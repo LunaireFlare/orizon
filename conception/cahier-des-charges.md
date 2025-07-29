@@ -143,6 +143,7 @@ Chemin utilisateur (en prenant en compte les contraintes spécifiques au public 
 
 | En tant que | Je souhaite | Afin de |
 |---|---|---|
+|Invité|consulter la page d'accueil||
 |Invité|s'inscrire|accéder aux fonctionnalités du site|
 |Utilisateur|se connecter / se déconnecter|accéder à mes fonctionnalités de membre|
 |Utilisateur|consulter / modifier son profil|accéder à mes informations personnelles|
