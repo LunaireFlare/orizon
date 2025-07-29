@@ -1,0 +1,38 @@
+@startuml deployment
+node "Utilisateur" {
+  [Navigateur Web] 
+}
+
+node "SeniorLove"{
+
+node "Reverse Proxy " {
+  [Nginx]
+}
+
+node "Frontend " {
+  [React App]
+}
+
+node "BackOffice" {
+  [ReactOffice App ]
+
+}
+
+node "Backend" {
+  [Node.js API]
+
+}
+
+database "PostgreSQL" {
+  [Base de données PostgreSQL]
+}
+
+[Navigateur Web] -- [Nginx] : HTTPS
+[Nginx] -- [ReactOffice App ] : HTTPS
+[Nginx] -- [React App] : HTTPS
+[React App] -- [Node.js API] : API REST
+[ReactOffice App ] -- [Node.js API] : API REST
+[Node.js API] -- [Base de données PostgreSQL] : SQL Queries
+}
+
+@enduml
