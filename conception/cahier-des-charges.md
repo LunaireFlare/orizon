@@ -141,7 +141,24 @@ Chemin utilisateur (en prenant en compte les contraintes spécifiques au public 
 
 ## User stories
 
-<!-- TODO: user stories -->
+| En tant que | Je souhaite | Afin de |
+|---|---|---|
+|Invité|s'inscrire|accéder aux fonctionnalités du site|
+|Utilisateur|se connecter / se déconnecter|accéder à mes fonctionnalités de membre|
+|Utilisateur|consulter / modifier son profil|accéder à mes informations personnelles|
+|Utilisateur|supprimer son profil|supprimer mes informations personnelles|
+|Utilisateur|créer / modifier un évènement||
+|Utilisateur|supprimer un évènement||
+|Utilisateur|afficher un évènement|avoir des détails sur un évènement particulier|
+|Utilisateur|filtrer les évènements existants par centre d'intérêt et/ou localisation|trouver des évènements qui m'intéressent|
+|Utilisateur|s'inscrire / se désinscrire à un évènement||
+|Utilisateur|écrire / recevoir un message|avoir une conversation avec un autre utilisateur|
+|Modérateur|valider un profil|autoriser l'accès d'un nouveau membre au site|
+|Modérateur|bloquer un profil|refuser l'accès d'un nouveau membre au site|
+|Modérateur|modifier un évènement|modérer un évènement existant|
+|Modérateur|supprimer un évènement|modérer un évènement existant|
+|Administrateur|créer et gérer les évènements||
+|Administrateur|créer et gérer les utilisateurs||
 
 ## Analyse des risques
 
