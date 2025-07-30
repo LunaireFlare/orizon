@@ -2,11 +2,13 @@
 
 ## Présentation du projet
 
-La société "Happy Retired", spécialisée dans les services aux seniors, souhaite lancer sa plateforme de rencontres et d'évènements locaux adressés aux retraités actifs : SeniorLove [Together ?].
+La société "Happy Retired", spécialisée dans les services aux seniors, souhaite lancer sa plateforme de rencontres et d'évènements locaux adressés aux retraités actifs : SeniorLove [Orizon].
 
-Visant à développer la vie sociale des seniors tout en luttant contre l'isolement et la solitude qui surviennent parfois au moment du retrait de la vie active, SeniorLove [Together ?] permet à ses utilisateurs de faire des rencontres authentiques grâce à des évènements diversifiés et des chats privés, le tout au sein d'un réseau sécurisé de profils vérifiés par nos équipes de modération.
+Visant à développer la vie sociale des seniors tout en luttant contre l'isolement et la solitude qui surviennent parfois au moment du retrait de la vie active, SeniorLove [Orizon] permet à ses utilisateurs de faire des rencontres authentiques grâce à des évènements diversifiés et des chats privés, le tout au sein d'un réseau sécurisé de profils vérifiés par nos équipes de modération.
 
-Qu'il s'agisse d'entretenir une retraite active ou de préparer sa retraite, SeniorLove [Together ?] est l'application idéale pour maintenir des liens sociaux et vivre de nouvelles expériences.
+Qu'il s'agisse d'entretenir une retraite active ou de préparer sa retraite, SeniorLove [Orizon] est l'application idéale pour maintenir des liens sociaux et vivre de nouvelles expériences.
+
+---
 
 ## Définition des besoins
 
@@ -16,6 +18,8 @@ Qu'il s'agisse d'entretenir une retraite active ou de préparer sa retraite, Sen
 - Possibilité pour les utilisateurs de créer, modifier ou supprimer des évènements
 - Possibilité pour les utilisateurs de participer et voir la liste des évènements existants (filtres : localisation ou centres d'intérêt)
 - Configuration d'un backoffice pour valider/bloquer des utilisateurs et modérer les évènements
+
+---
 
 ## Fonctionnalités du projet
 
@@ -51,7 +55,7 @@ Le MVP inclura les modules suivants:
 
 ### Évolutions potentielles
 
-Lors d'une Version 2, on pourra prévoir:  
+Lors d'une Version 2, on pourra prévoir :  
 
 - Options d'accessibilité (ex : augmenter taille du texte)
 - Messagerie instantanée type chat, entre 2 utilisateurs (via websockets).
@@ -59,7 +63,7 @@ Lors d'une Version 2, on pourra prévoir:
 - Cartographie interactive : visualisation géographique des événements et profils disponibles à proximité.
 - Badges ou récompenses virtuelles : valoriser les utilisateurs actifs et impliqués (organisateurs fréquents d’événements, participants réguliers, etc.).
 
-Lors d'une Version 3, on pourra prévoir:
+Lors d'une Version 3, on pourra prévoir :
 
 - Possibilité de signaler des contenus inappropriés et des comportements nuisibles.
 - Evolution du back-office : gestion des signalements.
@@ -67,6 +71,8 @@ Lors d'une Version 3, on pourra prévoir:
 - Alertes personnalisées : notifications en temps réel ou emails pour prévenir les utilisateurs d’événements pertinents proches de chez eux.
 - Système de témoignages et d’évaluations : recueillir les retours utilisateurs sur les événements et les rencontres effectuées.
 - Application mobile : optimisation poussée pour l'ergonomie et l'accessibilité afin de faciliter l'usage mobile chez les seniors.
+
+---
 
 ## Architecture du projet
 
@@ -77,6 +83,8 @@ Lors d'une Version 3, on pourra prévoir:
 - Base de données relationnelle unique puisque les données seront dans un premier temps toutes sous le même format et que ce système permet une manipulation facile des informations via le langage SQL.
   
 ![diagramme d'archi](./diagrams/architecture.png)
+
+---
 
 ## Spécifications techniques
 
@@ -89,10 +97,10 @@ Le projet utilisera les outils de versioning local et distant `git` et `GitHub`,
 Pour faciliter le développement sur les différents environnements de travail de l'équipe mais aussi le déploiement une fois le projet livré, on utilisera:
 
 - _Conteneurisation_:
-L'application sera conteneurisée à l'aide de **Docker** afin de standardiser les environnements de développement pour tous les membres de l'équipe. Docker permet également d'assurer la portabilité de l'application entre les environnements.
+L'application sera conteneurisée à l'aide de `Docker` afin de standardiser les environnements de développement pour tous les membres de l'équipe. `Docker` permet également d'assurer la portabilité de l'application entre les environnements.
 
 - _Frontend_:
-Développé avec React, on utilisera l'outil de build `Vite` pour obtenir un environnement de travail rapide et efficace et des outils utiles comme un serveur local avec rechargement automatique, un transpilateur pour transformer le code de développement en langage navigateur et un bundler pour compresser et optimiser les ressources statiques. 
+Développé avec React, on utilisera l'outil de build `Vite` pour obtenir un environnement de travail rapide et efficace et des outils utiles comme un serveur local avec rechargement automatique, un transpilateur pour transformer le code de développement en langage navigateur et un bundler pour compresser et optimiser les ressources statiques.
 
 - _Intégration et déploiement continus_:
 Durant le développement et après, sera également mis en place une pipeline CI/CD via `GitHub Actions` afin de maintenir une intégration et un déploiement continus pour une meilleure maintenance et donc, expérience utilisateur.
@@ -110,11 +118,11 @@ Les wireframes seront réalisés sur un logiciel de dessin, tandis que les maque
 
 Afin d'assurer la fiabilité, la maintenabilité et la qualité globale du projet, une série de test variée sera mise en place:
 
-- _Les Tests fonctionnels de l'API_:
-Les tests seront réalisés avec le client HTTP `Insomnia`, qui permettra de lancer des tests fonctionnels sur les endpoints de l'API et de vérifier la bonne exécution du traitement associé. Des tests unitaires seront effectués également grâce au framework `Jest`.
+- _Les tests unitaires et fonctionnels de l'API_:
+Les tests fonctionnels seront réalisés avec le client HTTP `Insomnia`, qui permettra de lancer des tests sur les endpoints de l'API et de vérifier la bonne exécution du traitement associé. Des tests unitaires seront également effectués grâce au framework `Jest`.
 
-- _Les tests unitaires et fonctionnels du frontend_:
-Le front React sera testé avec `Jest`, un framework JavaScript, qui permettra d'écrire les tests unitaires et fonctionnels du front (composants, routes, parcours e2e).
+- _Les tests unitaires, fonctionnels et e2e du frontend_:
+Le front React sera testé avec `Jest`, un framework JavaScript, qui permettra d'écrire les tests unitaires et fonctionnels du front (composants, routes). Les tests e2e pour évaluer l'expérience utilisateur sur différents navigateurs seront réalisés avec le framework `Playwright`.
 
 - _Validation de la structure HTML_:
 Pour vérifier l'intégrité de la syntaxe HTML, on utilisera le validateur HTML du W3C.
@@ -140,7 +148,7 @@ Pour plus de sécurité au développement et un débogage plus rapide des erreur
 ### Sécurité
 
 - Dans le contexte d'une SPA reposant sur une API, le projet utilisera pour l'authentification des utilisateurs des `jetons JWT` (JSON Web Token) plutôt qu'une session ou des cookies : les JWT sont signés par le serveur, ce qui rend leur falsification impossible, mais ne sont pas gérés par lui, ce qui réduit la charge sur le serveur.
-- Pour définir les permissions de chaque rôle, on utilisera le modèle de contrôle d'accès `RBAC (Role-Based Access Control)`. Pour la validation des données reçues du frontend, ce qui est nécessaire à la sécurité de l'application avant tout traitement des données issues du front et leur addition à la base de données, on utilisera le module de validation `Zod`. 
+- Pour définir les permissions de chaque rôle, on utilisera le modèle de contrôle d'accès `RBAC (Role-Based Access Control)`. Pour la validation des données reçues du frontend, ce qui est nécessaire à la sécurité de l'application avant tout traitement des données issues du front et leur addition à la base de données, on utilisera le module de validation `Zod`.
 - Suivant les [recommandations de sécurité](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html) de l'OWASP, les mots de passe et informations sensibles seront hachés avec le module `argon2`.
 - Des modules de sécurité spécifiques pour se prémunir de certaines attaques, comme `csrf` contre les attaques CSRF, `sanitize-html` pour nettoyer les entrées utilisateurs, `CORS` pour autoriser les requêtes externes au serveur ou encore `express-rate-limit` pour limiter le nombre de tentatives de connexion pour une IP donnée, seront utilisés pour renforcer la sécurité de l'application.
 
@@ -150,9 +158,13 @@ La base de données unique utilisera le SGBDR `PostgreSQL`, en s'appuyant au bes
 
 <!-- ? mentionner les fonctions SQL ? -->
 
+---
+
 ## Cible du projet/public visé
 
 Le public visé par ce projet regroupe les actifs en pré-retraite et les retraités actifs de plus de 60 ans, qui souhaitent maintenir leur rythme de vie et rencontrer de nouvelles personnes partageant leurs centres d'intérêt (sociaux, intellectuels, créatifs, sportifs) via des évènements locaux de toutes sortes, le tout dans un contexte sécurisé et vérifié par les équipes SeniorLove.
+
+---
 
 ## Navigateurs compatibles
 
@@ -164,23 +176,29 @@ La plateforme prévoit d'être disponible sur tous les navigateurs (desktop et m
 
 Et, à long terme, d'être disponible sous forme d'application mobile (Android, iOS).
 
+---
+
 ## Arborescence d'application (front)
 
 Pages disponibles :
 
 ![arborescence application](./diagrams/routes_tree.png)
 
+---
+
 ## Liste des routes prévues (back)
 
 ### Visiteurs
 
 - **GET** `/`
-- **POST** `/auth/register & login`
+- **POST** `/auth/register`
+- **POST** `/auth/login`
 
 ### Membres
 
-- **GET** `/`
-- **POST** `/auth/register & login`
+_Toutes les routes précédentes, plus :_
+
+- **POST** `/auth/logout`
 
 - **GET** `/profiles`
 - **GET** `/profiles/:id`
@@ -189,6 +207,13 @@ Pages disponibles :
 - **GET** `/events/:id`
 - **POST** `/events`
   
+- **GET** `/conversations`
+- **GET** `/conversations/:id/messages`
+- **POST** `/conversations/:id/messages`
+- **POST** `/conversations`
+
+<!-- ! confirmer fonctionnalité messagerie -->
+
 Pour leur profil:
 
 - **UPDATE** `/profiles/:id`
@@ -201,29 +226,32 @@ Pour leur évènements:
 
 ### Modérateurs
 
+_Toutes les routes précédentes, plus :_
 
+Sur tous les évènements :
 
+- **UPDATE** `/events/:id`
+- **DELETE** `/events/:id`
+
+Sur tous les utilisateurs, droit de modifier le champ `statut` uniquement :
+
+- **UDPATE** `/profiles/:id`
 
 ### Administrateurs
 
+_Toutes les routes précédentes, plus :_
 
-- **GET** `/`
-- **POST** `/auth/register & login`
-  
-- **GET** `/profile`
-- **UPDATE** `/profile`
-- **DELETE** `/profile`
+Sur tous les évènements :
 
-- **GET** `/users/`
-- **GET** `/users/:id`
+- **UPDATE** `/events/:id`
+- **DELETE** `/events/:id`
 
-- **GET** `/events`
-- **POST** `/events`
-- **UPDATE** `/events`
-- **DELETE** `/events`
+Sur tous les utilisateurs :
 
-- **GET** `/messages`
-- **POST** `/messages`
+- **UPDATE** `/profiles/:id`
+- **DELETE** `/profiles/:id`
+
+---
 
 ## User stories
 
@@ -247,16 +275,62 @@ Pour leur évènements:
 |Administrateur|créer et gérer les évènements||
 |Administrateur|créer et gérer les utilisateurs||
 
+---
+
 ## Analyse des risques
 
-- Risques juridiques / réglementaires : nouvelles lois, évolutions des lois existantes (RGPD)
-- Risques organisationnels : mauvaise répartition des rôles, manque de communication, dépassement des délais, manque des compétences nécessaires, absence ou indisponibilité des acteurs, changement des demandes client en cours de projet
-- Risques financiers : mauvaise gestion du budget, réduction du budget alloué
-- Risques psychosociaux : stress, burnout, conflits dans l'équipe, fatigue
-- Risques informatiques/numériques : mauvaise compatibilité ou installation des environnements, panne de serveur, performances faibles, référencement SEO insuffisant, perte de données, cyber-attaques, violation de confidentialité des données, évolution des technologies (obsolescence des technologies utilisées)
-- Risques de sécurité : injections de code malveillant (XSS, SQL), mauvaise gestion des rôles et permissions utilisateur, non-respect du RGPD et de la confidentialité des données, mauvaises configurations de sécurité, vol de tokens d'authentification, attaques CSRF, composants ou modules vulnérables et non tenus à jour
+### Risques juridiques
+
+- Création de nouvelles lois  
+- Évolutions des lois existantes (RGPD)
+
+### Risques techniques
+
+- Mauvaise compatibilité ou installation des environnements
+- Panne de serveur
+- Performances faibles
+- Référencement SEO insuffisant
+- Perte de données
+- Cyber-attaques
+- Violation de confidentialité des données
+- Évolution des technologies (obsolescence des technologies utilisées)
+
+### Risques humains
+
+- Stress/burnout
+- Conflits dans l'équipe
+- Fatigue
+
+### Risques liés à la gestion de projet
+
+- Mauvaise répartition des rôles
+- Manque de communication
+- Dépassement des délais
+- Manque des compétences nécessaires
+- Absence ou indisponibilité des acteurs
+- Changement des demandes client en cours de projet
+- Mauvaise gestion du budget
+- Réduction du budget alloué
+
+### Risques liés aux livrables
+
+- Injections de code malveillant (XSS, SQL)
+- Mauvaise gestion des rôles et permissions utilisateur
+- Non-respect du RGPD et de la confidentialité des données
+- Mauvaises configurations de sécurité
+- Vol de tokens d'authentification
+- Attaques CSRF
+- Composants ou modules vulnérables et non tenus à jour
+
+<!-- y a-t-il une alternative (et laquelle) ?
+peut-on faire de la prévention (et comment) ?
+peut-on éviter le risque (et comment) ?
+peut-on diminuer l'impact du risque (et comment) ?
+le risque est-il si peu impactant qu'il est acceptable -->
 
 <!-- ? vol === usurpation de token d'authentification ? -->
+
+---
 
 ## Liste des rôles
 
