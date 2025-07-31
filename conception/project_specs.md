@@ -279,54 +279,45 @@ Sur tous les utilisateurs :
 
 ## Analyse des risques
 
+_- Potentiellement très impactant : peut bloquer complètement le projet en développement ou compromettre le projet en production_
+_- Modérément impactant : peut causer des retards de développement ou rendre le projet indisponible en production_
+_- Acceptable : pas de conséquences durables_
+
 ### Risques juridiques
 
-- Création de nouvelles lois  
-- Évolutions des lois existantes (RGPD)
+- **Création de nouvelles lois** : pour diminuer ce risque, une veille spécifique sera mise en place pour surveiller le cadre juridique du développement. Le risque est modérément impactant.
+- **Évolutions des lois existantes (RGPD)** : pour diminuer ce risque, une veille spécifique sera mise en place pour surveiller le cadre juridique du développement. Le risque est modérément impactant.
 
 ### Risques techniques
 
-- Mauvaise compatibilité ou installation des environnements
-- Panne de serveur
-- Performances faibles
-- Référencement SEO insuffisant
-- Perte de données
-- Cyber-attaques
-- Violation de confidentialité des données
-- Évolution des technologies (obsolescence des technologies utilisées)
+- **Mauvaise compatibilité ou installation des environnements** : pour pallier ce risque, l'équipe de développement utilisera un logiciel de conteneurisation pour isoler et répliquer les environnements de travail sans problèmes de compatibilité. Le risque est modérément impactant.
+- **Panne de serveur** : pour éviter ce risque, le projet utilisera des sauvegardes du projet et un serveur de secours pour minimiser la durée de la panne. Le risque est modérément impactant.
+- **Performances faibles** : pour éviter ce risque, des audits de performance seront exécutés et les solutions nécessaires mises en place. Des pratiques d'optimisation (comme la pagination côté frontend des informations récupérées en base de données) seront également appliquées. Le risque est acceptable.
+- **Référencement SEO insuffisant** : pour éviter ce risque, des audits de référencement SEO seront exécutés et les solutions nécessaires mises en place. Des pratiques de référencement (comme la présence d'un fichier `robots.txt`) seront également appliquées. Le risque est acceptable.
+- **Accessibilité insuffisante** : pour éviter ce risque, des audits d'accessibilité seront exécutés et les solutions nécessaires mises en place. Des pratiques d'accessibilité (comme les textes alternatifs pour les images, le contraste des couleurs, la taille et la police du texte...) seront également appliquées. Le risque est acceptable.
+- **Perte de données** : pour diminuer ce risque, des commits réguliers sur git et des sauvegardes régulières de ceux-ci sur GitHub seront effectués afin d'éviter la perte de données. Le risque est potentiellement très impactant.
 
 ### Risques humains
 
-- Stress/burnout
-- Conflits dans l'équipe
-- Fatigue
+- **Stress ou fatigue des acteurs** : pour diminuer ce risque, le développement du projet sera flexible aux rythme et contraintes de chacun, et ponctué de pauses. En dehors du temps de travail prescrit et pour ménager sa fatigue, chacun sera libre d'aller plus loin sur ses tâches ou non aux horaires de son choix. Le risque est modérément impactant.
+- **Conflits dans l'équipe** : pour diminuer ce risque, une communication régulière sera maintenue tout au long de la journée, dans un environnement de confiance où chacun peut exprimer ses idées et griefs. Le risque est modérément impactant.
 
 ### Risques liés à la gestion de projet
 
-- Mauvaise répartition des rôles
-- Manque de communication
-- Dépassement des délais
-- Manque des compétences nécessaires
-- Absence ou indisponibilité des acteurs
-- Changement des demandes client en cours de projet
-- Mauvaise gestion du budget
-- Réduction du budget alloué
+- **Mauvaise répartition des rôles** : pour diminuer ce risque, les rôles ont été répartis au début du projet selon les affinités de chacun, étant entendu que tous les acteurs peuvent se soutenir sur certaines lacunes ou difficultés éventuelles. Le risque est acceptable.
+- **Manque de communication** : pour pallier ce risque, une réunion quotidienne aura lieu en début de journée pour faire le point sur le travail effectué et à venir (méthodologie Agile), le code de chacun sera relu par au moins une autre personne et des outils de discussion seront mis en place pour pouvoir échanger régulièrement à l'écrit et par vocal. Le risque est modérément impactant.
+- **Dépassement des délais** : pour diminuer ce risque, les semaines et journées de travail seront organisées grâce à un tableau Kanban, qui permettra de distribuer les tâches efficacement, étant entendu que des impondérables peuvent toujours venir perturber l'organisation prévue. Le risque est modérément impactant.
+- **Manque des compétences nécessaires** : pour diminuer ce risque, des recherches et une veille seront conduites par les développeurs tout au long du projet afin de développer leurs compétences. En même temps, le référent du projet sera joignable au moyen d'issues GitHub afin de combler d'éventuelles lacunes. Le risque est potentiellement très impactant.
+- **Absence ou indisponibilité des acteurs** : pour mitiger ce risque, chaque membre de l'équipe devra être capable de récupérer les tâches d'un autre membre afin de permettre au projet de progresser même en cas d'absence temporaire ou prolongée d'un acteur. Le risque est modérément impactant.  
+- **Mauvaise gestion/réduction du budget** : dans les circonstances du projet, les contraintes ne sont pas financières (allocation d'un budget) mais temporelles (respect des échéances, voir risque de dépassement de délais). Le risque est modérément impactant.
 
 ### Risques liés aux livrables
 
-- Injections de code malveillant (XSS, SQL)
-- Mauvaise gestion des rôles et permissions utilisateur
-- Non-respect du RGPD et de la confidentialité des données
-- Mauvaises configurations de sécurité
-- Vol de tokens d'authentification
-- Attaques CSRF
-- Composants ou modules vulnérables et non tenus à jour
-
-<!-- y a-t-il une alternative (et laquelle) ?
-peut-on faire de la prévention (et comment) ?
-peut-on éviter le risque (et comment) ?
-peut-on diminuer l'impact du risque (et comment) ?
-le risque est-il si peu impactant qu'il est acceptable -->
+- **Mauvaises configurations de sécurité** : pour mitiger ce risque, des stratégies de sécurisation de l'application seront mises en place de façon complémentaire (au niveau serveur : protocoles chiffrés HTTPS, configuration des headers avec CSP, politique CORS ; et applicatif : protections contre les injections, vols de tokens). Les mesures seront également vérifiées par des audits de sécurité tels que le Mozilla Observatory. Le risque est potentiellement très impactant.
+- **Violation de confidentialité des données** : pour mitiger ce risque, l'application sera protégée par un système de rôles et de permissions qui seront vérifiés à chaque action sensible de l'utilisateur pour s'assurer qu'il n'a accès qu'au nécessaire. De même, les accès à la base de données seront limités par des rôles et permissions spécifiques. Le risque est potentiellement très impactant.
+- **Évolution des technologies (obsolescence/vulnérabilité des technologies utilisées)** : pour diminuer ce risque, une veille sur les outils/langages utilisés sera mise en place pour suivre l'actualité des versions. De plus, des mises à jour des dépendances permettront de combler d'éventuelles vulnérabilités. Le risque est potentiellement très impactant.
+- **Injections de code malveillant (XSS, SQL)** : pour mitiger ce risque, des stratégies de sécurisation de l'application seront mises en place (nettoyage et validation des entrées utilisateurs, requêtes préparées). Le risque est potentiellement très impactant.
+- **Attaques CSRF/usurpation de token** : pour mitiger ce risque, le système d'authentification ne sera pas global mais reposera sur des vérifications multiples, notamment aux moments d'actions critiques, et utilisera des jetons afin de prouver l'identité de l'utilisateur. Le risque est potentiellement très impactant.
 
 <!-- ? vol === usurpation de token d'authentification ? -->
 
