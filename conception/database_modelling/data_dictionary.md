@@ -13,7 +13,7 @@
 | city | TEXT | NOT NULL | La ville de l'utilisateur |
 | age | INT | NOT NULL, CHECK ( age >= 60 ) | L'âge de l'utilisateur |
 | role | TEXT | NOT NULL | Le rôle de l'utilisateur |
-| is_valid | BOOLEAN | NOT NULL DEFAULT FALSE | Le statut de l'utilisateur (valide, bloqué) |
+| status | ENUM | NOT NULL DEFAULT PENDING | Le statut de l'utilisateur (valide, en attente de validation, bloqué, désactivé) |
 | created_at | TIMESTAMP | NOT NULL, DEFAULT CURRENT_TIMESTAMP | La date de création de l'utilisateur |
 | updated_at | TIMESTAMP | NOT NULL, DEFAULT CURRENT_TIMESTAMP | La date de dernière modification de l'utilisateur |
 
@@ -28,7 +28,6 @@
 | conversation_id | ENTITY | NOT NULL | L'identifiant de la conversation qui contient le message |
 | created_at | TIMESTAMP | NOT NULL, DEFAULT CURRENT_TIMESTAMP | La date de création du message |
 | updated_at | TIMESTAMP | NOT NULL, DEFAULT CURRENT_TIMESTAMP | La date de dernière modification du message |
-<!-- | recipient_id | ENTITY | NOT NULL | Le destinataire du message (user_id) | -->
 
 ## Table Conversation
 
@@ -50,8 +49,7 @@
 | address | TEXT | NOT NULL | L'adresse de l'évènement |
 | zip_code | VARCHAR(5) | NOT NULL, CHECK (value ~ ‘^\d{5}$’) | Le code postal de la ville |
 | city | TEXT | NOT NULL | La ville de l'évènement |
-| status | TEXT | NOT NULL | Le statut de l'évènement (à venir, en cours, passé) |
-| is_valid | BOOLEAN | NOT NULL, DEFAULT TRUE | Le statut de l'évènement (valide, bloqué) |
+| status | ENUM | NOT NULL DEFAULT PENDING | Le statut de l'évènement (valide, en attente de validation, bloqué) |
 | creator_id | ENTITY | NOT NULL | Le créateur de l'évènement (user_id) |
 | created_at | TIMESTAMP | NOT NULL, DEFAULT CURRENT_TIMESTAMP | La date de création de l'évènement |
 | updated_at | TIMESTAMP | NOT NULL, DEFAULT CURRENT_TIMESTAMP | La date de dernière modification de l'évènement |
