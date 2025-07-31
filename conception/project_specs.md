@@ -82,7 +82,8 @@ Lors d'une Version 3, on pourra prévoir :
 <!-- - Est ce qu'on peut dire le back en modif MVC? -->
 - Base de données relationnelle unique puisque les données seront dans un premier temps toutes sous le même format et que ce système permet une manipulation facile des informations via le langage SQL.
   
-![diagramme d'archi](./diagrams/architecture.png)
+![fonctionnementFrontBack](./diagrams/fonctionnementFrontBack.png)
+![fonctionnementFrontBack](./diagrams/recuperationFront.png)
 
 ---
 

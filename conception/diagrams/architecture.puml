@@ -1,38 +1,69 @@
-@startuml deployment
-node "Utilisateur" {
+@startuml
+
+title Récupération des front-end
+
+node "Client" {
   [Navigateur Web] 
 }
 
-node "SeniorLove"{
+node "Serveur"{
 
 node "Reverse Proxy " {
   [Nginx]
 }
 
-node "Frontend " {
-  [React App]
+node "Serveur front-office" {
+  [ Vite ]
 }
 
-node "BackOffice" {
-  [ReactOffice App ]
+node "Serveur BackOffice" {
+  [Vite]
 
-}
-
-node "Backend" {
-  [Node.js API]
-
-}
-
-database "PostgreSQL" {
-  [Base de données PostgreSQL]
 }
 
 [Navigateur Web] -- [Nginx] : HTTPS
-[Nginx] -- [ReactOffice App ] : HTTPS
-[Nginx] -- [React App] : HTTPS
-[React App] -- [Node.js API] : API REST
-[ReactOffice App ] -- [Node.js API] : API REST
-[Node.js API] -- [Base de données PostgreSQL] : SQL Queries
+[Nginx] -- [Vite] : HTTPS
+[Nginx] -- [ Vite ] : HTTPS
+
+}
+@enduml
+
+
+
+@startuml
+
+title Fonctionnement front-end / back-end
+
+node "Frontend"{
+
+node "Front-office" {
+  [React] 
 }
 
+node "Back-office" {
+  [React ] 
+}
+}
+
+node "Backend"{
+
+node "Reverse Proxy " {
+  [Nginx]
+}
+
+node "API" {
+  [Express]
+}
+
+database "BDD" {
+[PostgreSQL]
+}
+
+
+[React] -- [Nginx] : HTTPS
+[React ] -- [Nginx] : HTTPS
+[Nginx] -- [Express] : API REST
+[Express] -- [PostgreSQL]: SQL Queries 
+
+}
 @enduml
