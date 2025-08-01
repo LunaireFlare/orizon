@@ -8,10 +8,10 @@
 | lastname | TEXT | NOT NULL | Le nom de l'utilisateur |
 | firstname | TEXT | NOT NULL | Le prénom de l'utilisateur |
 | email | TEXT | NOT NULL UNIQUE | L'email de l'utilisateur |
-| password | TEXT | NOT NULL, CHECK (LENGTH(password) >= 8) | Le mot de passe de l'utilisateur |
+| password | TEXT | NOT NULL| Le mot de passe de l'utilisateur (hashé)|
 | zip_code | VARCHAR(5) | NOT NULL, CHECK (value ~ ‘^\d{5}$’) | Le code postal de l'utilisateur |
 | city | TEXT | NOT NULL | La ville de l'utilisateur |
-| date_of_birth | DATE | NOT NULL, CHECK (DATE_PART('year', AGE(CURRENT_DATE, date_naissance)) > 60) | L'âge de l'utilisateur |
+| date_of_birth | DATE | NOT NULL| L'âge de l'utilisateur |
 | role | TEXT | NOT NULL | Le rôle de l'utilisateur |
 | status | ENUM | NOT NULL DEFAULT PENDING | Le statut de l'utilisateur (valide, en attente de validation, bloqué, désactivé) |
 | created_at | TIMESTAMP | NOT NULL, DEFAULT CURRENT_TIMESTAMP | La date de création de l'utilisateur |

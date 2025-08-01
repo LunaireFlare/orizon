@@ -269,6 +269,7 @@ Sur tous les utilisateurs :
 |Membre|filtrer les évènements existants par centre d'intérêt et/ou localisation|trouver des évènements qui m'intéressent|
 |Membre|s'inscrire / se désinscrire à un évènement||
 |Membre|écrire / recevoir un message|avoir une conversation avec un autre utilisateur|
+|Membre|voir le profil des autres membres||
 |Modérateur|valider un profil|autoriser l'accès d'un nouveau membre au site|
 |Modérateur|bloquer un profil|refuser l'accès d'un nouveau membre au site|
 |Modérateur|modifier un évènement|modérer un évènement existant|
