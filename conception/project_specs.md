@@ -200,7 +200,7 @@ Pages disponibles :
 |/users/:id|PATCH|Mettre à jour un utilisateur|
 |/users/:id|DELETE|Supprimer un utilisateur|
 |/users/:id/events|GET|Liste des évènements auquels il participe|
-|/users/:id/interests|GET|Liste des intérêts d'un'utilisateur|
+|/users/:id/interests|GET|Liste des intérêts d'un utilisateur|
 |/login|POST|Authentification d'un utilisateur|
 |/logout|POST|Déconnexion d'un utilisateur|
 
