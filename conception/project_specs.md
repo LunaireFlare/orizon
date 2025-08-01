@@ -191,74 +191,51 @@ Pages disponibles :
 
 ### Gestion des utilisateurs
 
-- **GET** `/users` 
-<!-- Liste des utilisateurs -->
-- **POST** `/users`
-<!-- Créer un nouvel utilisateur -->
-- **GET** `/users/:id`
-<!-- Détail d'un utilisateur  -->
-- **PATCH** `/users/:id`
-<!-- Mettre à jour un utilisateur -->
-- **DELETE** `/users/:id`
-<!-- Supprimer un utilisateur -->
-
-- **GET** `/users/:id/events`
-<!-- Liste des évènements auquels il participe -->
-- **GET** `/users/:id/interests`
-<!-- Liste des intérêts d'un'utilisateur -->
-
-- **POST** `/login`
-<!-- Authentification d'un utilisateur -->
-- **POST** `/logout`
-<!-- Deconnexion d'un utilisateur -->
+|URL|HTTP|Description|
+|---|---|---|
+|/users|GET|Liste des utilisateurs|
+|/users|POST|Créer un nouvel utilisateur|
+|/users/:id|GET|Détail d'un utilisateur|
+|/users/:id|PATCH|Mettre à jour un utilisateur|
+|/users/:id|DELETE|Supprimer un utilisateur|
+|/users/:id/events|GET|Liste des évènements auquels il participe|
+|/users/:id/interests|GET|Liste des intérêts d'un'utilisateur|
+|/login|POST|Authentification d'un utilisateur|
+|/logout|POST|Déconnexion d'un utilisateur|
 
 ### Gestion des évènements
 
-- **GET** `/events`
-<!-- Liste des évènements -->
-- **GET** `/events/:id`
-<!--Détail d'un évènement -->
-- **POST** `/events`
-<!-- Créer un évènement -->
-- **PATCH** `users/:id/events/:id`
-<!-- Mettre à jour un évènement -->
-- **DELETE** `users/:id/events/:id`
-<!-- Supprimer un évènement -->
-- **GET** `/events/:id/users`
-<!-- Liste des utilisateurs participant à un évènement  -->
-- **POST** `/events/:id/users`
-<!-- Inscription d'un utilisateur à un évènement -->
-- **DELETE** `/events/:id/users/:id`
-<!-- Supprimer l'inscription d'un utilisateur -->
-
-- **GET** `/events/:id/interests`
-<!-- Liste des intérêts d'un évènement  -->
-- **POST** `/events/:id/interests`
-<!--Associer un intérêt à un évènement -->
-- **DELETE** `/events/:id/interests/:id`
-<!--Supprimer l'association d'un intérêt à un évènement -->
+|URL|HTTP|Description|
+|---|---|---|
+|/events|GET|Liste des événements|
+|/events/:id|GET|Détail d'un évènement|
+|/events|POST|Créer un évènement|
+|/users/:id/events/:id|PATCH|Mettre à jour un évènement|
+|/users/:id/events/:id|DELETE|Supprimer un évènement|
+|/events/:id/users|GET|Liste des utilisateurs participant à un évènement|
+|/events/:id/users|POST|Inscription d'un utilisateur à un évènement|
+|/events/:id/users/:id|DELETE|Supprimer l'inscription d'un utilisateur|
+|/events/:id/interests|GET|Liste des intérêts d'un évènement|
+|/events/:id/interests|POST|Associer un intérêt à un évènement|
+|/events/:id/interests/:id|DELETE|Supprimer l'association d'un intérêt à un évènement|
 
 ### Gestion des discussions utilisateurs
 
-- **GET** `/users/:id/conversations`
-<!-- Liste des conversations d'un utilisateur -->
-- **GET** `/users/:id/conversations/:id/messages`
-<!-- Détail d'une conversation -->
-- **POST** `/users/:id/conversations`
-<!-- Créer une conversation -->
-- **DELETE** `/users/:id/conversations/:id`
-<!-- Supprimer une conversation -->
-- **POST** `/users/:id/conversations/:id/messages`
-<!-- Créer un message dans une conversation -->
+|URL|HTTP|Description|
+|---|---|---|
+|/users/:id/conversations|GET|Liste des conversations d'un utilisateur|
+|/users/:id/conversations/:id/messages|GET|Détail d'une conversation|
+|/users/:id/conversations|POST|Créer une conversation|
+|/users/:id/conversations/:id|DELETE|Supprimer une conversation|
+|/users/:id/conversations/:id/messages|POST|Créer un message dans une conversation|
 
 ### Gestion des intérêts
 
-- **GET** `/interests`
-<!-- Liste des intérêts -->
-- **POST** `/interests`
-<!-- Créer un intérêt -->
-- **DELETE** `/interests/:id`
-<!-- Supprimer un intérêt -->
+|URL|HTTP|Description|
+|---|---|---|
+|/interests|GET|Liste des intérêts|
+|/interests|POST|Créer un intérêt|
+|/interests/:id|DELETE|Supprimer un intérêt|
 
 ### Modérateurs
 
@@ -266,19 +243,21 @@ _Toutes les routes précédentes, plus :_
 
 Sur tous les évènements :
 
-- **UPDATE** `/events/:id`
-<!-- Autoriser/Bloquer l'évènement -->
-- **UPDATE** `/users/:id`
-<!-- Autoriser/Bloquer le statut de l'utilisateur -->
+|URL|HTTP|Description|
+|---|---|---|
+|/events/:id|PATCH|Autoriser/Bloquer l'évènement |
+|/users/:id|PATCH|Autoriser/Bloquer le statut de l'utilisateur|
 
 ### Administrateurs
 
 _Toutes les routes précédentes, plus :_
 
-- **GET** `/conversations/:id`
-- **GET** `/conversations/:id/messages`
-- **DELETE** `/events/:id`
-- **DELETE** `/users/:id`
+|URL|HTTP|Description|
+|---|---|---|
+|/conversations/:id|GET| Liste d'une conversation|
+|/conversations/:id/messages|GET| Liste des messages d'une conversation|
+|/events/:id|DELETE|Suppression d'un événement|
+|/users/:id|DELETE|Suppression d'un utilisateur|
 
 ## User stories
 
