@@ -76,14 +76,15 @@ Lors d'une Version 3, on pourra prévoir :
 
 ## Architecture du projet
 
+L'application suivra une architecture Client-Serveur et sera divisée comme suit :
+
 - Reverse proxy qui redirige les requêtes entrantes vers le serveur adéquat après certaines vérifications de sécurité (certificat HTTPS, en-têtes de sécurité) pour plus de sécurité et une meilleure gestion du trafic entrant.
 - Frontend (partie client) sous forme de Single Page Application (SPA) pour une expérience utilisateur fluide et réactive, sans rechargement de page, et un débogage facilité pour les équipes de maintenance.
 - Backend (partie serveur) composé d'une API Rest pour pouvoir faire des opérations CRUD (Create, Read, Update, Delete) sur les données de la base de données, avec gestion des rôles et permissions des utilisateurs pour définir qui peut manipuler quelles données. Le backend sera organisé selon le pattern architectural MVC (Model-View-Controller)
-<!-- - Est ce qu'on peut dire le back en modif MVC? -->
 - Base de données relationnelle unique puisque les données seront dans un premier temps toutes sous le même format et que ce système permet une manipulation facile des informations via le langage SQL.
   
-![fonctionnementFrontBack](./diagrams/fonctionnementFrontBack.png)
-![fonctionnementFrontBack](./diagrams/recuperationFront.png)
+![fonctionnement front et back](./diagrams/architecture_front_back.png)
+![récupération des front-end](./diagrams/architecture_client_front.png)
 
 ---
 
@@ -183,7 +184,7 @@ Et, à long terme, d'être disponible sous forme d'application mobile (Android, 
 
 Pages disponibles :
 
-![arborescence application](./diagrams/routes_tree.png)
+![arborescence front application](./diagrams/front_routes_tree.png)
 
 ---
 
@@ -286,9 +287,9 @@ _Toutes les routes précédentes, plus :_
 
 ## Analyse des risques
 
-_- Potentiellement très impactant : peut bloquer complètement le projet en développement ou compromettre le projet en production_
-_- Modérément impactant : peut causer des retards de développement ou rendre le projet indisponible en production_
-_- Acceptable : pas de conséquences durables_
+- _Potentiellement très impactant : peut bloquer complètement le projet en développement ou compromettre le projet en production_
+- _Modérément impactant : peut causer des retards de développement ou rendre le projet indisponible en production_
+- _Acceptable : pas de conséquences durables_
 
 ### Risques juridiques
 
