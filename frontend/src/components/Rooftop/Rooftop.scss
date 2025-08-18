@@ -1,0 +1,41 @@
+#elemRoof {
+    width: 1280px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.buttonBox {
+    background-color: #fff;
+    width: 20rem;
+    padding: 0.5rem;
+    display: flex;
+    justify-content: space-around;
+    border-radius: 3rem;
+    max-height: 3rem;
+    align-items: center;
+}
+
+.buttonHover {
+    padding: 0.8rem 2.5rem;
+    border-radius: 3rem;
+    color: black;
+}
+
+.buttonHover a {
+    text-decoration: none;
+    font-size: 1rem;
+}
+
+.buttonHover2 a {
+    text-decoration: none;
+    font-size: 1rem;
+}
+
+.buttonHover2 a {
+    background-color: var(--blue-green-sky);
+    padding: 0.8rem 2.5rem;
+    border-radius: 3rem;
+    color: #fff;
+}

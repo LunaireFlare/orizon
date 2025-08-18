@@ -1,0 +1,15 @@
+#testimonials {
+    width: 1280px;
+    margin: 0 auto;
+    background-color: var(--blue-green-sky);
+    color: #fff !important;
+    border-radius: 2rem;
+    padding: 3rem 0rem;
+}
+
+#testimonials .containerTesti {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 1rem;
+    margin-top: 3rem;
+}

@@ -1,0 +1,32 @@
+#footer {
+    width: 1280;
+    margin: 0 auto;
+    background-color: var(--text-color-base);
+    color: #fff;
+    padding-top: 3rem;
+    padding-bottom: 0.5rem;
+    margin-top: 5rem;
+}
+
+#footer  a {
+    color: #fff;
+    text-decoration: none;
+    display: block;
+}
+
+#footer .containerFooter {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 2rem;
+    align-items: center;
+}
+
+#footer p {
+
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 200;
+    text-align: center;
+    margin-top: 3rem
+}
+    
