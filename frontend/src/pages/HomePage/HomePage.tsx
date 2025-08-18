@@ -17,25 +17,25 @@ export default function HomePage() {
 
                       <div className="blcFigure">
                         <div className="elemFigure">
-                            {/* <img width="150px" src="../src/assets/communauteactive.png" alt="picto-communauté-active" /> */}
+                            <img width="150px" src="../../src/assets/images/communauteactive.png" alt="picto-communauté-active" />
                             <h4>COMMUNAUTE ACTIVE</h4>
                             <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum</p>
                         </div>
 
                         <div className="elemFigure">
-                            {/* <img width="150px" src="../src/assets/reseauxsecurise.png" alt="picto-communauté-active" /> */}
+                            <img width="150px" src="../../src/assets/images/reseauxsecurise.png" alt="picto-communauté-active" />
                             <h4>RESEAU SECURISE</h4>
                             <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum</p>
                         </div>
 
                         <div className="elemFigure">
-                            {/* <img width="150px" src="../src/assets/messagerieprive.png" alt="picto-communauté-active" /> */}
+                            <img width="150px" src="../../src/assets/images/messagerieprive.png" alt="picto-communauté-active" />
                             <h4>MESSAGERIE PRIVEE</h4>
                             <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum</p>
                         </div>
 
                         <div className="elemFigure">
-                            {/* <img width="150px" src="../src/assets/evenement.png" alt="picto-communauté-active" /> */}
+                            <img width="150px" src="../../src/assets/images/evenement.png" alt="picto-communauté-active" />
                             <h4>EVENEMENTS</h4>
                             <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum</p>
                         </div>
@@ -59,12 +59,12 @@ export default function HomePage() {
                             </p>
                         </div>
                         <div>
-                            {/* <img src="../src/assets/retraiteorizon.png" alt="picto-communauté-active" /> */}
+                            <img src="../../src/assets/images/retraiteorizon.png" alt="picto-communauté-active" />
                         </div>
                     </div>
                     <div className="containerAboutTwo">
                         <div>
-                            {/* <img src="../src/assets/rencontreorizon.png" alt="picto-communauté-active" /> */}
+                            <img src="../../src/assets/images/rencontreorizon.png" alt="picto-communauté-active" />
                         </div>
                     
                         <div>

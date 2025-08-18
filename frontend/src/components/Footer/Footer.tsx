@@ -1,5 +1,5 @@
 import { Link } from 'react-router';
-// import logo from '../assets/Logo_OrizonBlanc.png';
+import logo from '../../assets/images/Logo_OrizonBlanc.png';
 
 import './Footer.scss';
 
@@ -20,7 +20,7 @@ export default function Footer() {
                     <Link to="/">Lorem Ipsum is simply dummy</Link>
                 </div>
                 <div>
-                    {/* <img width="350px" src={logo} alt="logo-orizon" /> */}
+                    <img width="350px" src={logo} alt="logo-orizon" />
                 </div>
             </div>
                 <p>leap into electronic typesetting, remaining essentially</p>
