@@ -29,7 +29,7 @@ CREATE TYPE status_user AS ENUM (
     'désactivé'
 );
 
-CREATE TABLE users (
+CREATE TABLE user (
     id INTEGER GENERATED ALWAYS AS IDENTITY NOT NULL PRIMARY KEY,
     lastname TEXT NOT NULL,
     firstname TEXT NOT NULL,
@@ -40,6 +40,43 @@ CREATE TABLE users (
     date_of_birth DATE NOT NULL,
     role TEXT NOT NULL,
     photo TEXT DEFAULT ,
-    status status_user DEFAULT 'en_attente',
+    status status_user DEFAULT 'en_attente'
+);
+
+CREATE TABLE message (
+    id INTEGER GENERATED ALWAYS AS IDENTITY NOT NULL PRIMARY KEY,
+    content TEXT NOT NULL,
+    date TIMESTAMP NOT NULL,
+    sender_id INT NOT NULL,
+    conversation_id INT NOT NULL
+);
+
+CREATE TABLE conversation (
+    id INTEGER GENERATED ALWAYS AS IDENTITY NOT NULL PRIMARY KEY
+);
+
+
+CREATE TYPE status_event AS ENUM (
+    'en_attente', 
+    'valide', 
+    'bloqué'
+);
+
+CREATE TABLE event (
+    id INTEGER GENERATED ALWAYS AS IDENTITY NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL,
+    start_date TIMESTAMP NOT NULL CHECK (start_date > CURRENT_TIMESTAMP),
+    end_date TIMESTAMP NOT NULL CHECK ( end_date > start_date),
+    description TEXY NOT NULL,
+    address TEXT NOT NULL,
+    zip_code VARCHAR(5) NOT NULL CHECK ( zip_code ~ '^\d{5}$'),
+    city TEXT NOT NULL,
+    status status_event DEFAULT 'en_attente',
+    creator_id INT NOT NULL
+);
+
+CREATE TABLE interest (
+    id INTEGER GENERATED ALWAYS AS IDENTITY NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL
 );
 
