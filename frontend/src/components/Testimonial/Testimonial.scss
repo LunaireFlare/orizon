@@ -1,3 +1,41 @@
+/* -----------------Version Mobile ----------------- */
+
+#testimonials {
+    width: 95%;
+    margin: 0 auto;
+    background-color: var(--blue-green-sky);
+    border-radius: 2rem;
+    padding: 3rem 0rem;
+    text-align: center;
+}
+
+#testimonials img {
+    width: 60%;
+}
+
+#testimonials .containerTesti {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    grid-gap: 1rem;
+    margin-top: 3rem;
+    color: #fff;
+}
+
+#testimonials h2 {
+    color: #fff;
+}
+
+#testimonials h4 {
+    color: #fff;
+    padding: 0rem;
+}
+
+
+
+/* -----------------Version Desktop ----------------- */
+
+@media (min-width: 1291px) {
+
 #testimonials {
     width: 1280px;
     margin: 0 auto;
@@ -15,11 +53,9 @@
     color: #fff;
 }
 
-#testimonials h2 {
-    color: #fff;
-}
-
 #testimonials .profil h4 {
     padding: 0rem;
     color: #fff;
+}
+
 }

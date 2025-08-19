@@ -1,3 +1,5 @@
+/* -----------------Version Mobile ----------------- */
+
 #footer {
     width: 100%;
     margin: 0 auto;
@@ -19,12 +21,12 @@
 }
 
 #footer .containerFooter {
-    width: 1280px;
     margin: 0 auto;
     display: grid;
     grid-template-columns: repeat(1, 1fr);
     grid-gap: 2rem;
     align-items: center;
+    text-align: center;
 }
 
 #footer p {
@@ -35,8 +37,9 @@
     margin-top: 3rem
 }
 
+/* -----------------Version Desktop ----------------- */
 
-@media (min-width: 750px) {
+@media (min-width: 1291px) {
 
 #footer {
     width: 100%;
