@@ -1,5 +1,5 @@
 services:  
-  reverseproxy:
+  proxy:
     image: nginx:latest
     ports:
       - 81:80
