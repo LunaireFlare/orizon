@@ -1,3 +1,17 @@
+BEGIN;
+
+DROP TABLE IF EXISTS conversation_user;
+DROP TABLE IF EXISTS event_participant;
+DROP TABLE IF EXISTS event_interest;
+DROP TABLE IF EXISTS interest_user;
+DROP TYPE IF EXISTS status_event CASCADE;
+DROP TYPE IF EXISTS status_user CASCADE;
+DROP TABLE IF EXISTS message;
+DROP TABLE IF EXISTS conversation;
+DROP TABLE IF EXISTS event;
+DROP TABLE IF EXISTS interest;
+DROP TABLE IF EXISTS "user";
+
 CREATE TABLE conversation_user (
     conversation_id INTEGER NOT NULL,
     user_id INTEGER NOT NULL,
@@ -11,9 +25,9 @@ CREATE TABLE event_participant (
 );
 
 CREATE TABLE interest_user (
-    interest INTEGER NOT NULL,
+    interest_id INTEGER NOT NULL,
     user_id INTEGER NOT NULL,
-    PRIMARY KEY (interest, user_id)
+    PRIMARY KEY (interest_id, user_id)
 );
 
 CREATE TABLE event_interest (
@@ -29,7 +43,7 @@ CREATE TYPE status_user AS ENUM (
     'désactivé'
 );
 
-CREATE TABLE user (
+CREATE TABLE "user" (
     id INTEGER GENERATED ALWAYS AS IDENTITY NOT NULL PRIMARY KEY,
     lastname TEXT NOT NULL,
     firstname TEXT NOT NULL,
@@ -39,7 +53,7 @@ CREATE TABLE user (
     city TEXT NOT NULL,
     date_of_birth DATE NOT NULL,
     role TEXT NOT NULL,
-    photo TEXT DEFAULT ,
+    photo TEXT,
     status status_user DEFAULT 'en_attente'
 );
 
@@ -67,7 +81,7 @@ CREATE TABLE event (
     name TEXT NOT NULL,
     start_date TIMESTAMP NOT NULL CHECK (start_date > CURRENT_TIMESTAMP),
     end_date TIMESTAMP NOT NULL CHECK ( end_date > start_date),
-    description TEXY NOT NULL,
+    description TEXT NOT NULL,
     address TEXT NOT NULL,
     zip_code VARCHAR(5) NOT NULL CHECK ( zip_code ~ '^\d{5}$'),
     city TEXT NOT NULL,
@@ -80,3 +94,21 @@ CREATE TABLE interest (
     name TEXT NOT NULL
 );
 
+ALTER TABLE conversation_user ADD FOREIGN KEY (conversation_id) REFERENCES conversation (id);
+ALTER TABLE conversation_user ADD FOREIGN KEY (user_id) REFERENCES "user" (id);
+
+ALTER TABLE event_participant ADD FOREIGN KEY (event_id) REFERENCES event (id);
+ALTER TABLE event_participant ADD FOREIGN KEY (participant_id) REFERENCES "user" (id);
+
+ALTER TABLE interest_user ADD FOREIGN KEY (interest_id) REFERENCES interest (id);
+ALTER TABLE interest_user ADD FOREIGN KEY (user_id) REFERENCES "user" (id);
+
+ALTER TABLE event_interest ADD FOREIGN KEY (event_id) REFERENCES event (id);
+ALTER TABLE event_interest ADD FOREIGN KEY (interest_id) REFERENCES interest (id);
+
+ALTER TABLE message ADD FOREIGN KEY (sender_id) REFERENCES "user" (id);
+ALTER TABLE message ADD FOREIGN KEY (conversation_id) REFERENCES conversation (id);
+
+ALTER TABLE event ADD FOREIGN KEY (creator_id) REFERENCES "user" (id);
+
+COMMIT;
