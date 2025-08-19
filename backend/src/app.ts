@@ -18,7 +18,5 @@ app.get("/", (_req, res) => {
     res.send("Welcome to the backend server!");
 });
 
-app.use(notFound);
-app.use(errorHandler);
 
 export { app };
