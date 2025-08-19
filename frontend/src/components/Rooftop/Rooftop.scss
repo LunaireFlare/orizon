@@ -1,0 +1,85 @@
+/* -----------------Version Mobile ----------------- */
+
+#elemRoof {
+    display: none;
+}
+#navMobile {
+    width: 95%;
+    margin: 0 auto;
+    background-color: #fff;
+    border-radius: 1rem;
+    padding: 0.7rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+#navMobile  img {
+    width: 10rem;
+}
+
+#navMobile .navButton img {
+    width: 3rem;
+}
+
+
+/* -----------------Version Desktop ----------------- */
+
+@media (min-width: 1291px) {
+
+#navMobile {
+    display: none;
+}
+
+#elemRoof {
+    width: 1280px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#containerHead {
+    width: 1280px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: repeat(1, 1fr);
+    grid-gap: 1rem;
+    align-items: center;
+    padding: 3rem 0rem;
+  }
+
+.buttonBox {
+    background-color: #fff;
+    width: 20rem;
+    padding: 0.5rem;
+    display: flex;
+    justify-content: space-around;
+    border-radius: 3rem;
+    max-height: 3rem;
+    align-items: center;
+}
+
+.buttonHover {
+    padding: 0.8rem 2.5rem;
+    border-radius: 3rem;
+    color: black;
+}
+
+.buttonHover a {
+    text-decoration: none;
+    font-size: 1rem;
+}
+
+.buttonHover2 a {
+    text-decoration: none;
+    font-size: 1rem;
+}
+
+.buttonHover2 a {
+    background-color: var(--blue-green-sky);
+    padding: 0.8rem 2.5rem;
+    border-radius: 3rem;
+    color: #fff;
+}
+}
