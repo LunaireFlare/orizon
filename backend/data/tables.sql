@@ -69,7 +69,6 @@ CREATE TABLE conversation (
     id INTEGER GENERATED ALWAYS AS IDENTITY NOT NULL PRIMARY KEY
 );
 
-
 CREATE TYPE status_event AS ENUM (
     'en_attente', 
     'valide', 
