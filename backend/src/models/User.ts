@@ -5,12 +5,6 @@ class User extends Model {};
 
 User.init(
     {
-        id: {
-            type: DataTypes.INTEGER,
-            primaryKey: true,
-            autoIncrement: true,
-            autoIncrementIdentity: true
-        },
         lastname: {
             type: DataTypes.TEXT,
             allowNull: false
@@ -22,7 +16,10 @@ User.init(
         email: {
             type: DataTypes.TEXT,
             allowNull: false,
-            unique: true
+            unique: true,
+            validate: {
+                isEmail: true
+            }
         },
         password: {
             type: DataTypes.TEXT,
@@ -30,7 +27,10 @@ User.init(
         },
         zip_code: {
             type: DataTypes.TEXT,
-            allowNull: false
+            allowNull: false,
+            validate: {
+                is: /^\d{5}$/
+            }
         },
         city: {
             type: DataTypes.TEXT,
@@ -48,14 +48,13 @@ User.init(
         photo: {
             type: DataTypes.TEXT,
             allowNull: false,
-            // default: ???
+            // defaultValue: '<link>'
         },
         status: {
             type: DataTypes.ENUM,
             allowNull: false,
-            defaultValue: 'PENDING'
+            defaultValue: 'en_attente'
         }
-
     },
     {
         sequelize: sequelize,

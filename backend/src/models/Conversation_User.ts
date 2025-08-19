@@ -5,13 +5,22 @@ class Conversation_User extends Model {}
 
 Conversation_User.init(
     {
-        conversation_id: DataTypes.INTEGER,
-        user_id: DataTypes.INTEGER
+        conversation_id: {
+            type : DataTypes.INTEGER,
+            allowNull: false,
+            primaryKey: true
+        },
+        
+        user_id: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            primaryKey: true
+        }
     },
-
     {
         sequelize: sequelize,
-        tableName: 'conversation_user'
+        tableName: 'conversation_user',
+        timestamps: false
     }
 );
 
