@@ -51,7 +51,7 @@ User.init(
             // defaultValue: '<link>'
         },
         status: {
-            type: DataTypes.ENUM,
+            type: DataTypes.ENUM("en_attente", "valide", "bloqué","désactivé"),
             allowNull: false,
             defaultValue: 'en_attente'
         }
