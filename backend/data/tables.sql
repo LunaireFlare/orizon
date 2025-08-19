@@ -54,7 +54,9 @@ CREATE TABLE "user" (
     date_of_birth DATE NOT NULL,
     role TEXT NOT NULL,
     photo TEXT,
-    status status_user DEFAULT 'en_attente'
+    status status_user DEFAULT 'en_attente',
+    created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamptz
 );
 
 CREATE TABLE message (
@@ -62,11 +64,15 @@ CREATE TABLE message (
     content TEXT NOT NULL,
     date TIMESTAMP NOT NULL,
     sender_id INT NOT NULL,
-    conversation_id INT NOT NULL
+    conversation_id INT NOT NULL,
+    created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamptz
 );
 
 CREATE TABLE conversation (
-    id INTEGER GENERATED ALWAYS AS IDENTITY NOT NULL PRIMARY KEY
+    id INTEGER GENERATED ALWAYS AS IDENTITY NOT NULL PRIMARY KEY,
+    created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamptz
 );
 
 CREATE TYPE status_event AS ENUM (
@@ -85,12 +91,16 @@ CREATE TABLE event (
     zip_code VARCHAR(5) NOT NULL CHECK ( zip_code ~ '^\d{5}$'),
     city TEXT NOT NULL,
     status status_event DEFAULT 'en_attente',
-    creator_id INT NOT NULL
+    creator_id INT NOT NULL,
+    created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamptz
 );
 
 CREATE TABLE interest (
     id INTEGER GENERATED ALWAYS AS IDENTITY NOT NULL PRIMARY KEY,
-    name TEXT NOT NULL
+    name TEXT NOT NULL,
+    created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamptz
 );
 
 ALTER TABLE conversation_user ADD FOREIGN KEY (conversation_id) REFERENCES conversation (id);
