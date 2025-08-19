@@ -37,7 +37,7 @@ Event.init(
             allowNull: false
         },
         status: {
-            type: DataTypes.ENUM,
+            type: DataTypes.ENUM('en_attente', 'valide', 'bloqué'),
             allowNull: false,
             defaultValue: 'en_attente'
         }

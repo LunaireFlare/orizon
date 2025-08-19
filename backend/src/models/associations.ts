@@ -4,9 +4,12 @@ import { User } from './User.js';
 import { Message } from './Message.js';
 import { Conversation } from './Conversation.js';
 import { Event } from './Event.js';
+import { Interest } from './Interest.js';
 
 import { Conversation_User } from './Conversation_User.js';
 import { Event_Participant } from './Event_Participant.js';
+import { Interest_User } from './Interest_User.js';
+import { Event_Interest } from './Event_Interest.js';
 
 /* USER-MESSAGE */
 
@@ -76,4 +79,36 @@ Event.belongsToMany(User, {
     as: 'users'
 });
 
-export { sequelize, User, Conversation, Message, Event, Conversation_User, Event_Participant };
+/* INTEREST-USER */
+
+Interest.belongsToMany(User, {
+    foreignKey: 'interest_id',
+    otherKey: 'user_id',
+    through: Interest_User,
+    as: 'users'
+});
+
+User.belongsToMany(Interest, {
+    foreignKey: 'user_id',
+    otherKey: 'interest_id',
+    through: Interest_User,
+    as: 'interests'
+});
+
+/* INTEREST-EVENT */
+
+Interest.belongsToMany(Event, {
+    foreignKey: 'interest_id',
+    otherKey: 'event_id',
+    through: Event_Interest,
+    as: 'events'
+});
+
+Event.belongsToMany(Interest, {
+    foreignKey: 'event_id',
+    otherKey: 'interest_id',
+    through: Event_Interest,
+    as: 'interests'
+});
+
+export { sequelize, User, Conversation, Message, Event, Interest, Conversation_User, Event_Participant, Interest_User, Event_Interest };
