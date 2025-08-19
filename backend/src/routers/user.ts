@@ -3,7 +3,8 @@ import { userController } from "../controllers/user.js";
 const userRouter = Router();
 
 userRouter.route('/users')
-    .get(userController.index);
+    .get(userController.getAllUsers)
+    .post(userController.createUser)
 
 
 

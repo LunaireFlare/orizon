@@ -47,7 +47,7 @@ User.init(
         },
         photo: {
             type: DataTypes.TEXT,
-            allowNull: false,
+            allowNull: true,
             // defaultValue: '<link>'
         },
         status: {
