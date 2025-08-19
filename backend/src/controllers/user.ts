@@ -4,11 +4,39 @@ import { User } from '../models/associations.js';
 import { z } from "zod";
 
 const userController = {
+
+    /**
+     * Retourne la liste des utilisateurs.
+     * @param req
+     * @param res 
+     */
     async getAllUsers(req: Request, res: Response) {
         const users = await User.findAll();
         res.json(users);
     },
 
+    /**
+     * Retourne un utilisateur à partir de son id.
+     * @param req 
+     * @param res 
+     */
+    async getOneUser(req: Request, res: Response) {
+        const id = parseInt(req.params.id);
+
+        const user = await User.findByPk(id);
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found.' });
+        }
+
+        res.json(user);
+    },
+
+    /**
+     * Création d'un utilisateur.
+     * @param req
+     * @param res 
+     */
     async createUser(req: Request, res: Response) {
         const body = req.body;
 
@@ -21,7 +49,7 @@ const userController = {
             lastname: z.string().min(1).max(255),
             firstname: z.string().min(1).max(255),
             email: z.email(),
-            password: z.string().min(12).max(255),
+            password: z.string().min(8).max(255),
             zip_code: z.string().length(5).regex(/^\d{5}$/),
             city: z.string().min(1).max(255),
             date_of_birth: z.preprocess(

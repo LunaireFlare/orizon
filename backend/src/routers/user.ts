@@ -6,6 +6,7 @@ userRouter.route('/users')
     .get(userController.getAllUsers)
     .post(userController.createUser)
 
-
+userRouter.route('/users/:id')
+    .get(userController.getOneUser)
 
 export { userRouter}
