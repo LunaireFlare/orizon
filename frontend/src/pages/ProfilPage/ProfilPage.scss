@@ -1,0 +1,91 @@
+/* ----------------------------------- CONTENT --------------------------------- */
+
+/* *************** Version Mobile ************* */
+
+/* ------------- Pofil ---------------- */
+
+#containerProfil {
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 2rem 1rem;
+    margin-top: 2rem;
+}
+
+#containerProfil .headProfil {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.headProfil button {
+    margin-left: 0.5rem;
+}
+
+.headProfil .pathButton {
+    padding: 0.6rem 1rem;
+    font-size: 1rem;
+    background-color: var(--yelow-or);
+    border: none;
+    border-radius: 3rem;
+}
+
+.headProfil .delButton {
+    padding: 0.6rem 1rem;
+    font-size: 1rem;
+    background-color: rgb(39, 114, 253);
+    color: #fff;
+    border: none;
+    border-radius: 3rem;
+}
+
+.bodyProfil {
+    display: grid;
+    grid-template-columns: repeat(1, 2fr);
+    grid-gap: 0.2rem;
+}
+
+.bodyProfil img {
+    width: 100%;
+}
+
+.bodyProfil .intButton {
+    padding: 0.6rem 1.6rem;
+    font-size: 1rem;
+    background-color: rgb(38, 143, 94);
+    color: #fff;
+    border: none;
+    border-radius: 3rem;
+}
+
+.bodyProfil button {
+    margin-left: 0.5rem;
+}
+
+.bodyProfil .contentInterest {
+    display: flex;
+    padding-top: 1rem;
+}
+
+
+@media (min-width: 1291px) {
+
+#containerProfil {
+    width: 100%;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 2rem 1rem;
+    margin-top: 2rem;
+}
+
+#containerProfil .widthProfil {
+    width: 1280px;
+    margin: 0 auto;
+}
+
+.bodyProfil {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 2rem;
+}
+
+}
