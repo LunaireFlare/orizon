@@ -1,3 +1,35 @@
+/* -----------------Version Mobile ----------------- */
+
+#elemRoof {
+    display: none;
+}
+#navMobile {
+    width: 95%;
+    margin: 0 auto;
+    background-color: #fff;
+    border-radius: 1rem;
+    padding: 0.7rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+#navMobile  img {
+    width: 10rem;
+}
+
+#navMobile .navButton img {
+    width: 3rem;
+}
+
+
+/* -----------------Version Desktop ----------------- */
+
+@media (min-width: 750px) {
+
+#navMobile {
+    display: none;
+}
+
 #elemRoof {
     width: 1280px;
     margin: 0 auto;
@@ -5,6 +37,17 @@
     justify-content: space-between;
     align-items: center;
 }
+
+#containerHead {
+    width: 1280px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: repeat(1, 1fr);
+    grid-gap: 1rem;
+    align-items: center;
+    padding: 3rem 0rem;
+  }
 
 .buttonBox {
     background-color: #fff;
@@ -38,4 +81,5 @@
     padding: 0.8rem 2.5rem;
     border-radius: 3rem;
     color: #fff;
+}
 }
