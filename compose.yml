@@ -8,7 +8,7 @@ services:
     depends_on:
       - backend
       # - backoffice
-      # - frontend
+      - frontend
 
   database:
     image: postgres:latest
@@ -17,8 +17,10 @@ services:
       POSTGRES_PASSWORD: seniorlove
       POSTGRES_DB: seniorlove
     volumes:
-      - ./data:/docker-entrypoint-initdb.d/
-      - ./database:/var/lib/postgresql/data
+      - ./backend/data:/docker-entrypoint-initdb.d/
+      # .database/ ==> crée dossier database local, risque de corruption et pas de gestion automatique par Docker, comportement erratique selon environnement.
+      # database/ + volume nommé en fin de fichier ==> séparation des responsabilités, moins de risques de corruption, meilleures perfs (recommandé en prod)
+      - database:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U seniorlove -d seniorlove"]
       interval: 15s
@@ -38,18 +40,20 @@ services:
     depends_on:
       database:
         condition: service_healthy
-    command: npm run start
 
-  # frontend:
-  #   build:
-  #     context: ./frontend
-  #     dockerfile: Dockerfile
-  #   ports: 
-  #     - 4173:4173
-  #   volumes:
-  #     - ./frontend:/app
-  #     - /app/node_modules
-  #   command: npm run dev
+  frontend:
+    build:
+      context: ./frontend
+      # ! quand on passera en prod, utiliser `Dockerfile.prod` (utilise `build` au lieu de `dev`)
+      dockerfile: Dockerfile.dev
+    # ports:
+      # dev
+      # - 5173:5173
+      # prod
+      # - 4173:4173
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
 
   # backoffice:
   #   build:
@@ -64,3 +68,6 @@ services:
   #     database:
   #       condition: service_healthy
   #   command: npm run dev
+
+volumes:
+  database:
