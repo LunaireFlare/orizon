@@ -6,7 +6,7 @@ export function bodySanitizerMiddleware(req: Request, res: Response, next: NextF
 
   if (!body) {
     return next();
-  }
+  };
   
   Object.keys(body).forEach(key => {
     if (typeof body[key] === 'string') {
