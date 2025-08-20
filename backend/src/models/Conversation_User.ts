@@ -1,27 +1,31 @@
-import { Model, DataTypes } from 'sequelize';
+import "dotenv/config";
 import { sequelize } from '../database/sequelize/client.js';
 
-class Conversation_User extends Model {}
+import {
+    Table,
+    Column,
+    Model,
+    AllowNull,
+    DataType,
+    PrimaryKey
+} from "sequelize-typescript";
 
-Conversation_User.init(
-    {
-        conversation_id: {
-            type : DataTypes.INTEGER,
-            allowNull: false,
-            primaryKey: true
-        },
-        
-        user_id: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            primaryKey: true
-        }
-    },
-    {
-        sequelize: sequelize,
-        tableName: 'conversation_user',
-        timestamps: false
-    }
-);
+@Table({
+    tableName: "conversation_user",
+    timestamps: true,
+})
 
-export { Conversation_User };
+export class Conversation_User extends Model {
+    @PrimaryKey
+    @AllowNull(false)
+    @Column(DataType.INTEGER)
+    declare conversation_id: number;
+
+    @PrimaryKey
+    @AllowNull(false)
+    @Column(DataType.INTEGER)
+    declare user_id: number;
+}
+
+sequelize.addModels([Conversation_User]);
+
