@@ -7,7 +7,7 @@ import {
 } from "sequelize-typescript";
 
 @Table({
-    tableName: "user",
+    tableName: "conversation",
     timestamps: true,
     createdAt: "created_at",
     updatedAt: "updated_at"

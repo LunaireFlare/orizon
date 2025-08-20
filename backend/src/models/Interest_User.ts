@@ -11,20 +11,20 @@ import {
 } from "sequelize-typescript";
 
 @Table({
-    tableName: "user",
+    tableName: "interest_user",
     timestamps: true,
 })
 
 export class Interest_User extends Model {
+    @PrimaryKey
     @AllowNull(false)
     @Column(DataType.INTEGER)
-    @PrimaryKey
-    declare interest_id: Number;
+    declare interest_id: number;
 
+    @PrimaryKey
     @AllowNull(false)
     @Column(DataType.INTEGER)
-    @PrimaryKey
-    declare user_id: Number;
+    declare user_id: number;
 }
 
 sequelize.addModels([Interest_User]);
