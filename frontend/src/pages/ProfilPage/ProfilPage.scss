@@ -12,9 +12,9 @@
 }
 
 #containerProfil .headProfil {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    display: grid;
+    grid-template-columns: repeat(1, fr);
+    margin-bottom: 1rem;
 }
 
 .headProfil button {
@@ -22,20 +22,21 @@
 }
 
 .headProfil .pathButton {
-    padding: 0.6rem 1rem;
-    font-size: 1rem;
+    padding: 0.6rem 0.8rem;
+    font-size: 0.8rem;
     background-color: var(--yelow-or);
     border: none;
     border-radius: 3rem;
 }
 
 .headProfil .delButton {
-    padding: 0.6rem 1rem;
-    font-size: 1rem;
+    padding: 0.6rem 0.8rem;
+    font-size: 0.8rem;
     background-color: rgb(39, 114, 253);
     color: #fff;
     border: none;
     border-radius: 3rem;
+    margin-top: 0.5rem;
 }
 
 .bodyProfil {
@@ -66,8 +67,57 @@
     padding-top: 1rem;
 }
 
+.bioDescription {
+    text-align: justify;
+}
+
+.bodyProfil .buttonOnWhite {
+    margin: 0 auto;
+    display: block;
+    margin-top: 3rem;
+}
+
+/* ------------- Event ---------------- */
+
+#fullContainerProfil #eventCreate {
+    width: 95%;
+    margin: 0 auto;
+    margin-top: 5rem;
+}
+
+#fullContainerProfil #eventParticped {
+    width: 95%;
+    margin: 0 auto;
+    margin-top: 5rem;
+}
+
+#fullContainerProfil #eventBefore {
+    width: 95%;
+    margin: 0 auto;
+    margin-top: 5rem;
+}
+
+
+/* *************** Version Desktop ************* */
+
 
 @media (min-width: 1291px) {
+
+#containerProfil .headProfil {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.headProfil .pathButton {
+    padding: 0.6rem 1rem;
+    font-size: 1rem;
+}
+    
+.headProfil .delButton {
+    padding: 0.6rem 1rem;
+    font-size: 1rem;
+    }
 
 #containerProfil {
     width: 100%;
@@ -86,6 +136,23 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-gap: 2rem;
+}
+
+
+/* ------------- Event ---------------- */
+
+
+#fullContainerProfil #eventCreate {
+    width: 1280px;
+}
+
+#fullContainerProfil #eventParticped {
+    width: 1280px;
+
+}
+
+#fullContainerProfil #eventBefore {
+    width: 1280px;
 }
 
 }
