@@ -9,6 +9,8 @@ import { notFound, errorHandler } from './middlewares/error.js';
 import { bodySanitizerMiddleware } from './middlewares/body-sanitizer.js';
 
 const app = express();
+// Sécurité
+app.disable('x-powered-by');
 
 // Sécurité
 app.disable('x-powered-by');

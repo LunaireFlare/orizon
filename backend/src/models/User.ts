@@ -65,7 +65,7 @@ export class User extends Model {
 
     @AllowNull(true)
     @Column(DataType.TEXT)
-    declare description: string;
+    declare description: string | null;
 
     @AllowNull(false)
     @Default("en_attente")
