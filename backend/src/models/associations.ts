@@ -69,7 +69,7 @@ User.belongsToMany(Event, {
     foreignKey: 'participant_id',
     otherKey: 'event_id',
     through: Event_Participant,
-    as: 'events'
+    as: 'eventsParticipant'
 });
 
 Event.belongsToMany(User, {

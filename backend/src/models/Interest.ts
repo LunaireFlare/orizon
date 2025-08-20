@@ -1,19 +1,25 @@
-import { Model, DataTypes } from 'sequelize';
+import "dotenv/config";
 import { sequelize } from '../database/sequelize/client.js';
 
-class Interest extends Model {};
+import {
+    Table,
+    Column,
+    Model,
+    AllowNull,
+    DataType,
+} from "sequelize-typescript";
 
-Interest.init(
-    {
-        name: {
-            type: DataTypes.TEXT,
-            allowNull: false
-        }
-    },
-    {
-        sequelize: sequelize,
-        tableName: 'interest'
-    }
-);
+@Table({
+    tableName: "interest",
+    timestamps: true,
+    createdAt: "created_at",
+    updatedAt: "updated_at"
+})
 
-export { Interest };
+export class Interest extends Model {
+    @AllowNull(false)
+    @Column(DataType.TEXT)
+    declare name: string;
+};
+
+sequelize.addModels([Interest]);
