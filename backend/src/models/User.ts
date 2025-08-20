@@ -63,6 +63,10 @@ export class User extends Model {
     @Column(DataType.TEXT)
     declare photo: string | null;
 
+    @AllowNull(true)
+    @Column(DataType.TEXT)
+    declare description: string;
+
     @AllowNull(false)
     @Default("en_attente")
     @Column(DataType.ENUM("en_attente", "valide", "bloqué", "désactivé"))
