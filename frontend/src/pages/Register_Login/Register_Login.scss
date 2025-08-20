@@ -15,17 +15,17 @@
         border-radius: 4px;
     }
 
-    button {
-        padding: 0.75rem;
-        background-color: #1976d2;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
+    .buttonHover {
+        padding: 0.8rem 2.5rem;
+        border-radius: 3rem;
+        border-color: transparent;
+        color: #fff;
+        background-color: var(--blue-green-sky);
+    }
 
-        &:hover {
-            background-color: #125aa3;
-        }
+    .buttonHover a {
+        text-decoration: none;
+        font-size: 1rem;
     }
 
     .error-msg {
@@ -53,7 +53,7 @@
         border-radius: 8px;
         font-size: 1.2rem;
         font-weight: bold;
-        color: #2f3e46;
+        color: #047925;
         text-align: center;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     }

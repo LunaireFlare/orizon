@@ -60,7 +60,7 @@ export default function Login() {
                     onChange={handleChange}
                     required
                 />
-                <button type="submit">Se connecter</button>
+                <button type="submit" className='buttonHover'>Se connecter</button>
                 {error && <p className="error-msg">{error}</p>}
             </form>
 

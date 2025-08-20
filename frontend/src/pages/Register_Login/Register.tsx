@@ -81,7 +81,7 @@ export default function Register() {
                     onChange={handleChange}
                     required
                 />
-                <button type="submit">S'inscrire</button>
+                <button className="buttonHover" type="submit">S'inscrire</button>
                 {error && <p className="error-msg">{error}</p>}
             </form>
             {'}'}

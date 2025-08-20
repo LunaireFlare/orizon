@@ -17,7 +17,7 @@ export default function Rooftop() {
             </div>
 
             <div id="elemRoof">
-                <NavLink to="/"> {/* ✅ Redirection via logo desktop */}
+                <NavLink to="/"> {/*  Redirection via logo desktop */}
                     <img src={logo} style={{ width: "15rem" }} alt="logo orizon" />
                 </NavLink>
 
