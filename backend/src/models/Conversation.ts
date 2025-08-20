@@ -1,14 +1,18 @@
-import { Model } from 'sequelize';
+import "dotenv/config";
 import { sequelize } from '../database/sequelize/client.js';
 
-class Conversation extends Model {};
+import {
+    Table,
+    Model,
+} from "sequelize-typescript";
 
-Conversation.init(
-    {},
-    {
-        sequelize: sequelize,
-        tableName: 'conversation'
-    }
-);
+@Table({
+    tableName: "user",
+    timestamps: true,
+    createdAt: "created_at",
+    updatedAt: "updated_at"
+})
 
-export { Conversation };
+export class Conversation extends Model {};
+
+sequelize.addModels([Conversation]);

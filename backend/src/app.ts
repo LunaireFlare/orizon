@@ -17,7 +17,5 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(router);
 
-app.use(notFound);
-app.use(errorHandler);
 
 export { app };
