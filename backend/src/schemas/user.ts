@@ -18,5 +18,6 @@ export const userSchema = z.object({
             ),
             role: z.string().default("user"),
             photo: z.string().nullable().default(null),
+            description: z.string().min(1).max(255),
             status: z.enum(["en_attente", "valide", "bloqué", "désactivé"]).default("en_attente")
         });
