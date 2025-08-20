@@ -1,72 +1,72 @@
-services:  
-  proxy:
-    image: nginx:latest
-    ports:
-      - 81:80
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
-    depends_on:
-      - backend
-      - backoffice
-      - frontend
+services:
+    proxy:
+        image: nginx:latest
+        ports:
+            - 81:80
+        volumes:
+            - ./nginx.conf:/etc/nginx/nginx.conf
+        depends_on:
+            - backend
+            - backoffice
+            - frontend
 
-  database:
-    image: postgres:latest
-    environment:
-      POSTGRES_USER: seniorlove
-      POSTGRES_PASSWORD: seniorlove
-      POSTGRES_DB: seniorlove
-    volumes:
-      - ./backend/data:/docker-entrypoint-initdb.d/
-      # .database/ ==> crée dossier database local, risque de corruption et pas de gestion automatique par Docker, comportement erratique selon environnement.
-      # database/ + volume nommé en fin de fichier ==> séparation des responsabilités, moins de risques de corruption, meilleures perfs (recommandé en prod)
-      - database:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U seniorlove -d seniorlove"]
-      interval: 15s
-      timeout: 5s
-      retries: 5
-      start_period: 15s
+    database:
+        image: postgres:latest
+        environment:
+            POSTGRES_USER: seniorlove
+            POSTGRES_PASSWORD: seniorlove
+            POSTGRES_DB: seniorlove
+        volumes:
+            - ./backend/data:/docker-entrypoint-initdb.d/
+            # .database/ ==> crée dossier database local, risque de corruption et pas de gestion automatique par Docker, comportement erratique selon environnement.
+            # database/ + volume nommé en fin de fichier ==> séparation des responsabilités, moins de risques de corruption, meilleures perfs (recommandé en prod)
+            - database:/var/lib/postgresql/data
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U seniorlove -d seniorlove"]
+            interval: 15s
+            timeout: 5s
+            retries: 5
+            start_period: 15s
 
-  backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    # ports:
-    #   - 3000:3000
-    volumes:
-      - ./backend:/app
-      - /app/node_modules
-    depends_on:
-      database:
-        condition: service_healthy
+    backend:
+        build:
+            context: ./backend
+            dockerfile: Dockerfile
+        # ports:
+        #   - 3000:3000
+        volumes:
+            - ./backend:/app
+            - /app/node_modules
+        depends_on:
+            database:
+                condition: service_healthy
 
-  frontend:
-    build:
-      context: ./frontend
-      # ! quand on passera en prod, utiliser `Dockerfile.prod` (utilise `build` au lieu de `dev`)
-      dockerfile: Dockerfile.dev
-    # ports:
-      # dev
-      # - 5173:5173
-      # prod
-      # - 4173:4173
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
+    frontend:
+        build:
+            context: ./frontend
+            # ! quand on passera en prod, utiliser `Dockerfile.prod` (utilise `build` au lieu de `dev`)
+            dockerfile: Dockerfile.dev
+        # ports:
+        # dev
+        # - 5173:5173
+        # prod
+        # - 4173:4173
+        volumes:
+            - ./frontend:/app
+            - /app/node_modules
 
-  backoffice:
-    build:
-      context: ./backoffice
-      dockerfile: Dockerfile.dev
-    # ports: 
-    #   - 5174:5173
-    volumes:
-      - ./backoffice:/app
-      - /app/node_modules
-    depends_on:
-      database:
-        condition: service_healthy
+    backoffice:
+        build:
+            context: ./backoffice
+            dockerfile: Dockerfile.dev
+        # ports:
+        #   - 5174:5173
+        volumes:
+            - ./backoffice:/app
+            - /app/node_modules
+        depends_on:
+            database:
+                condition: service_healthy
 
 volumes:
-  database:
+    database:
