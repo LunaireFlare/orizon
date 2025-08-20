@@ -1,12 +1,12 @@
 import { Router } from 'express';
-const router = Router();
+const mainRouter = Router();
 
 import { userRouter } from './user.js';
 
-router.get('/', (_req, res) => {
+mainRouter.get('/', (_req, res) => {
     res.send('Welcome to the backend server!');
 });
 
-router.use(userRouter);
+mainRouter.use(userRouter);
 
-export { router }
+export { mainRouter }
