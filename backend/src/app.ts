@@ -6,7 +6,7 @@ import rateLimit from './config/rate_limit.js';
 
 import { mainRouter } from './routers/index.js';
 import { notFound, errorHandler } from './middlewares/error.js';
-// import { bodySanitizerMiddleware } from './middlewares/body-sanitizer.js';
+import { bodySanitizerMiddleware } from './middlewares/body-sanitizer.js';
 
 const app = express();
 
@@ -19,7 +19,7 @@ app.use(cors({ origin: '*' }));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-// app.use(bodySanitizerMiddleware); // Pour nettoyer les données
+app.use(bodySanitizerMiddleware); // Pour nettoyer les données
 
 app.use(mainRouter);
 
