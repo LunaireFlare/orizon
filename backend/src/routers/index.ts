@@ -2,6 +2,7 @@ import { Router } from 'express';
 const mainRouter = Router();
 
 import { userRouter } from './user.js';
+import { interestRouter } from './interest.js';
 
 // route de test
 mainRouter.get('/', (_req, res) => {
@@ -9,5 +10,7 @@ mainRouter.get('/', (_req, res) => {
 });
 
 mainRouter.use(userRouter);
+mainRouter.use(interestRouter);
+
 
 export { mainRouter }
