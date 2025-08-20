@@ -7,7 +7,7 @@ services:
       - ./nginx.conf:/etc/nginx/nginx.conf
     depends_on:
       - backend
-      # - backoffice
+      - backoffice
       - frontend
 
   database:
@@ -55,19 +55,18 @@ services:
       - ./frontend:/app
       - /app/node_modules
 
-  # backoffice:
-  #   build:
-  #     context: ./backoffice
-  #     dockerfile: Dockerfile
-  #   ports: 
-  #     - 4174:4173
-  #   volumes:
-  #     - ./backoffice:/app
-  #     - /app/node_modules
-  #   depends_on:
-  #     database:
-  #       condition: service_healthy
-  #   command: npm run dev
+  backoffice:
+    build:
+      context: ./backoffice
+      dockerfile: Dockerfile.dev
+    # ports: 
+    #   - 5174:5173
+    volumes:
+      - ./backoffice:/app
+      - /app/node_modules
+    depends_on:
+      database:
+        condition: service_healthy
 
 volumes:
   database:
