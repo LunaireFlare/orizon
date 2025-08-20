@@ -1,7 +1,7 @@
 import { Response, Request } from "express";
 import argon2 from "argon2";
 import { User } from '../models/associations.js';
-import { z } from "zod";
+import { userSchema } from "../schemas/user.js";
 
 const userController = {
 
@@ -11,7 +11,18 @@ const userController = {
      * @param res 
      */
     async getAllUsers(req: Request, res: Response) {
-        const users = await User.findAll();
+        const users = await User.findAll(
+        //     {
+        //     include: [
+        //         {
+        //             association: 'interests',
+        //         },
+        //         {
+        //             association: 'events',
+        //         },
+        //     ]
+        // }
+    );
         res.json(users);
     },
 
@@ -39,36 +50,13 @@ const userController = {
      */
     async createUser(req: Request, res: Response) {
         const body = req.body;
-
-        const sixtyYearsAgo = (): Date => {
-            const today = new Date();
-            return new Date(today.getFullYear() - 60, today.getMonth(), today.getDate());
-        };
-
-        const userSchema = z.object({
-            lastname: z.string().min(1).max(255),
-            firstname: z.string().min(1).max(255),
-            email: z.email(),
-            password: z.string().min(8).max(255),
-            zip_code: z.string().length(5).regex(/^\d{5}$/),
-            city: z.string().min(1).max(255),
-            date_of_birth: z.preprocess(
-                (val) => (val ? new Date(val as string) : val),
-                z.date().max(sixtyYearsAgo(), "Vous devez avoir au moins 60 ans")
-            ),
-            role: z.string().default("user"),
-            photo: z.string().nullable().default(null),
-            status: z.enum(["en_attente", "valide", "bloqué", "désactivé"]).default("en_attente")
-        });
-
         const { error, data } = userSchema.safeParse(body);
 
         if (error) {
             return res.status(400).json({ error: error.message });
         };
 
-        const { lastname, firstname, email, password, zip_code, city, date_of_birth, role, photo, status } = data;
-
+        const { lastname, firstname, email, password, zip_code, city, date_of_birth, photo } = data;
         const userExists = await User.findOne({ where: { email: email } });
 
         if (userExists !== null) {
@@ -76,12 +64,74 @@ const userController = {
         };
 
         const hashedPassword = await argon2.hash(password);
-
-        const createdUser = await User.create({ lastname, firstname, email, password: hashedPassword, zip_code, city, date_of_birth, role, photo, status });
+        const createdUser = await User.create({ lastname, firstname, email, password: hashedPassword, zip_code, city, date_of_birth, photo });
 
         res.status(201).json(createdUser);
     },
 
+
+    /**
+     * Mise à jour d'un utilisateur.
+     * @param req 
+     * @param res 
+     */
+    async updateUser(req: Request, res: Response) {
+
+        const id = parseInt(req.params.id);
+        const body = req.body;
+        const user = await User.findByPk(id);
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found.' });
+        };
+
+        const { error, data } = userSchema.safeParse(body);
+
+        if (error) {
+            return res.status(400).json({ error: error.message });
+        }
+
+        const { lastname, firstname, email, password, zip_code, city, date_of_birth, photo } = data;
+        const userExists = await User.findOne({ where: { email: email } });
+
+        if (userExists !== null && userExists.id !== id) {
+            return res.status(400).json({ error: 'Email already exists.' });
+        };
+
+        const hashedPassword = await argon2.hash(password);
+
+        user.lastname = lastname;
+        user.firstname = firstname;
+        user.email = email;
+        user.password = hashedPassword;
+        user.zip_code = zip_code;
+        user.city = city;
+        user.date_of_birth = date_of_birth;
+        user.photo = photo;
+
+        await user.save();
+
+        res.json(user);
+    },
+
+    /**
+     * Suppression d'un utilisateur
+     * @param req 
+     * @param res 
+     */
+    async deleteUser(req: Request, res: Response) {
+        const id = parseInt(req.params.id);
+
+        const user = await User.findByPk(id);
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found.' });
+        }
+
+        await user.destroy();
+
+        res.status(204).end();
+    }
 }
 
 export { userController }
