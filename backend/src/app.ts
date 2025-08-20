@@ -4,7 +4,7 @@ import express from 'express';
 import cors from 'cors';
 import rateLimit from './config/rate_limit.js';
 
-import { router } from './routers/router.js';
+import { router } from './routers/index.js';
 import { notFound, errorHandler } from './middlewares/error.js';
 
 const app = express();
@@ -19,5 +19,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(router);
+
+app.use(notFound);
+app.use(errorHandler);
 
 export { app };
