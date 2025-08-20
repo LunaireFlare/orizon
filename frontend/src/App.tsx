@@ -1,4 +1,5 @@
 import HomePage from './pages/HomePage/HomePage.tsx';
+import ProfilPage from './pages/ProfilPage/ProfilPage.tsx';
 import './App.scss';
 import './assets/styles/index.scss'
 
@@ -8,9 +9,9 @@ function App() {
   return (
     <div>
 
-      <Routes>
+    <Routes>
         <Route path="/" element={<HomePage />} />
-        {/* <Route path="/signup" element={<Signup />} /> */}
+        <Route path="/profil" element={<ProfilPage />} />
     </Routes>
 
     </div>
