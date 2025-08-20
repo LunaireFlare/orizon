@@ -1,5 +1,5 @@
 import { Response, Request } from "express";
-import argon2 from "argon2";
+import * as argon2 from "argon2";
 import { User } from '../models/associations.js';
 import { userSchema } from "../schemas/user.js";
 
@@ -56,7 +56,7 @@ const userController = {
             return res.status(400).json({ error: error.message });
         };
 
-        const { lastname, firstname, email, password, zip_code, city, date_of_birth, photo } = data;
+        const { lastname, firstname, email, password, zip_code, city, date_of_birth, photo, description } = data;
         const userExists = await User.findOne({ where: { email: email } });
 
         if (userExists !== null) {
@@ -64,7 +64,7 @@ const userController = {
         };
 
         const hashedPassword = await argon2.hash(password);
-        const createdUser = await User.create({ lastname, firstname, email, password: hashedPassword, zip_code, city, date_of_birth, photo });
+        const createdUser = await User.create({ lastname, firstname, email, password: hashedPassword, zip_code, city, date_of_birth, photo, description });
 
         res.status(201).json(createdUser);
     },
@@ -91,7 +91,7 @@ const userController = {
             return res.status(400).json({ error: error.message });
         }
 
-        const { lastname, firstname, email, password, zip_code, city, date_of_birth, photo } = data;
+        const { lastname, firstname, email, password, zip_code, city, date_of_birth, photo, description } = data;
         const userExists = await User.findOne({ where: { email: email } });
 
         if (userExists !== null && userExists.id !== id) {
@@ -108,6 +108,7 @@ const userController = {
         user.city = city;
         user.date_of_birth = date_of_birth;
         user.photo = photo;
+        user.description = description;
 
         await user.save();
 
