@@ -1,51 +1,59 @@
-import { Model, DataTypes } from 'sequelize';
+import "dotenv/config";
 import { sequelize } from '../database/sequelize/client.js';
 
-class Event extends Model {};
+import {
+    Table,
+    Column,
+    Model,
+    AllowNull,
+    DataType,
+    Default
+} from "sequelize-typescript";
 
-Event.init(
-    {
-        name: {
-            type: DataTypes.TEXT,
-            allowNull: false
-        },
-        start_date: {
-            type: DataTypes.DATE,
-            allowNull: false
-        },
-        end_date: {
-            type: DataTypes.DATE,
-            allowNull: false
-        },
-        description: {
-            type: DataTypes.TEXT,
-            allowNull: false
-        },
-        address: {
-            type: DataTypes.TEXT,
-            allowNull: false
-        },
-        zip_code: {
-            type: DataTypes.TEXT,
-            allowNull: false,
-            validate: {
-                is: /^\d{5}$/
-            }
-        },
-        city: {
-            type: DataTypes.TEXT,
-            allowNull: false
-        },
-        status: {
-            type: DataTypes.ENUM('en_attente', 'valide', 'bloqué'),
-            allowNull: false,
-            defaultValue: 'en_attente'
-        }
-    },
-    {
-        sequelize: sequelize,
-        tableName: 'event'
-    }
-);
+@Table({
+    tableName: "event",
+    timestamps: true,
+    createdAt: "created_at",
+    updatedAt: "updated_at"
+})
 
-export { Event };
+export class Event extends Model {
+
+    @AllowNull(false)
+    @Column(DataType.TEXT)
+    declare name: string;
+
+    @AllowNull(false)
+    @Column(DataType.DATE)
+    declare start_date: Date;
+
+    @AllowNull(false)
+    @Column(DataType.DATE)
+    declare end_date: Date;
+
+    @AllowNull(false)
+    @Column(DataType.TEXT)
+    declare description: string;
+
+    @AllowNull(false)
+    @Column(DataType.TEXT)
+    declare address: string;
+
+    @AllowNull(false)
+    @Column({
+        type: DataType.TEXT,
+        validate: { is: /^\d{5}$/ }
+    })
+    declare zip_code: string;
+
+    @AllowNull(false)
+    @Column(DataType.TEXT)
+    declare city: string;
+
+    @AllowNull(false)
+    @Default("en_attente")
+    @Column(DataType.ENUM("en_attente", "valide", "bloqué"))
+    declare status: "en_attente" | "valide" | "bloqué";
+};
+
+sequelize.addModels([Event]);

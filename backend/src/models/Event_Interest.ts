@@ -1,27 +1,30 @@
-import { Model, DataTypes } from 'sequelize';
+import "dotenv/config";
 import { sequelize } from '../database/sequelize/client.js';
 
-class Event_Interest extends Model {}
+import {
+    Table,
+    Column,
+    Model,
+    AllowNull,
+    DataType,
+    PrimaryKey
+} from "sequelize-typescript";
 
-Event_Interest.init(
-    {
-        event_id: {
-            type : DataTypes.INTEGER,
-            allowNull: false,
-            primaryKey: true
-        },
-        
-        interest_id: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            primaryKey: true
-        }
-    },
-    {
-        sequelize: sequelize,
-        tableName: 'event_interest',
-        timestamps: false
-    }
-);
+@Table({
+    tableName: "event_interest",
+    timestamps: true,
+})
 
-export { Event_Interest };
+export class Event_Interest extends Model {
+    @PrimaryKey
+    @AllowNull(false)
+    @Column(DataType.INTEGER)
+    declare event_id: number;
+
+    @PrimaryKey
+    @AllowNull(false)
+    @Column(DataType.INTEGER)
+    declare interest_id: number;
+}
+
+sequelize.addModels([Event_Interest]);

@@ -3,7 +3,12 @@
         "target": "esnext",
         "module": "nodenext",
         "strict": true,
-        "skipLibCheck": true
+        "skipLibCheck": true,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "moduleResolution": "nodenext",
+        "esModuleInterop": true,
+        "allowJs": true
     },
-    "include": ["src/**/*.ts", "src/database/sequelize/client.ts"]
+    "include": ["src/**/*.ts", "src/database/sequelize/client.ts", "tests/**/*.ts"]
 }

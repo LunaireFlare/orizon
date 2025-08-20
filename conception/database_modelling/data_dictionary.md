@@ -14,6 +14,7 @@
 | date_of_birth | DATE | NOT NULL| L'âge de l'utilisateur |
 | role | TEXT | NOT NULL | Le rôle de l'utilisateur |
 | photo | TEXT | DEFAULT "lien"| photo de profil de l'utilisateur |
+| description | TEXT | | La description de l'utilisateur |
 | status | ENUM | NOT NULL DEFAULT PENDING | Le statut de l'utilisateur (valide, en attente de validation, bloqué, désactivé) |
 | created_at | TIMESTAMP | NOT NULL, DEFAULT CURRENT_TIMESTAMP | La date de création de l'utilisateur |
 | updated_at | TIMESTAMP | NOT NULL, DEFAULT CURRENT_TIMESTAMP | La date de dernière modification de l'utilisateur |
