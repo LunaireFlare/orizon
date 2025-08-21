@@ -19,6 +19,11 @@
     text-align: center;
 }
 
+#container-content .keyFigure span {
+    color: #0FA3B1;
+    font-weight: 900;
+}
+
 #container-content .blcFigure {
     margin: 0 auto;
     display: grid;
@@ -65,12 +70,10 @@
     margin-bottom: 1rem;
 }
 
-.containerAboutOne p {
-    text-align: justify;
-}
-
+.containerAboutOne p,
 .containerAboutTwo p {
     text-align: justify;
+    padding-top: 1rem;
 }
 
 @media (min-width: 1291px) {

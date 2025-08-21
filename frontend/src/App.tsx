@@ -1,5 +1,8 @@
 import HomePage from './pages/HomePage/HomePage.tsx';
 import ProfilPage from './pages/ProfilPage/ProfilPage.tsx';
+import CommunityPage from './pages/CommunityPage/CommunityPage.tsx';
+import EventPage from './pages/EventPage/EventPage.tsx';
+import MessagePage from './pages/MessagesPage/MessagesPage.tsx';
 import ErrorPage from './pages/ErrorPage/ErrorPage.tsx';
 
 import './App.scss';
@@ -15,10 +18,13 @@ function App() {
             <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/profil" element={<ProfilPage />} />
+                <Route path="/communaute" element={<CommunityPage />} />
+                <Route path="/evenements" element={<EventPage />} />
+                <Route path="/messages" element={<MessagePage />} />
                 
-                <Route path="/register" element={<Register />} />
-                <Route path="/login" element={<Login />} />
-              
+                <Route path="/inscription" element={<Register />} />
+                <Route path="/connexion" element={<Login />} />
+            
                 <Route path="*" element={<ErrorPage code={500} title={''} message={''} />} /> {/* Route 404 */}
             </Routes>
         </div>

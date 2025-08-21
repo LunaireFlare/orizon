@@ -35,7 +35,7 @@ const mockInterests: Interest[] = [
     { id: 1, name: "cuisine" },
     { id: 2, name: "sport" },
     { id: 3, name: "cinema" }
-  ];
+];
 
 
 export default function ProfilPage() {
@@ -55,8 +55,8 @@ export default function ProfilPage() {
                             <h2>Mon profil</h2>
                         </div>
                         <div>
-                            <button className="pathButton">Modifier</button>
-                            <button className="delButton">Supprimer</button>
+                            <button className="pathButton">Modifier mon profil</button>
+                            <button className="delButton">Supprimer mon compte</button>
                         </div>
                     </div>
                     <div className="bodyProfil">
@@ -67,20 +67,18 @@ export default function ProfilPage() {
                          {/* <button className="buttonOnWhite">Contacter</button> */}
                     </div>
 
-                    {/* Infos user */}
                     <div className="contentInfo">
                         <div>
                             {user && (
                                 <div key={user.id}>
                                 <h3>{user.name}</h3>
                                 <p>{user.date_of_birth} ans</p>
-                                <div>{user.city} ({user.zip_code})</div>
-                                <p className="bioDescription">Bio: {user.description}</p>
+                                <div><span>{user.city} ({user.zip_code})</span></div>
+                                <p className="bioDescription">{user.description}</p>
                                 </div>
                             )}
                         </div>
                         <div className="contentInterest">
-                            {/* Infos Interets */}
                                 {interests.map((interest) => (
                                 <div key={interest.id}>
                                 <button className="intButton">{interest.name}</button>
@@ -92,22 +90,21 @@ export default function ProfilPage() {
                     </div>
                 </div>
             </div>
-            <div id="eventCreate">
+
+            <div id="eventsCreated">
                 <h2>Les évènements créés par moi</h2>
                 <CardEvent />  
             </div>
 
-            <div id="eventParticped">
+            <div id="eventsParticiped">
                 <h2>Les évènements auxquels je participe</h2>
                 <CardEvent />  
             </div>
 
-            <div id="ctnParticped">
-                <h2>Les évènements auxquels je participe</h2>
+            <div id="eventsPassed">
+                <h2>Les évènements auxquels j'ai participé</h2>
                 <CardEvent />  
             </div>
-
-
 
             <Footer />
         </div>
