@@ -15,6 +15,11 @@ const interestController = {
         res.json(interests);
     },
 
+    /**
+     * Création d'un intéret
+     * @param req
+     * @param res 
+     */
     async createInterest(req: Request, res: Response) {
         const body = req.body;
         const { error, data } = interestSchema.safeParse(body);
@@ -34,6 +39,11 @@ const interestController = {
         res.status(201).json(createdInterest);
     },
 
+    /**
+     * Suppression d'un intérêt.
+     * @param req
+     * @param res 
+     */
     async deleteInterest(req: Request, res: Response) {
         const id = parseInt(req.params.id);
 
