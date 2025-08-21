@@ -2,6 +2,9 @@ import React from 'react';
 import ConversationItem from '../../components/ConversationItem/ConversationItem';
 import type { Conversation } from '../../type/ConversationType';
 import './ConversationPage.scss';
+import Rooftop from '../../components/Rooftop/Rooftop';
+import Banner from '../../components/Banner/Banner';
+import Footer from '../../components/Footer/Footer';
 
 const ConversationsPage: React.FC = () => {
     const conversations: Conversation[] = [
@@ -29,20 +32,24 @@ const ConversationsPage: React.FC = () => {
     ];
 
     return (
-        <div id="container-content">
-            <section className="keyFigure">
-                <h2>Mes Conversations</h2>
-                <div className="conversation-list">
-                    {conversations.map((conv) => (
-                        <ConversationItem
-                            key={conv.id}
-                            conversation={conv}
-                            onClick={() => console.log('Clicked', conv.id)}
-                        />
-                    ))}
-                </div>
-            </section>
-        </div>
+        <>
+            <Rooftop />
+            <Banner />
+            <div id="container-content">
+                <section className="keyFigure">
+                    <h2>Mes Conversations</h2>
+                    <div className="conversation-list">
+                        {conversations.map((conv) => (
+                            <ConversationItem
+                                key={conv.id}
+                                conversation={conv}
+                                onClick={() => console.log('Clicked', conv.id)} />
+                        ))}
+                    </div>
+                </section>
+            </div>
+            <Footer />
+        </>
     );
 };
 
