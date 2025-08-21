@@ -20,13 +20,14 @@ export default function Register() {
 
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError(null);
 
@@ -40,16 +41,49 @@ export default function Register() {
             return;
         }
 
-        setTimeout(() => {
-            // Simulation d'un succès d'inscription
-            setSuccess(true);
-        }, 1000);
+        setLoading(true);
+
+        try {
+            // On excluse le confirmPassword de l'envoi au backend (éviter la répétition)
+            const { confirmPassword, ...userData } = form;
+
+            const response = await fetch('http://localhost:3000/users', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    lastname: userData.name,
+                    firstname: userData.firstname,
+                    zip_code: userData.code,
+                    city: userData.city,
+                    date_of_birth: userData.birth,
+                    email: userData.email,
+                    password: userData.password,
+                    description: userData.description,
+                    photo: null,
+                }),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                setError(data.error || "Erreur lors de l'inscription.");
+            } else {
+                setSuccess(true);
+            }
+        } catch (err) {
+            console.error("Erreur lors de l'inscription :", err);
+            setError('Erreur réseau ou serveur.');
+        } finally {
+            setLoading(false);
+        }
     };
 
     useEffect(() => {
         if (success) {
             const timeout = setTimeout(() => {
-                navigate('/');
+                navigate('/se connecter');
             }, 2000);
             return () => clearTimeout(timeout);
         }
