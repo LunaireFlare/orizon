@@ -1,0 +1,96 @@
+/* ----------------------------------- CONTENT --------------------------------- */
+
+/* *************** Version Mobile ************* */
+
+/* ------------- Messages ---------------- */
+
+#containerConversation {
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 2rem 1rem;
+    margin-top: 2rem;
+}
+
+.bodyConversation{
+    width: 95%;
+    background-color: var(--blue-green-sky);
+    border-radius: 20px ;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+#headMessages {
+    display: flex;
+    align-items: center;
+    margin-left: 2rem;
+}
+
+#headMessages h3{
+    color: #fff;
+    padding-left: 0.5rem;
+}
+
+#headMessages img{
+
+    border-radius: 30px;
+}
+
+#containerMessages {
+    background-color: var(--white-body);
+    border-radius: 20px ;
+    margin : 1rem;
+    padding: 1rem;
+}
+
+.leftMessages {
+    display: flex;
+    align-items: flex-end;
+}
+
+.leftMessages img {
+    border-radius: 30px;
+}
+
+.leftMessages p {
+    background-color: #FFEAF7 ;
+    padding: 1.5rem;
+    border-radius: 20px 20px 20px 0px ;
+    margin-left: 0.5rem;
+}
+
+.rightMessages {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+}
+
+.rightMessages img {
+    border-radius: 30px;
+}
+
+.rightMessages p {
+    background-color: #DDF8FF ;
+    padding: 1.5rem;
+    border-radius: 20px 20px 0px 20px ;
+    margin-right: 0.5rem;
+}
+
+
+/* *************** Version Desktop ************* */
+
+
+@media (min-width: 1291px) {
+
+    #fullContainerMessages {
+        width: 1280px;
+        margin: 0 auto;
+    }
+
+#containerMessages .headMessages {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+}

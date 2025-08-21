@@ -73,68 +73,63 @@
     text-align: justify;
 }
 
-
-
-
 @media (min-width: 1291px) {
+    /* ------------- KEY FIGURES ---------------- */
 
-/* ------------- KEY FIGURES ---------------- */
+    #container-content .keyFigure {
+        margin: 0 auto;
+        background-color: #fff;
+        padding: 3rem 0rem;
+    }
 
-#container-content .keyFigure {
-    margin: 0 auto;
-    background-color: #fff;
-    padding: 3rem 0rem;
-}
+    #container-content .keyFigure h2 {
+        text-align: center;
+    }
 
-#container-content .keyFigure h2 {
-    text-align: center;
-}
+    #container-content .blcFigure {
+        width: 1290px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-gap: 1rem;
+        margin-top: 3rem;
+    }
 
-#container-content .blcFigure {
-    width: 1290px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-gap: 1rem;
-    margin-top: 3rem;
-}
+    #container-content .blcFigure h4 {
+        margin-top: 0.8rem;
+        margin-bottom: 0.2rem;
+    }
 
-#container-content .blcFigure h4 {
-    margin-top: 0.8rem;
-    margin-bottom: 0.2rem;
-}
+    /* ------------- ABOUT ---------------- */
 
+    #about {
+        width: 1280px;
+        margin: 0 auto;
+        padding: 3rem 0rem;
+    }
 
-/* ------------- ABOUT ---------------- */
+    .containerAboutOne {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-gap: 3rem;
+        text-align: left;
+        margin-top: 3rem;
+    }
 
-#about {
-    width: 1280px;
-    margin: 0 auto;
-    padding: 3rem 0rem;
-}
+    .containerAboutTwo {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-gap: 3rem;
+        text-align: right;
+        margin-top: 7rem;
+        margin-bottom: 3rem;
+    }
 
-.containerAboutOne {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-gap: 3rem;
-    text-align: left;
-    margin-top: 3rem;
-}
+    .containerAboutOne p {
+        text-align: justify;
+    }
 
-.containerAboutTwo {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-gap: 3rem;
-    text-align: right;
-    margin-top: 7rem;
-    margin-bottom: 3rem;
-}
-
-.containerAboutOne p {
-    text-align: justify;
-}
-
-.containerAboutTwo p {
-    text-align: justify;
-}
+    .containerAboutTwo p {
+        text-align: justify;
+    }
 }
