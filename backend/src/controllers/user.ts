@@ -10,8 +10,12 @@ const userController = {
      * @param res
      */
     async getAllUsers(req: Request, res: Response) {
-        const users = await User.findAll(
-
+        const users = await User.findAll();
+        const usersWithoutPasswords = users.map((u) => {
+            const { password, ...rest } = u.toJSON();
+            return rest;
+        });
+        res.json(usersWithoutPasswords);
     },
 
     /**
@@ -22,15 +26,15 @@ const userController = {
     async getOneUser(req: Request, res: Response) {
         const id = parseInt(req.params.id);
 
-        const user = await User.findByPk(id,{
+        const user = await User.findByPk(id, {
             include: [
                 {
-                    association: 'interests',
+                    association: "interests",
                 },
                 {
-                    association: 'events',
+                    association: "events",
                 },
-            ]
+            ],
         });
 
         if (!user) {
@@ -161,16 +165,18 @@ const userController = {
         user.password = "";
         user.zip_code = "";
         user.city = "";
-        const parsed = userSchema.parse({ date_of_birth: "1900-01-01T00:00:00.000Z" });
+        const parsed = userSchema.parse({
+            date_of_birth: "1900-01-01T00:00:00.000Z",
+        });
         user.date_of_birth = parsed.date_of_birth;
         user.photo = null;
         user.description = null;
-        user.status="désactivé"
+        user.status = "désactivé";
 
         await user.save();
 
         res.status(204).end();
-    }
-}
+    },
+};
 
 export { userController };

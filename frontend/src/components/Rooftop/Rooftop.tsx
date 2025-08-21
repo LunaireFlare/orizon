@@ -21,7 +21,6 @@ export default function Rooftop() {
                     <img src={logo} style={{ width: '15rem' }} alt='logo orizon' />
                 </NavLink>
 
-
                 <div className='buttonBox'>
                     <div className='buttonHover'><NavLink to='/inscription'>S'inscrire</NavLink></div>
                     <div className='buttonHover2'><NavLink to='/connexion'>Connexion</NavLink></div>
