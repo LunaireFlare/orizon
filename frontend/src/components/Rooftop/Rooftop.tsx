@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom'; // ✅ Corrigé ici
+import { NavLink } from 'react-router';
 import logo from '../../assets/images/Logo_Orizon.png';
 import pictonav from '../../assets/images/navburger.png';
 
