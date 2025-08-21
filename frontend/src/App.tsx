@@ -8,6 +8,7 @@ import './assets/styles/index.scss'
 import { Routes, Route } from 'react-router';
 import Register from './pages/Register_Login/Register.tsx';
 import Login from './pages/Register_Login/Login.tsx';
+import ConversationsPage from './pages/ConversationPage/ConversationPages.tsx';
 
 function App() {
     return (
@@ -18,6 +19,7 @@ function App() {
 
                 <Route path="/s'inscrire" element={<Register />} />
                 <Route path="/se connecter" element={<Login />} />
+                <Route path="/messages" element={<ConversationsPage />} />
 
                 <Route path="*" element={<ErrorPage code={500} title={''} message={''} />} /> {/* Route 404 */}
             </Routes>
