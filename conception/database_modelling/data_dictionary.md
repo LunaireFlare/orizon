@@ -25,7 +25,6 @@
 | --- | --- | --- | --- |
 | id | INT | PRIMARY KEY, UNSIGNED, NOT NULL, AUTO_INCREMENT | L'identifiant du message |
 | content | TEXT | NOT NULL | Le contenu du message |
-| date | TIMESTAMP | NOT NULL | La date et heure de l'envoi |
 | sender_id | ENTITY | NOT NULL | L'expéditeur du message (user_id) |
 | conversation_id | ENTITY | NOT NULL | L'identifiant de la conversation qui contient le message |
 | created_at | TIMESTAMP | NOT NULL, DEFAULT CURRENT_TIMESTAMP | La date de création du message |
