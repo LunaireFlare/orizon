@@ -1,10 +1,8 @@
 import { Request, Response } from "express";
 import argon2 from "argon2";
 import jwt from "jsonwebtoken";
-import { config } from "dotenv";
+import "dotenv/config";
 import { User } from "../models/User.js";
-
-config(); // charge .env
 
 const authController = {
     /**
@@ -18,7 +16,7 @@ const authController = {
             if (!user) {
                 return res
                     .status(401)
-                    .json({ error: "Utilisateur non trouvé" });
+                    .json({ error: "Identifiants invalides" });
             }
 
             const valid = await argon2.verify(user.password, password);
@@ -26,8 +24,8 @@ const authController = {
                 return (
                     res
                         .status(401)
-                        // Mettre un autre message d'erreur pour éviter les attaques par force brute ??
-                        .json({ error: "Mot de passe incorrect" })
+                        // Message générique pour éviter de donner des infos sur l'existence de l'utilisateur à voir si on est plus implicite pour le besoin des utilisateurs
+                        .json({ error: "Identifiants invalides" })
                 );
             }
 
@@ -37,7 +35,13 @@ const authController = {
                 { expiresIn: "1h" }
             );
 
-            res.json({ token });
+            res.json({
+                token,
+                user: {
+                    id: user.id,
+                    email: user.email,
+                },
+            });
         } catch (err) {
             console.error(err);
             res.status(500).json({ error: "Erreur serveur" });
