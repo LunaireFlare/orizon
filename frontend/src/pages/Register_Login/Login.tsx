@@ -64,25 +64,27 @@ export default function Login() {
     return (
         <>
             <Rooftop />
-            <form onSubmit={handleSubmit} className="auth-form">
-                <h2>Connexion</h2>
-                <input
-                    type="email"
-                    name="email"
-                    placeholder="Email"
-                    onChange={handleChange}
-                    required
-                />
-                <input
-                    type="password"
-                    name="password"
-                    placeholder="Mot de passe"
-                    onChange={handleChange}
-                    required
-                />
-                <button type="submit" className='buttonHover'>Se connecter</button>
-                {error && <p className="error-msg">{error}</p>}
-            </form>
+            <div className="auth-header">
+                <form onSubmit={handleSubmit} className="auth-form">
+                    <h2>Connexion</h2>
+                    <input
+                        type="email"
+                        name="email"
+                        placeholder="Email"
+                        onChange={handleChange}
+                        required
+                    />
+                    <input
+                        type="password"
+                        name="password"
+                        placeholder="Mot de passe"
+                        onChange={handleChange}
+                        required
+                    />
+                    <button type="submit" className='buttonHover'>Se connecter</button>
+                    {error && <p className="error-msg">{error}</p>}
+                </form>
+            </div>
 
             {success && (
                 <div className="modal">

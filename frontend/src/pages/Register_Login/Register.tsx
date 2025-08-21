@@ -92,73 +92,76 @@ export default function Register() {
     return (
         <>
             <Rooftop />
-            <form onSubmit={handleSubmit} className="auth-form">
-                <h2>Inscription</h2>
-                <input
-                    type="text"
-                    name="name"
-                    placeholder="Nom"
-                    onChange={handleChange}
-                    required
-                />
-                <input
-                    type="text"
-                    name="firstname"
-                    placeholder="Prénom"
-                    onChange={handleChange}
-                    required
-                />
-                <input
-                    type="text"
-                    name="birth"
-                    placeholder="Date de naissance (JJ/MM/AAAA)"
-                    onChange={handleChange}
-                    required
-                />
-                <input
-                    type="email"
-                    name="email"
-                    placeholder="Email"
-                    onChange={handleChange}
-                    required
-                />
-                <input
-                    type="text"
-                    name="code"
-                    placeholder="Code postal"
-                    onChange={handleChange}
-                    required
-                />
-                <input
-                    type="text"
-                    name="city"
-                    placeholder="Ville"
-                    onChange={handleChange}
-                    required
-                />
-                <input
-                    type="password"
-                    name="password"
-                    placeholder="Mot de passe (min 8 caractères)"
-                    onChange={handleChange}
-                    required
-                />
-                <input
-                    type="password"
-                    name="confirmPassword"
-                    placeholder="Confirmer le mot de passe"
-                    onChange={handleChange}
-                    required
-                />
-                <input
-                    type="text"
-                    name="description"
-                    placeholder="Une description de vous-même"
-                    onChange={handleChange}
-                />
-                <button className="buttonHover" type="submit">S'inscrire</button>
-                {error && <p className="error-msg">{error}</p>}
-            </form>
+            <div className="auth-header">
+
+                <form onSubmit={handleSubmit} className="auth-form">
+                    <h2>Inscription</h2>
+                    <input
+                        type="text"
+                        name="name"
+                        placeholder="Nom"
+                        onChange={handleChange}
+                        required
+                    />
+                    <input
+                        type="text"
+                        name="firstname"
+                        placeholder="Prénom"
+                        onChange={handleChange}
+                        required
+                    />
+                    <input
+                        type="text"
+                        name="birth"
+                        placeholder="Date de naissance (JJ/MM/AAAA)"
+                        onChange={handleChange}
+                        required
+                    />
+                    <input
+                        type="email"
+                        name="email"
+                        placeholder="Email"
+                        onChange={handleChange}
+                        required
+                    />
+                    <input
+                        type="text"
+                        name="code"
+                        placeholder="Code postal"
+                        onChange={handleChange}
+                        required
+                    />
+                    <input
+                        type="text"
+                        name="city"
+                        placeholder="Ville"
+                        onChange={handleChange}
+                        required
+                    />
+                    <input
+                        type="password"
+                        name="password"
+                        placeholder="Mot de passe (min 8 caractères)"
+                        onChange={handleChange}
+                        required
+                    />
+                    <input
+                        type="password"
+                        name="confirmPassword"
+                        placeholder="Confirmer le mot de passe"
+                        onChange={handleChange}
+                        required
+                    />
+                    <input
+                        type="text"
+                        name="description"
+                        placeholder="Une description de vous-même"
+                        onChange={handleChange}
+                    />
+                    <button className="buttonHover" type="submit">S'inscrire</button>
+                    {error && <p className="error-msg">{error}</p>}
+                </form>
+            </div>
 
             {success && (
                 <div className="modal">

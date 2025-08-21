@@ -1,3 +1,7 @@
+.error-page {
+    min-height: 80vh;
+}
+
 .error-container {
     width: 90%;
     max-width: 600px;
@@ -9,7 +13,6 @@
     text-align: center;
     font-family: Arial, sans-serif;
     color: #333;
-    min-height: 80vh;
 }
 
 .error-container h1 {
