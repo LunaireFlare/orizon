@@ -9,6 +9,7 @@ export default function Login() {
     const [form, setForm] = useState({ email: '', password: '' });
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
 
@@ -16,26 +17,46 @@ export default function Login() {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError(null);
+        setLoading(true);
 
-        setTimeout(() => {
-            if (form.email === 'test@test.com' && form.password === '123456') {
+        try {
+            const response = await fetch('http://localhost:3000/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(form),
+            });
+
+            const text = await response.text();
+            const data = text ? JSON.parse(text) : null;
+
+            if (!response.ok) {
+                setError(data?.error || 'Identifiants incorrects.');
+            } else if (data?.token) {
+                // Stockage du token
+                localStorage.setItem('token', data.token);
+
                 setSuccess(true);
             } else {
-                setError("Identifiants incorrects.");
+                setError('Réponse invalide du serveur.');
             }
-        }, 1000);
+        } catch (err) {
+            console.error('Erreur lors de la connexion :', err);
+            setError('Erreur serveur ou réseau.');
+        } finally {
+            setLoading(false);
+        }
     };
 
     useEffect(() => {
         if (success) {
-            // Redirection après 2 secondes
             const timeout = setTimeout(() => {
                 navigate('/');
             }, 2000);
-
             return () => clearTimeout(timeout);
         }
     }, [success, navigate]);

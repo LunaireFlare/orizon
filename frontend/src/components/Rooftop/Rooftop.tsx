@@ -22,8 +22,8 @@ export default function Rooftop() {
                 </NavLink>
 
                 <div className="buttonBox">
-                    <div className="buttonHover"><NavLink to="/register">S'inscrire</NavLink></div>
-                    <div className="buttonHover2"><NavLink to="/login">Connexion</NavLink></div>
+                    <div className="buttonHover"><NavLink to="/s'inscrire">S'inscrire</NavLink></div>
+                    <div className="buttonHover2"><NavLink to="/se connecter">Connexion</NavLink></div>
                 </div>
             </div>
         </div>

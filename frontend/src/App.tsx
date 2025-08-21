@@ -15,10 +15,10 @@ function App() {
             <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/profil" element={<ProfilPage />} />
-                
-                <Route path="/register" element={<Register />} />
-                <Route path="/login" element={<Login />} />
-              
+
+                <Route path="/s'inscrire" element={<Register />} />
+                <Route path="/se connecter" element={<Login />} />
+
                 <Route path="*" element={<ErrorPage code={500} title={''} message={''} />} /> {/* Route 404 */}
             </Routes>
         </div>
