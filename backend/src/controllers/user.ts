@@ -10,24 +10,8 @@ const userController = {
      * @param res
      */
     async getAllUsers(req: Request, res: Response) {
-        const users = await User
-            .findAll
-            //     {
-            //     include: [
-            //         {
-            //             association: 'interests',
-            //         },
-            //         {
-            //             association: 'events',
-            //         },
-            //     ]
-            // }
-            ();
-        const usersWithoutPasswords = users.map((u) => {
-            const { password, ...rest } = u.toJSON();
-            return rest;
-        });
-        res.json(usersWithoutPasswords);
+        const users = await User.findAll(
+
     },
 
     /**
@@ -38,7 +22,16 @@ const userController = {
     async getOneUser(req: Request, res: Response) {
         const id = parseInt(req.params.id);
 
-        const user = await User.findByPk(id);
+        const user = await User.findByPk(id,{
+            include: [
+                {
+                    association: 'interests',
+                },
+                {
+                    association: 'events',
+                },
+            ]
+        });
 
         if (!user) {
             return res.status(404).json({ error: "User not found." });
@@ -162,10 +155,22 @@ const userController = {
             return res.status(404).json({ error: "User not found." });
         }
 
-        await user.destroy();
+        // await user.destroy();
+        user.lastname = "";
+        user.firstname = "";
+        user.password = "";
+        user.zip_code = "";
+        user.city = "";
+        const parsed = userSchema.parse({ date_of_birth: "1900-01-01T00:00:00.000Z" });
+        user.date_of_birth = parsed.date_of_birth;
+        user.photo = null;
+        user.description = null;
+        user.status="désactivé"
+
+        await user.save();
 
         res.status(204).end();
-    },
-};
+    }
+}
 
 export { userController };

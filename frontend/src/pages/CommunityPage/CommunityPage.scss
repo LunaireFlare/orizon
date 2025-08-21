@@ -1,0 +1,100 @@
+/* ----------------------------------- CONTENT --------------------------------- */
+
+/* *************** Version Mobile ************* */
+
+/* ------------- Pofil ---------------- */
+
+#containerSearchUser {
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 1.5rem 1rem 3rem 1rem;
+    margin-top: 2rem;
+}
+
+#containerSearchUser label {
+    display: block;
+    margin-top: 0.8rem;
+    margin-bottom: 0.2rem;
+}
+
+#containerSearchUser input {
+    width: 100%;
+    display: block;
+    font-size: 1rem;
+    padding: 0.5rem;
+    border-radius: 3rem;
+}
+
+#containerSearchUser form {
+    width: 100%;
+}
+
+#containerSearchUser select {
+    width: 100%;
+    display: block;
+    font-size: 1rem;
+    padding: 0.5rem;
+    border-radius: 3rem;
+}
+
+#searchUser {
+    width: 100%;
+}
+
+.suggestions {
+    width: 20rem;
+    background-color: #fff;
+    padding: 1rem;
+    font-size: 1.2rem;
+    margin-top: 0rem;
+    cursor: pointer;
+    position: absolute;
+}
+
+#containerSearchUser #contentFilter li {
+    list-style: none;
+    padding: 0.2rem;
+    cursor: pointer;
+}
+
+#containerSearchUser #contentFilter li:hover {
+    background-color: #f3f3f3;
+
+}
+
+#containerSearchUser .suggestions {
+    background-color: #fff;
+}
+
+/* ------------- Card user ---------------- */
+
+#userCommunity {
+    padding-top: 3rem;
+}
+
+
+
+/* *************** Version Desktop ************* */
+
+@media (min-width: 1291px) {
+
+    #containerSearchUser {
+        width: 1280px;
+        padding: 5rem 1rem 5rem 1rem;
+    }
+
+    #containerSearchUser .twoForm {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-gap: 1rem;
+    }
+
+    .searchUser {
+        width: 1291px;
+        margin: 0 auto;
+    }
+
+    #containerSearchUser form {
+        width: 100%;
+    }
+}
