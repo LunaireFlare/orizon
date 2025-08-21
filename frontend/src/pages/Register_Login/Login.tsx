@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 import './Register_Login.scss';
 import Rooftop from '../../components/Rooftop/Rooftop';
-import Header from '../../components/Header/Header';
 import Footer from '../../components/Footer/Footer';
 
 export default function Login() {
