@@ -12,9 +12,6 @@ const app = express();
 // Sécurité
 app.disable('x-powered-by');
 
-// Sécurité
-app.disable('x-powered-by');
-
 // router principal, middlewares d'erreur...
 app.use(cors({ origin: '*' }));
 // app.use(rateLimit);

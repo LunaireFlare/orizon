@@ -12,7 +12,7 @@ import {
 
 @Table({
     tableName: "interest_user",
-    timestamps: true,
+    timestamps: false,
 })
 
 export class Interest_User extends Model {
