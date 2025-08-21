@@ -1,0 +1,69 @@
+@startuml
+
+title Récupération des front-end
+
+node "Client" {
+  [Navigateur Web] 
+}
+
+node "Serveur"{
+
+node "Reverse Proxy " {
+  [Nginx]
+}
+
+node "Serveur front-office" {
+  [ Vite ]
+}
+
+node "Serveur BackOffice" {
+  [Vite]
+
+}
+
+[Navigateur Web] -- [Nginx] : HTTPS
+[Nginx] -- [Vite] : HTTPS
+[Nginx] -- [ Vite ] : HTTPS
+
+}
+@enduml
+
+
+
+@startuml
+
+title Fonctionnement front-end / back-end
+
+node "Frontend"{
+
+node "Front-office" {
+  [React] 
+}
+
+node "Back-office" {
+  [React ] 
+}
+}
+
+node "Backend"{
+
+node "Reverse Proxy " {
+  [Nginx]
+}
+
+node "API" {
+  [Express]
+}
+
+database "BDD" {
+[PostgreSQL]
+}
+
+
+[React] -- [Nginx] : HTTPS
+[React ] -- [Nginx] : HTTPS
+[Nginx] -- [Express] : API REST
+[Express] -- [PostgreSQL]: SQL Queries 
+
+}
+@enduml
