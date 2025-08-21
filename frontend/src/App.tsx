@@ -11,6 +11,7 @@ import './assets/styles/index.scss'
 import { Routes, Route } from 'react-router';
 import Register from './pages/Register_Login/Register.tsx';
 import Login from './pages/Register_Login/Login.tsx';
+/* import ConversationsPage from './pages/ConversationPage/ConversationPages.tsx'; */
 
 function App() {
     return (
@@ -20,20 +21,13 @@ function App() {
                 <Route path="/profil" element={<ProfilPage />} />
                 <Route path="/communaute" element={<CommunityPage />} />
                 <Route path="/evenements" element={<EventPage />} />
+                {/* <Route path="/conversations" element={<ConversationsPage />} /> */}
                 <Route path="/messages" element={<MessagePage />} />
-<<<<<<< HEAD
-
-                <Route path="/inscription" element={<Register />} />
-                <Route path="/connexion" element={<Login />} />
-
-                <Route path="" element={<ErrorPage code={500} title={''} message={''} />} /> {/ Route 404 */}
-=======
                 
                 <Route path="/inscription" element={<Register />} />
                 <Route path="/connexion" element={<Login />} />
             
                 <Route path="*" element={<ErrorPage code={500} title={''} message={''} />} /> {/* Route 404 */}
->>>>>>> a4047962fc399c9061b5c747ecdd62b711f1ed60
             </Routes>
         </div>
     )
