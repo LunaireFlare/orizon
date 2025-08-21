@@ -1,5 +1,6 @@
 import { Response, Request } from "express";
 import { Event } from '../models/associations.js';
+import { eventSchema } from "../schemas/event.js";
 
 const eventController = {
         /**
@@ -38,6 +39,29 @@ const eventController = {
             };
 
             res.json(event);
+        },
+
+        /**
+         * Création d'un évènement.
+         * @param req
+         * @param res 
+         */
+        async createEvent(req: Request, res: Response) {
+            const body = req.body;
+            // TODO: récupérer JWT d'authentification
+            const { error, data } = eventSchema.safeParse(body);
+    
+            if (error) {
+                return res.status(400).json({ error: error.message });
+            };
+    
+            const { name, start_date, end_date, description, address, zip_code, city } = data;
+
+            // ? vérification qu'évènement existe déjà ?
+    
+            const createdEvent = await Event.create({ name, start_date, end_date, description, address, zip_code, city });
+    
+            res.status(201).json(createdEvent);
         },
 
 };
