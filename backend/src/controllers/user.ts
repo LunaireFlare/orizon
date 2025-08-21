@@ -128,11 +128,11 @@ const userController = {
         }
 
         // await user.destroy();
-        user.lastname = "utilisateur supprimé";
-        user.firstname = "utilisateur supprimé";
-        user.password = "utilisateur supprimé";
-        user.zip_code = "00000";
-        user.city = "utilisateur supprimé";
+        user.lastname = "";
+        user.firstname = "";
+        user.password = "";
+        user.zip_code = "";
+        user.city = "";
         const parsed = userSchema.parse({ date_of_birth: "1900-01-01T00:00:00.000Z" });
         user.date_of_birth = parsed.date_of_birth;
         user.photo = null;
