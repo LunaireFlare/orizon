@@ -23,7 +23,11 @@ const userController = {
             //     ]
             // }
             ();
-        res.json(users);
+        const usersWithoutPasswords = users.map((u) => {
+            const { password, ...rest } = u.toJSON();
+            return rest;
+        });
+        res.json(usersWithoutPasswords);
     },
 
     /**
@@ -40,7 +44,8 @@ const userController = {
             return res.status(404).json({ error: "User not found." });
         }
 
-        res.json(user);
+        const { password, ...userWithoutPassword } = user.toJSON();
+        res.json(userWithoutPassword);
     },
 
     /**
