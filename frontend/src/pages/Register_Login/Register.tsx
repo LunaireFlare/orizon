@@ -60,7 +60,6 @@ export default function Register() {
                     date_of_birth: userData.birth,
                     email: userData.email,
                     password: userData.password,
-                    description: userData.description,
                     photo: null,
                 }),
             });
@@ -151,12 +150,6 @@ export default function Register() {
                         placeholder="Confirmer le mot de passe"
                         onChange={handleChange}
                         required
-                    />
-                    <input
-                        type="text"
-                        name="description"
-                        placeholder="Une description de vous-même"
-                        onChange={handleChange}
                     />
                     <button className="buttonHover" type="submit">S'inscrire</button>
                     {error && <p className="error-msg">{error}</p>}
