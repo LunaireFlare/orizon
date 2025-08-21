@@ -1,0 +1,51 @@
+/* -----------------Version Mobile ----------------- */
+
+#bannerTop {
+    width: 95%;
+    margin: 0 auto;
+    min-height: 5rem;
+    padding: 1.3rem 0.8rem;
+    background: URL(../../assets//images/BannerSeniorOrizon.webp);
+    background-size: cover;
+    background-repeat: no-repeat;
+    margin-top: 1rem;
+    border-radius: 1rem;
+    display: flex;
+    justify-content:flex-start;
+    align-items: center;
+}
+
+.bannerContent h1 {
+    color: #fff;
+    font-size: 2rem;
+}
+
+/* -----------------Version Desktop ----------------- */
+
+@media (min-width: 1291px) {
+
+    #bannerTop {
+        width: 1280px;
+        margin: 0 auto;
+        min-height: 10rem;
+        background: URL(../../assets//images/BannerSeniorOrizon.webp);
+        background-size: cover;
+        background-repeat: no-repeat;
+        margin-top: 1rem;
+        display: flex;
+        justify-content:flex-start;
+        align-items: center;
+    }
+
+    .bannerContent {
+        width: 100%;
+        padding: 0rem 2rem;
+    }
+
+
+    .bannerContent h1 {
+        color: #fff;
+        font-size: 3rem;
+    }
+
+}
