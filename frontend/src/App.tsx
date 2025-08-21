@@ -2,6 +2,7 @@ import HomePage from './pages/HomePage/HomePage.tsx';
 import ProfilPage from './pages/ProfilPage/ProfilPage.tsx';
 import CommunityPage from './pages/CommunityPage/CommunityPage.tsx';
 import EventPage from './pages/EventPage/EventPage.tsx';
+import MessagePage from './pages/MessagesPage/MessagesPage.tsx';
 import ErrorPage from './pages/ErrorPage/ErrorPage.tsx';
 
 import './App.scss';
@@ -19,7 +20,7 @@ function App() {
                 <Route path="/profil" element={<ProfilPage />} />
                 <Route path="/communaute" element={<CommunityPage />} />
                 <Route path="/evenements" element={<EventPage />} />
-
+                <Route path="/messages" element={<MessagePage />} />
                 
                 <Route path="/inscription" element={<Register />} />
                 <Route path="/connexion" element={<Login />} />
