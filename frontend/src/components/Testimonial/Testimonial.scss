@@ -16,7 +16,8 @@
 #testimonials .containerTesti {
     display: grid;
     grid-template-columns: repeat(1, 1fr);
-    grid-gap: 1rem;
+    grid-gap: 2rem;
+    padding: 0 1rem;
     margin-top: 3rem;
     color: #fff;
 }
@@ -30,7 +31,9 @@
     padding: 0rem;
 }
 
-
+#testimonials span {
+    font-style: italic;
+}
 
 /* -----------------Version Desktop ----------------- */
 
@@ -48,7 +51,7 @@
 #testimonials .containerTesti {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    grid-gap: 1rem;
+    grid-gap: 2rem;
     margin-top: 3rem;
     color: #fff;
 }

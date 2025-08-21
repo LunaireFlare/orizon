@@ -21,11 +21,19 @@ function App() {
                 <Route path="/communaute" element={<CommunityPage />} />
                 <Route path="/evenements" element={<EventPage />} />
                 <Route path="/messages" element={<MessagePage />} />
+<<<<<<< HEAD
 
                 <Route path="/inscription" element={<Register />} />
                 <Route path="/connexion" element={<Login />} />
 
                 <Route path="" element={<ErrorPage code={500} title={''} message={''} />} /> {/ Route 404 */}
+=======
+                
+                <Route path="/inscription" element={<Register />} />
+                <Route path="/connexion" element={<Login />} />
+            
+                <Route path="*" element={<ErrorPage code={500} title={''} message={''} />} /> {/* Route 404 */}
+>>>>>>> a4047962fc399c9061b5c747ecdd62b711f1ed60
             </Routes>
         </div>
     )
