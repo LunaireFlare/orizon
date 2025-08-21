@@ -13,6 +13,7 @@
     "description": "",
     "dependencies": {
         "argon2": "^0.44.0",
+        "cors": "^2.8.5",
         "dotenv": "^17.2.1",
         "express": "^5.1.0",
         "jsonwebtoken": "^9.0.2",
@@ -33,9 +34,7 @@
         "@types/pg": "^8.15.5",
         "@types/sanitize-html": "^2.16.0",
         "@types/sequelize": "^4.28.20",
-        "@types/supertest": "^6.0.3",
         "jest": "^30.0.5",
-        "supertest": "^7.1.4",
         "ts-jest": "^29.4.1",
         "typescript": "^5.9.2"
     }

@@ -3,7 +3,8 @@ import { eventController } from '../controllers/event.js';
 const eventRouter = Router();
 
 eventRouter.route('/events')
-    .get(eventController.getAllEvents);
+    .get(eventController.getAllEvents)
+    .post(eventController.createEvent);
 
 eventRouter.route('/events/:id')
     .get(eventController.getOneEvent);
