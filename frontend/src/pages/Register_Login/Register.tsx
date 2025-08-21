@@ -6,10 +6,20 @@ import Rooftop from '../../components/Rooftop/Rooftop';
 import Footer from '../../components/Footer/Footer';
 
 export default function Register() {
-    const [form, setForm] = useState({ email: '', password: '', confirmPassword: '' });
+    const [form, setForm] = useState({
+        name: '',
+        firstname: '',
+        code: '',
+        city: '',
+        birth: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+        description: ''
+    });
+
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState<string | null>(null);
-
     const navigate = useNavigate();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -25,13 +35,13 @@ export default function Register() {
             return;
         }
 
-        if (form.password.length < 6) {
-            setError("Le mot de passe doit contenir au moins 6 caractères.");
+        if (form.password.length < 8) {
+            setError("Le mot de passe doit contenir au moins 8 caractères.");
             return;
         }
 
         setTimeout(() => {
-            // Simulation succès inscription
+            // Simulation d'un succès d'inscription
             setSuccess(true);
         }, 1000);
     };
@@ -45,21 +55,32 @@ export default function Register() {
         }
     }, [success, navigate]);
 
-    if (success) {
-        return (
-            <div className="modal">
-                <div className="modal-content">
-                    <p>Inscription réussie ! Redirection...</p>
-                </div>
-            </div>
-        );
-    }
-
     return (
         <>
             <Rooftop />
             <form onSubmit={handleSubmit} className="auth-form">
                 <h2>Inscription</h2>
+                <input
+                    type="text"
+                    name="name"
+                    placeholder="Nom"
+                    onChange={handleChange}
+                    required
+                />
+                <input
+                    type="text"
+                    name="firstname"
+                    placeholder="Prénom"
+                    onChange={handleChange}
+                    required
+                />
+                <input
+                    type="text"
+                    name="birth"
+                    placeholder="Date de naissance (JJ/MM/AAAA)"
+                    onChange={handleChange}
+                    required
+                />
                 <input
                     type="email"
                     name="email"
@@ -68,9 +89,23 @@ export default function Register() {
                     required
                 />
                 <input
+                    type="text"
+                    name="code"
+                    placeholder="Code postal"
+                    onChange={handleChange}
+                    required
+                />
+                <input
+                    type="text"
+                    name="city"
+                    placeholder="Ville"
+                    onChange={handleChange}
+                    required
+                />
+                <input
                     type="password"
                     name="password"
-                    placeholder="Mot de passe (min 6 caractères)"
+                    placeholder="Mot de passe (min 8 caractères)"
                     onChange={handleChange}
                     required
                 />
@@ -81,10 +116,24 @@ export default function Register() {
                     onChange={handleChange}
                     required
                 />
+                <input
+                    type="text"
+                    name="description"
+                    placeholder="Une description de vous-même"
+                    onChange={handleChange}
+                />
                 <button className="buttonHover" type="submit">S'inscrire</button>
                 {error && <p className="error-msg">{error}</p>}
             </form>
-            {'}'}
+
+            {success && (
+                <div className="modal">
+                    <div className="modal-content">
+                        <p>Inscription réussie ! Redirection...</p>
+                    </div>
+                </div>
+            )}
+
             <Footer />
         </>
     );
