@@ -6,28 +6,35 @@
 
 #containerConversation {
     margin: 0 auto;
-    background-color: #fff;
-    padding: 2rem 1rem;
+    padding: 1rem 1rem;
     margin-top: 2rem;
+    width: 100%;
+}
+
+#containerConversation h2{
+    padding-left: 0.5rem;
+    padding-bottom: 1.5rem;
 }
 
 .bodyConversation{
-    width: 95%;
+    width: 100%;
     background-color: var(--blue-green-sky);
     border-radius: 20px ;
     margin: 0 auto;
-    padding: 1rem;
+    padding: 0.5rem;
 }
 
 #headMessages {
     display: flex;
     align-items: center;
-    margin-left: 2rem;
+    margin-left: 1rem;
+    box-sizing: border-box;
 }
 
 #headMessages h3{
     color: #fff;
     padding-left: 0.5rem;
+    overflow-wrap: break-word;
 }
 
 #headMessages img{
@@ -42,9 +49,21 @@
     padding: 1rem;
 }
 
+.bodyConversation textarea{
+    display: block;
+    margin: 0 auto;
+    background-color: var(--white-body);
+    border-radius: 20px ;
+    border: none;
+    padding: 1rem;
+    width: 95%; 
+    box-sizing: border-box;
+}
+
 .leftMessages {
     display: flex;
     align-items: flex-end;
+    margin-bottom: 0.5rem;
 }
 
 .leftMessages img {
@@ -75,6 +94,17 @@
     margin-right: 0.5rem;
 }
 
+.sendMessage{
+    display: block;
+    margin: 0 auto;
+    margin-top: 1rem;
+    width: 95%;
+    padding: 1rem;
+    border: none;
+    border-radius: 20px;
+    background-color: var(--yelow-or);
+}
+
 
 /* *************** Version Desktop ************* */
 
@@ -86,11 +116,17 @@
         margin: 0 auto;
     }
 
-#containerMessages .headMessages {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
+    #containerMessages .headMessages {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
 
+    .bodyConversation textarea{
+        box-sizing: content-box;
+    }
 
+    .sendMessage{
+        width: 20%;
+    }
 }

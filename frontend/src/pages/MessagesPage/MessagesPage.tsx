@@ -16,7 +16,7 @@ export default function MessagePage() {
                 <div className="bodyConversation">
                     <div id="headMessages">
                         <img src="../../src/assets/images/profil-blandinegallet.webp" width="50px" alt="photo de profil"></img>
-                        <h3>Nadine8905680</h3>
+                        <h3>Nadine8905680 feuuuuuuuuuuuuu</h3>
                     </div>
                     <div id="containerMessages">
                         <div className="leftMessages">
@@ -28,7 +28,14 @@ export default function MessagePage() {
                             <img src="../../src/assets/images/profil-guillaumegentil.webp" width="50px" alt="photo de profil"></img>
                         </div>
                     </div>
-                
+                    <textarea
+                        name="message"
+                        rows={4}
+                        placeholder="Entrer votre message"
+                        required
+                    />
+                        
+                    <button type="submit" className='sendMessage'>Envoyer</button>
                 </div>
             </div>
             <Footer />
