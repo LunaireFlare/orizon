@@ -1,0 +1,108 @@
+
+
+#containerSearchEvent {
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 1.5rem 1rem 3rem 1rem;
+    margin-top: 2rem;
+}
+
+#containerSearchEvent label {
+    display: block;
+    font-size: 1.1rem;
+    margin-top: 0.8rem;
+    margin-bottom: 0.2rem;
+}
+
+#containerSearchEvent input {
+    width: 100%;
+    display: block;
+    font-size: 1rem;
+    padding: 0.8rem;
+    border-radius: 3rem;
+    border: solid 2px #0FA3B1;
+}
+
+#containerSearchEvent input::placeholder {
+    font-style: italic;
+}
+
+#containerSearchEvent input:focus,
+#containerSearchEvent input:active {
+    border: solid 2px #F0B64A;
+    outline: none;
+}
+
+#containerSearchEvent form {
+    width: 100%;
+}
+
+#containerSearchEvent select {
+    width: 100%;
+    display: block;
+    font-size: 1rem;
+    padding: 0.8rem;
+    border-radius: 3rem;
+    border: none;
+    background-color: #0FA3B1;
+    color: #fff;
+}
+
+#searchEvent {
+    width: 100%;
+}
+
+.suggestions {
+    width: 20rem;
+    background-color: #fff;
+    padding: 1rem;
+    font-size: 1.2rem;
+    margin-top: 0rem;
+    cursor: pointer;
+    position: absolute;
+}
+
+#containerSearchEvent #contentFilter li {
+    list-style: none;
+    padding: 0.2rem;
+    cursor: pointer;
+}
+
+#containerSearchEvent #contentFilter li:hover {
+    background-color: #f3f3f3;
+
+}
+
+#containerSearchEvent .suggestions {
+    background-color: #fff;
+}
+
+#eventCommunity {
+    padding-top: 3rem;
+}
+
+
+
+
+@media (min-width: 1280px) {
+
+    #containerSearchEvent {
+        width: 100%;
+        padding: 5rem 1rem 5rem 1rem;
+    }
+
+    #containerSearchEvent .twoForm {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-gap: 1rem;
+    }
+
+    .searchEvent {
+        width: 1291px;
+        margin: 0 auto;
+    }
+
+    #containerSearchEvent form {
+        width: 100%;
+    }
+}

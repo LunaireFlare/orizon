@@ -1,31 +1,17 @@
 /* *************** Version Mobile ************* */
 
-#containerCard {
+#containerCardUser {
     display: grid;
     grid-template-columns: repeat(1, 6fr);
     grid-gap: 1rem;
 }
 
-#containerCard img {
+#containerCardUser img {
     width: 100%;
     border-radius: 1rem;
-    margin-bottom: 0.5rem;
 }
 
-#containerCard h3 {
-    margin-bottom: 0.2rem;
-}
-
-#containerCard p {
-    padding: 0.2rem 0;
-    text-align: justify;
-}
-
-#containerCard span {
-    font-weight: 700;
-}
-
-.elmCard {
+.elmCardUser {
     background-color: #ececec;
     margin-top: 1rem;
     padding: 1rem;
@@ -33,18 +19,16 @@
     border-radius: 1rem;
 }
 
-.eventDescription {
-    margin: 0.5rem 0;
+.elmCardUser p {
+    margin-top: 0.5rem;
 }
 
-.elmCard .interestEvent {
+.elmCardUser .interestUser {
     background-color: var(--blue-green-sky);
     color: #fff;
-    font-size: 1rem;
-    font-style: italic;
-    padding: 0.6rem 1.5rem;
+    font-size: 0.7rem;
+    padding: 0.9rem 2rem;
     border: none;
-    margin-top: 0.5rem;
     border-radius: 3rem;
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }
@@ -53,7 +37,7 @@
 
 @media (min-width: 1291px) {
 
-    #containerCard {
+    #containerCardUser {
         width: 1280px;
         margin: 0 auto;
         display: grid;
