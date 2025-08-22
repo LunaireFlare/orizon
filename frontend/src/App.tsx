@@ -25,10 +25,11 @@ function App() {
                 <Route path="/evenements" element={<EventPage />} />
                 <Route path="/conversations" element={<ConversationsPage />} />
                 <Route path="/messages" element={<MessagePage />} />
-                
+
                 <Route path="/inscription" element={<Register />} />
                 <Route path="/connexion" element={<Login />} />
-            
+
+
                 <Route path="*" element={<ErrorPage code={500} title={''} message={''} />} /> {/* Route 404 */}
             </Routes>
         </div>

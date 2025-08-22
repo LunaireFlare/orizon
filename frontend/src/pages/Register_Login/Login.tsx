@@ -23,7 +23,7 @@ export default function Login() {
         setLoading(true);
 
         try {
-            const response = await fetch('http://localhost:3000/login', {
+            const response = await fetch('http://backend.localhost:81/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -55,7 +55,7 @@ export default function Login() {
     useEffect(() => {
         if (success) {
             const timeout = setTimeout(() => {
-                navigate('/');
+                navigate('/profil/:id');
             }, 2000);
             return () => clearTimeout(timeout);
         }
