@@ -6,13 +6,13 @@ const userRouter = Router();
 
 userRouter
     .route("/users")
-    .get(authMiddleware, userController.getAllUsers)
+    .get(userController.getAllUsers)
     .post(userController.createUser);
 
 userRouter
     .route("/users/:id")
-    .get(authMiddleware, userController.getOneUser)
-    .put(authMiddleware, userController.updateUser)
+    .get(userController.getOneUser)
+    .put(userController.updateUser)
     .delete(authMiddleware, userController.deleteUser);
 
 export { userRouter };

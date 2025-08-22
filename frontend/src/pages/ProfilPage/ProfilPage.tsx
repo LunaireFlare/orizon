@@ -8,14 +8,19 @@ import CardEvent from '../../components/CardEvent/CardEvent.tsx';
 import Modal from '../../components/Modal/Modal.tsx';
 
 import './ProfilPage.scss';
-
+import React from 'react';
+import { useParams } from 'react-router';
 
 type User = {
     id: number,
-    name: string,
-    zip_code: number,
-    date_of_birth: number,
+    lastname: string,
+    firstname: string,
+    email: string,
+    password: string,
+    confirmPassword: string,
+    zip_code: string,
     city: string,
+    date_of_birth: string,
     description: string
 }
 
@@ -24,30 +29,105 @@ type Interest = {
     name: string
 }
 
-
-const mockUser = {
-    id: 1,
-    name: "Nadine FEU",
-    city: "Paris",
-    date_of_birth: 62,
-    zip_code: 75000,
-    description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
-};
-
 const mockInterests: Interest[] = [
     { id: 1, name: "cuisine" },
     { id: 2, name: "sport" },
     { id: 3, name: "cinema" }
 ];
 
+function getAge(dateOfBirth: Date | string): number {
+    const dob = new Date(dateOfBirth);
+    const today = new Date();
+    let age = today.getFullYear() - dob.getFullYear();
+    const m = today.getMonth() - dob.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+        age--;
+    }
+    return age;
+}  
 
 export default function ProfilPage() {
 
-    const [user] = useState<User>(mockUser);
-    const [interests] = useState<Interest[]>(mockInterests);
-    // const [ isModalOpen, setModalOpen ] = useState<boolean>(false);
+    const [user, setUser] = useState<User | null >(null);
+    const [formData, setFormData] = useState<User | null>(null);
 
+    const openModifyModal = () => {
+        setFormData(user);
+        setActiveModal('modifyAccount');
+    };
+
+    const [interests] = useState<Interest[]>(mockInterests);
+    const {id} = useParams();
+
+    React.useEffect(() => {
+
+        fetch(`http://localhost:3000/users/${id}`)
+            .then((res) => res.json())
+            .then((data: User) => {
+                setUser(data);
+            })
+            .catch((err) => console.error("Erreur API:", err));
+
+        },  [id]);
+
+    const [_success, setSuccess] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const [_loading, setLoading] = useState(false);
     const [ activeModal, setActiveModal ] = useState<string | null>(null);
+    
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (!formData) return;
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    if (!user) {
+        return <p>Chargement en cours…</p>;
+    }
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!formData) return;
+        setError(null);
+
+        if (formData.password !== formData.confirmPassword) {
+            setError("Les mots de passe ne correspondent pas.");
+            return;
+        }
+
+        if (formData.password.length < 8) {
+            setError("Le mot de passe doit contenir au moins 8 caractères.");
+            return;
+        }
+
+        setLoading(true);
+
+        try {
+
+            const response = await fetch(`http://localhost:3000/users/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ ...formData, confirmPassword: undefined }),
+            });            
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                setError(data.error || "Erreur lors de la modification.");
+            } else {
+                setSuccess(true);
+                setUser({ ...formData });
+                setActiveModal(null);
+            }
+        } catch (err) {
+            console.error("Erreur lors de la modification :", err);
+            setError('Erreur réseau ou serveur.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
 
     return (
         <div id="fullContainerProfil">
@@ -61,7 +141,7 @@ export default function ProfilPage() {
                             <h2>Mon profil</h2>
                         </div>
                         <div>
-                            <button className="pathButton">Modifier mon profil</button>
+                            <button onClick={openModifyModal} className="pathButton">Modifier mon profil</button>
                             <button className="delButton" onClick={() => setActiveModal('deleteAccount')}>Supprimer mon compte</button>
                         </div>
                     </div>
@@ -77,8 +157,8 @@ export default function ProfilPage() {
                         <div>
                             {user && (
                                 <div key={user.id}>
-                                <h3>{user.name}</h3>
-                                <p>{user.date_of_birth} ans</p>
+                                <h3>{user.firstname} {user.lastname} </h3>
+                                <p>{getAge(user.date_of_birth)} ans</p>
                                 <div><span>{user.city} ({user.zip_code})</span></div>
                                 <p className="bioDescription">{user.description}</p>
                                 </div>
@@ -203,7 +283,95 @@ export default function ProfilPage() {
                 </div>
             </Modal>
 
-            <Footer />
+            
+
+            <Modal isOpen={activeModal === 'modifyAccount'} onClose={() => setActiveModal(null)}>
+
+                <form onSubmit={handleSubmit} className="eventForm">
+                    <label htmlFor="lastname">Nom</label>
+                    <input
+                        type="text"
+                        name="lastname"
+                        placeholder="Nom*"
+                        value={formData?.lastname}
+                        onChange={handleChange}
+                        required
+                    />
+                    <label htmlFor="firstname">Prénom</label>
+                    <input
+                        type="text"
+                        name="firstname"
+                        placeholder="Prénom*"
+                        value={formData?.firstname}
+                        onChange={handleChange}
+                        required
+                    />
+                    <label htmlFor="date_of_birth">Date de naissance</label>
+                    <input
+                        type="text"
+                        name="date_of_birth"
+                        value={formData?.date_of_birth}
+                        placeholder="Date de naissance (JJ/MM/AAAA)*"
+                        onChange={handleChange}
+                        required
+                    />
+                    <label htmlFor="email">Email</label>
+                    <input
+                        type="email"
+                        name="email"
+                        value={formData?.email}
+                        placeholder="Email*"
+                        onChange={handleChange}
+                        required
+                    />
+                    <label htmlFor="zip_code">Code Postal</label>
+                    <input
+                        type="text"
+                        name="zip_code"
+                        value={formData?.zip_code}
+                        placeholder="Code postal*"
+                        onChange={handleChange}
+                        required
+                    />
+                    <label htmlFor="city">Ville</label>
+                    <input
+                        type="text"
+                        name="city"
+                        value={formData?.city}
+                        placeholder="Ville*"
+                        onChange={handleChange}
+                        required
+                    />
+                    <label htmlFor="description">Description</label>
+                    <input
+                        type="text"
+                        name="description"
+                        value={formData?.description}
+                        placeholder="Description"
+                        onChange={handleChange}
+                        required
+                    />
+                    <label htmlFor="password">Mot de passe</label>
+                    <input
+                        type="password"
+                        name="password"
+                        placeholder="Mot de passe (min 8 caractères)*"
+                        onChange={handleChange}
+                        required
+                    />
+                    <label htmlFor="confirmPassword">Confirmez votre mot de passe</label>
+                    <input
+                        type="password"
+                        name="confirmPassword"
+                        placeholder="Confirmer le mot de passe*"
+                        onChange={handleChange}
+                        required
+                    />
+                    <input type="submit" value="Valider" className=""></input>
+                    {error && <p className="error-msg">{error}</p>}
+                </form>
+            </Modal>
+    <Footer />
         </div>
     )
 }
