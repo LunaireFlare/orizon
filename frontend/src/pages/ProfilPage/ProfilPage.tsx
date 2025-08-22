@@ -1,9 +1,11 @@
 import { useState } from 'react';
+import { Link } from 'react-router';
+
 import Rooftop from '../../components/Rooftop/Rooftop.tsx'
 import Banner from '../../components/Banner/Banner.tsx'
 import Footer from '../../components/Footer/Footer.tsx';
 import CardEvent from '../../components/CardEvent/CardEvent.tsx';
-import Modal from "../../components/Modal/Modal.tsx";
+import Modal from '../../components/Modal/Modal.tsx';
 
 import './ProfilPage.scss';
 import React from 'react';
@@ -47,6 +49,13 @@ function getAge(dateOfBirth: Date | string): number {
 export default function ProfilPage() {
 
     const [user, setUser] = useState<User | null >(null);
+    const [formData, setFormData] = useState<User | null>(null);
+
+    const openModifyModal = () => {
+        setFormData(user);
+        setActiveModal('modifyAccount');
+    };
+
     const [interests] = useState<Interest[]>(mockInterests);
     const {id} = useParams();
 
@@ -64,11 +73,11 @@ export default function ProfilPage() {
     const [_success, setSuccess] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [_loading, setLoading] = useState(false);
-
-    const [isModalOpen, setModalOpen] = useState<boolean>(false);
+    const [ activeModal, setActiveModal ] = useState<string | null>(null);
+    
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (!user) return;
-        setUser({ ...user, [e.target.name]: e.target.value });
+        if (!formData) return;
+        setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
     if (!user) {
@@ -77,14 +86,15 @@ export default function ProfilPage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (!formData) return;
         setError(null);
 
-        if (user.password !== user.confirmPassword) {
+        if (formData.password !== formData.confirmPassword) {
             setError("Les mots de passe ne correspondent pas.");
             return;
         }
 
-        if (user.password.length < 8) {
+        if (formData.password.length < 8) {
             setError("Le mot de passe doit contenir au moins 8 caractères.");
             return;
         }
@@ -93,23 +103,12 @@ export default function ProfilPage() {
 
         try {
 
-            const { confirmPassword, ...userData } = user;
-
             const response = await fetch(`http://localhost:3000/users/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    lastname: userData.lastname,
-                    firstname: userData.firstname,
-                    email: userData.email,
-                    password: userData.password,
-                    zip_code: userData.zip_code,
-                    city: userData.city,
-                    date_of_birth: userData.date_of_birth,
-                    description: userData.description
-                }),
+                body: JSON.stringify({ ...formData, confirmPassword: undefined }),
             });            
 
             const data = await response.json();
@@ -118,6 +117,8 @@ export default function ProfilPage() {
                 setError(data.error || "Erreur lors de la modification.");
             } else {
                 setSuccess(true);
+                setUser({ ...formData });
+                setActiveModal(null);
             }
         } catch (err) {
             console.error("Erreur lors de la modification :", err);
@@ -126,6 +127,7 @@ export default function ProfilPage() {
             setLoading(false);
         }
     };
+
 
     return (
         <div id="fullContainerProfil">
@@ -139,8 +141,8 @@ export default function ProfilPage() {
                             <h2>Mon profil</h2>
                         </div>
                         <div>
-                            <button onClick={()=> {setModalOpen(true);}} className="pathButton">Modifier mon profil</button>
-                            <button className="delButton">Supprimer mon compte</button>
+                            <button onClick={openModifyModal} className="pathButton">Modifier mon profil</button>
+                            <button className="delButton" onClick={() => setActiveModal('deleteAccount')}>Supprimer mon compte</button>
                         </div>
                     </div>
                     <div className="bodyProfil">
@@ -155,8 +157,7 @@ export default function ProfilPage() {
                         <div>
                             {user && (
                                 <div key={user.id}>
-                                <h3>{user.lastname}</h3>
-                                <h3>{user.firstname}</h3>
+                                <h3>{user.firstname} {user.lastname} </h3>
                                 <p>{getAge(user.date_of_birth)} ans</p>
                                 <div><span>{user.city} ({user.zip_code})</span></div>
                                 <p className="bioDescription">{user.description}</p>
@@ -177,12 +178,19 @@ export default function ProfilPage() {
             </div>
 
             <div id="eventsCreated">
-                <h2>Les évènements créés par moi</h2>
+                <div className="eventOptions">
+                    <h2>Les évènements créés par moi</h2>
+                    <button className="pathButton" onClick={() => setActiveModal('createEvent')}>
+                        Créer un évènement</button>
+                </div>
                 <CardEvent />  
             </div>
 
             <div id="eventsParticiped">
-                <h2>Les évènements auxquels je participe</h2>
+                <div className="eventOptions">
+                    <h2>Les évènements auxquels je participe</h2>
+                    <button className="pathButton"><Link to="/evenements" className="link">Trouver d'autres évènements</Link></button>
+                </div>
                 <CardEvent />  
             </div>
 
@@ -191,74 +199,159 @@ export default function ProfilPage() {
                 <CardEvent />  
             </div>
 
-            <Footer />
+            <Modal isOpen={activeModal === 'createEvent'} onClose={() => setActiveModal(null)}>
+                <div id="containerCreateEvent">
+                    <h2>Créer un évènement</h2>
 
-            <Modal 
-                    isOpen={isModalOpen} 
-                    onClose={() => {
-                        setModalOpen(false);
-                        }}
-                    >
+                    <p>Tous les champs doivent obligatoirement être remplis.</p>
+                    
+                    <form className='eventForm'>
+                        <label htmlFor="eventName">Nom de l'évènement</label>
+                        <input
+                                type="text"
+                                name="eventName"
+                                placeholder="Cours de cuisine, exposition au musée..."
+                                // onChange={handleChange}
+                                required
+                        />
 
-                <form onSubmit={handleSubmit} className="auth-form">
+                        <label htmlFor="eventStartDate">Date et heure de début de l'évènement</label>
+                        <input
+                            type="datetime-local"
+                            name="eventStartDate"
+                            // onChange={handleChange}
+                            required
+                        />
+
+                        <label htmlFor="eventEndDate">Date et heure de fin de l'évènement</label>
+                        <input
+                            type="datetime-local"
+                            name="eventEndDate"
+                            // onChange={handleChange}
+                            required
+                        />
+
+                        <label htmlFor="eventDescription">Description</label>
+                        <textarea
+                                name="eventDescription"
+                                placeholder="Décrivez votre évènement en quelques lignes !"
+                                // onChange={handleChange}
+                                required
+                        />
+
+                        <label htmlFor="eventAddress">Adresse</label>
+                        <input
+                                type="text"
+                                name="eventAddress"
+                                placeholder="75 rue Honoré de Balzac"
+                                // onChange={handleChange}
+                                required
+                        />
+
+                        <div className="eventAddressDetails">
+                            <label htmlFor="eventCity">Ville</label>
+                            <input
+                                    type="text"
+                                    name="eventCity"
+                                    placeholder="Paris"
+                                    // onChange={handleChange}
+                                    required
+                            />
+
+                            <label htmlFor="eventZipCode">Code postal</label>
+                            <input
+                                    type="text"
+                                    name="eventZipCode"
+                                    placeholder="75000"
+                                    // onChange={handleChange}
+                                    required
+                            />
+                        </div>
+
+                        <input type="submit" value="Valider" className=""></input>
+                    </form>
+                </div>
+            </Modal>
+
+            <Modal isOpen={activeModal === 'deleteAccount'} onClose={() => setActiveModal(null)}>
+                <div id="containerDeleteAccount">
+                    <h2>Supprimer mon compte</h2>
+                    <p>Attention ! Vous êtes sur le point de supprimer votre compte. Si vous cliquez sur le bouton "Je confirme", vous n'aurez plus accès au site et vos données personnelles seront effacées. Si vous ne souhaitez pas supprimer votre compte, cliquez sur la croix rouge en haut à droite ou n'importe où en dehors de cet encadré.</p>
+                    <p>Êtes-vous sûr(e) de vouloir supprimer votre compte ?</p>
+
+                    <button className="delButton">Je confirme</button>
+                </div>
+            </Modal>
+
+            
+
+            <Modal isOpen={activeModal === 'modifyAccount'} onClose={() => setActiveModal(null)}>
+
+                <form onSubmit={handleSubmit} className="eventForm">
+                    <label htmlFor="lastname">Nom</label>
                     <input
                         type="text"
                         name="lastname"
                         placeholder="Nom*"
-                        value={user.lastname}
+                        value={formData?.lastname}
                         onChange={handleChange}
                         required
                     />
+                    <label htmlFor="firstname">Prénom</label>
                     <input
                         type="text"
                         name="firstname"
                         placeholder="Prénom*"
-                        value={user.firstname}
+                        value={formData?.firstname}
                         onChange={handleChange}
                         required
                     />
+                    <label htmlFor="date_of_birth">Date de naissance</label>
                     <input
                         type="text"
                         name="date_of_birth"
-                        value={user.date_of_birth}
+                        value={formData?.date_of_birth}
                         placeholder="Date de naissance (JJ/MM/AAAA)*"
                         onChange={handleChange}
                         required
                     />
+                    <label htmlFor="email">Email</label>
                     <input
                         type="email"
                         name="email"
-                        value={user.email}
+                        value={formData?.email}
                         placeholder="Email*"
                         onChange={handleChange}
                         required
                     />
+                    <label htmlFor="zip_code">Code Postal</label>
                     <input
                         type="text"
                         name="zip_code"
-                        value={user.zip_code}
+                        value={formData?.zip_code}
                         placeholder="Code postal*"
                         onChange={handleChange}
                         required
                     />
+                    <label htmlFor="city">Ville</label>
                     <input
                         type="text"
                         name="city"
-                        value={user.city}
+                        value={formData?.city}
                         placeholder="Ville*"
                         onChange={handleChange}
                         required
                     />
-
+                    <label htmlFor="description">Description</label>
                     <input
                         type="text"
                         name="description"
-                        value={user.description}
+                        value={formData?.description}
                         placeholder="Description"
                         onChange={handleChange}
                         required
                     />
-
+                    <label htmlFor="password">Mot de passe</label>
                     <input
                         type="password"
                         name="password"
@@ -266,6 +359,7 @@ export default function ProfilPage() {
                         onChange={handleChange}
                         required
                     />
+                    <label htmlFor="confirmPassword">Confirmez votre mot de passe</label>
                     <input
                         type="password"
                         name="confirmPassword"
@@ -273,11 +367,11 @@ export default function ProfilPage() {
                         onChange={handleChange}
                         required
                     />
-                    <button className="buttonHover" type="submit">Enregistrer</button>
+                    <input type="submit" value="Valider" className=""></input>
                     {error && <p className="error-msg">{error}</p>}
                 </form>
             </Modal>
-
+    <Footer />
         </div>
     )
 }
