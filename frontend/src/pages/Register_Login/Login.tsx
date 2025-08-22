@@ -62,8 +62,9 @@ export default function Login() {
     }, [success, navigate]);
 
     return (
-        <>
+        <div id="testVH">
             <Rooftop />
+            <div id="containerLogin">
             <div className="auth-header">
                 <form onSubmit={handleSubmit} className="auth-form">
                     <h2>Connexion</h2>
@@ -93,7 +94,9 @@ export default function Login() {
                     </div>
                 </div>
             )}
+            </div>
             <Footer />
-        </>
+            
+        </div>
     );
 }

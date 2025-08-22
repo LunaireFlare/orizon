@@ -1,3 +1,8 @@
+
+#containerLogin {
+    width: 100%;
+}
+
 .auth.header {
     min-height: 80vh;
 }
@@ -60,5 +65,13 @@
         color: #047925;
         text-align: center;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+}
+
+
+@media (min-width: 1291px) {
+
+    #containerLogin {
+        min-height: calc(100vh - (99.2px + 239.3px));
     }
 }
