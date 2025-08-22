@@ -2,7 +2,7 @@ import React from 'react';
 import ConversationItem from '../../components/ConversationItem/ConversationItem';
 import type { Conversation } from '../../type/ConversationType';
 import './ConversationPage.scss';
-import Rooftop from '../../components/Rooftop/Rooftop';
+import RooftopConnected from '../../components/Rooftop/RooftopConnected';
 import Banner from '../../components/Banner/Banner';
 import Footer from '../../components/Footer/Footer';
 
@@ -33,7 +33,7 @@ const ConversationsPage: React.FC = () => {
 
     return (
         <>
-            <Rooftop />
+            <RooftopConnected />
             <Banner />
             <div id="container-content">
                 <section className="keyFigure">

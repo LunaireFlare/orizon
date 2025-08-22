@@ -49,8 +49,8 @@
 
     .buttonBox {
         background-color: #fff;
-        width: 20rem;
-        padding: 0.5rem;
+        width: fit-content;
+        padding: 1.9rem;
         display: flex;
         justify-content: space-around;
         border-radius: 3rem;
@@ -64,12 +64,9 @@
         color: black;
     }
 
-    .buttonHover a {
-        text-decoration: none;
-        font-size: 1rem;
-    }
-
-    .buttonHover2 a {
+    .buttonHover a,
+    .buttonHover2 a,
+    .buttonHover3 a {
         text-decoration: none;
         font-size: 1rem;
     }
@@ -79,5 +76,12 @@
         padding: 0.8rem 2.5rem;
         border-radius: 3rem;
         color: #fff;
+    }
+
+    .buttonHover3 a {
+        background-color: #caeaed;
+        padding: 0.8rem 2.5rem;
+        border-radius: 3rem;
+        color: #000000;
     }
 }
