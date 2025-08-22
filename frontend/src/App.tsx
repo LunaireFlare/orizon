@@ -20,8 +20,6 @@ function App() {
                 <Route path="/" element={<HomePage />} />
                 <Route path="/profil" element={<ProfilPage />} />
 
-                <Route path="/register" element={<Register />} />
-                <Route path="/login" element={<Login />} />
                 <Route path="/communaute" element={<CommunityPage />} />
                 <Route path="/evenements" element={<EventPage />} />
                 <Route path="/conversations" element={<ConversationsPage />} />
