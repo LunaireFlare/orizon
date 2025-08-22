@@ -1,6 +1,8 @@
 import HomePage from './pages/HomePage/HomePage.tsx';
 import ProfilPage from './pages/ProfilPage/ProfilPage.tsx';
 import ErrorPage from './pages/ErrorPage/ErrorPage.tsx';
+import MessagesPage from './pages/MessagesPage/MessagesPage.tsx';
+
 
 import './App.scss';
 import './assets/styles/index.scss'
@@ -15,10 +17,11 @@ function App() {
             <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/profil" element={<ProfilPage />} />
+                <Route path="/messages" element={<MessagesPage />} />
                 
                 <Route path="/register" element={<Register />} />
                 <Route path="/login" element={<Login />} />
-              
+            
                 <Route path="*" element={<ErrorPage code={500} title={''} message={''} />} /> {/* Route 404 */}
             </Routes>
         </div>
