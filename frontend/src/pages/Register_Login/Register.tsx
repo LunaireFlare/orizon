@@ -47,7 +47,7 @@ export default function Register() {
             // On exclus le confirmPassword de l'envoi au backend (éviter la répétition)
             const { confirmPassword, ...userData } = form;
 
-            const response = await fetch('http://backend.localhost:81/api/users', {
+            const response = await fetch('http://backend.localhost:81/users', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

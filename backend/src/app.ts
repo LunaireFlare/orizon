@@ -20,7 +20,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodySanitizerMiddleware); // Pour nettoyer les données
 
-app.use("/api", mainRouter);
+app.use(mainRouter);
+// app.use("/api", mainRouter);
 
 app.use(notFound);
 app.use(errorHandler);
