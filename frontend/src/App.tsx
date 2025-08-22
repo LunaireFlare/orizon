@@ -4,8 +4,6 @@ import CommunityPage from './pages/CommunityPage/CommunityPage.tsx';
 import EventPage from './pages/EventPage/EventPage.tsx';
 import MessagePage from './pages/MessagesPage/MessagesPage.tsx';
 import ErrorPage from './pages/ErrorPage/ErrorPage.tsx';
-import MessagesPage from './pages/MessagesPage/MessagesPage.tsx';
-
 
 import './App.scss';
 import './assets/styles/index.scss'
@@ -21,10 +19,8 @@ function App() {
             <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/profil" element={<ProfilPage />} />
-                <Route path="/messages" element={<MessagesPage />} />
-                
-                <Route path="/register" element={<Register />} />
-                <Route path="/login" element={<Login />} />
+                <Route path="/profil/:id" element={<ProfilPage />} />
+
                 <Route path="/communaute" element={<CommunityPage />} />
                 <Route path="/evenements" element={<EventPage />} />
                 <Route path="/conversations" element={<ConversationsPage />} />
