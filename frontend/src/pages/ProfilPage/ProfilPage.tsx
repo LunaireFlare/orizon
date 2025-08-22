@@ -45,12 +45,9 @@ export default function ProfilPage() {
 
     const [user] = useState<User>(mockUser);
     const [interests] = useState<Interest[]>(mockInterests);
-    // const [ open, setOpen ] = useState(false);
+    // const [ isModalOpen, setModalOpen ] = useState<boolean>(false);
 
-    const [ isModalOpen, setModalOpen ] = useState(false);
-    // const handleOpen = () => setModalOpen(true);
-    // const handleClose = () => setOpen(false);
-
+    const [ activeModal, setActiveModal ] = useState<string | null>(null);
 
     return (
         <div id="fullContainerProfil">
@@ -65,7 +62,7 @@ export default function ProfilPage() {
                         </div>
                         <div>
                             <button className="pathButton">Modifier mon profil</button>
-                            <button className="delButton">Supprimer mon compte</button>
+                            <button className="delButton" onClick={() => setActiveModal('deleteAccount')}>Supprimer mon compte</button>
                         </div>
                     </div>
                     <div className="bodyProfil">
@@ -103,7 +100,8 @@ export default function ProfilPage() {
             <div id="eventsCreated">
                 <div className="eventOptions">
                     <h2>Les évènements créés par moi</h2>
-                    <button className="pathButton" onClick={() => setModalOpen(true)}>Créer un évènement</button>
+                    <button className="pathButton" onClick={() => setActiveModal('createEvent')}>
+                        Créer un évènement</button>
                 </div>
                 <CardEvent />  
             </div>
@@ -121,15 +119,8 @@ export default function ProfilPage() {
                 <CardEvent />  
             </div>
 
-            {/* {open && (
-                <div className="modal">
-                    <h2>Créer un évènement</h2>
-                    <button onClick={handleClose}>x</button>
-                </div>
-            )} */}
-
-            <Modal isOpen={isModalOpen} onClose={() => {setModalOpen(false)}}>
-                <div className="#containerCreateEvent">
+            <Modal isOpen={activeModal === 'createEvent'} onClose={() => setActiveModal(null)}>
+                <div id="containerCreateEvent">
                     <h2>Créer un évènement</h2>
 
                     <p>Tous les champs doivent obligatoirement être remplis.</p>
@@ -200,7 +191,16 @@ export default function ProfilPage() {
                         <input type="submit" value="Valider" className=""></input>
                     </form>
                 </div>
+            </Modal>
 
+            <Modal isOpen={activeModal === 'deleteAccount'} onClose={() => setActiveModal(null)}>
+                <div id="containerDeleteAccount">
+                    <h2>Supprimer mon compte</h2>
+                    <p>Attention ! Vous êtes sur le point de supprimer votre compte. Si vous cliquez sur le bouton "Je confirme", vous n'aurez plus accès au site et vos données personnelles seront effacées. Si vous ne souhaitez pas supprimer votre compte, cliquez sur la croix rouge en haut à droite ou n'importe où en dehors de cet encadré.</p>
+                    <p>Êtes-vous sûr(e) de vouloir supprimer votre compte ?</p>
+
+                    <button className="delButton">Je confirme</button>
+                </div>
             </Modal>
 
             <Footer />

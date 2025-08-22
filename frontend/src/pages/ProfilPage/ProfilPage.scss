@@ -129,11 +129,34 @@
     margin-top: 5rem;
 }
 
-/* ------------- Create Event Modal ---------------- */
 
-#containerCreateEvent h2 {
-    margin: 1rem 0;
+/* ------------- Delete Account Modal ---------------- */
+
+#containerDeleteAccount h2,
+#containerDeleteAccount p {
+    margin-bottom: 1rem;
 }
+
+#containerDeleteAccount p {
+    // color: #c52525;
+    color: black;
+    text-align: justify;
+    font-weight: 500;
+}
+
+#containerDeleteAccount .delButton {
+    padding: 1rem 3rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    background-color: #c52525;
+    color: #fff;
+    border: none;
+    border-radius: 3rem;
+    margin-top: 0.5rem;
+}
+
+
+/* ------------- Create Event Modal ---------------- */
 
 .eventForm {
     width: 100%;
@@ -187,6 +210,7 @@
 .eventForm textarea {
     min-height: 7rem;
     resize: vertical;
+    border-radius: 1.6rem;
 }
 
 .eventAddressDetails {
