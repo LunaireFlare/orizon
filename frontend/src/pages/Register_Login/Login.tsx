@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 
 import './Register_Login.scss';
 import Rooftop from '../../components/Rooftop/Rooftop';
@@ -23,7 +23,7 @@ export default function Login() {
         setLoading(true);
 
         try {
-            const response = await fetch('http://localhost:3000/login', {
+            const response = await fetch('http://backend.localhost:81/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -55,7 +55,7 @@ export default function Login() {
     useEffect(() => {
         if (success) {
             const timeout = setTimeout(() => {
-                navigate('/');
+                navigate('/profil/:id');
             }, 2000);
             return () => clearTimeout(timeout);
         }
@@ -66,6 +66,9 @@ export default function Login() {
             <Rooftop />
             <div id="containerLogin">
             <div className="auth-header">
+
+                <Link to="/" className="link">&#8626; Retour à l'accueil du site</Link>
+
                 <form onSubmit={handleSubmit} className="auth-form">
                     <h2>Connexion</h2>
                     <input

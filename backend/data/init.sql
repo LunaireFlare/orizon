@@ -54,7 +54,7 @@ CREATE TABLE "user" (
     date_of_birth DATE NOT NULL,
     role TEXT NOT NULL,
     photo TEXT,
-    description TEXT NOT NULL,
+    description TEXT,
     status status_user DEFAULT 'en_attente',
     created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamptz
