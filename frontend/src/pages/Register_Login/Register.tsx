@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 
 import './Register_Login.scss';
 import Rooftop from '../../components/Rooftop/Rooftop';
@@ -92,6 +92,8 @@ export default function Register() {
         <>
             <Rooftop />
             <div className="auth-header">
+
+                <Link to="/" className="link">&#8626; Retour à l'accueil du site</Link>
 
                 <form onSubmit={handleSubmit} className="auth-form">
                     <h2>Inscription</h2>

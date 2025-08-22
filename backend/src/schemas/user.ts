@@ -10,19 +10,14 @@ export const userSchema = z.object({
   firstname: z.string().min(1).max(255),
   email: z.email(),
   password: z.string().min(8).max(255),
-  zip_code: z
-    .string()
-    .length(5)
-    .regex(/^\d{5}$/),
+  zip_code: z.string().length(5).regex(/^\d{5}$/),
   city: z.string().min(1).max(255),
   date_of_birth: z.preprocess(
-    (val) => (val ? new Date(val as string) : val),
-    z.date().max(sixtyYearsAgo(), "Vous devez avoir au moins 60 ans")
+      (val) => (val ? new Date(val as string) : val),
+      z.date().max(sixtyYearsAgo(), "Vous devez avoir au moins 60 ans")
   ),
   role: z.string().default("user"),
   photo: z.string().nullable().default(null),
   description: z.string().min(1).max(255).nullable().default(null),
-  status: z
-    .enum(["en_attente", "valide", "bloqué", "désactivé"])
-    .default("en_attente"),
+  status: z.enum(["en_attente", "valide", "bloqué", "désactivé"]).default("en_attente")
 });

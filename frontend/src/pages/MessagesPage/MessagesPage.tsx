@@ -1,4 +1,4 @@
-import Rooftop from '../../components/Rooftop/Rooftop.tsx'
+import RooftopConnected from '../../components/Rooftop/RooftopConnected';
 import Banner from '../../components/Banner/Banner.tsx'
 import Footer from '../../components/Footer/Footer.tsx';
 
@@ -9,7 +9,7 @@ export default function MessagePage() {
 
     return (
         <div id="fullContainerMessages">
-            <Rooftop />
+            <RooftopConnected />
             <Banner />
             <div id="containerConversation">
                 <h2>Votre Conversation</h2>
