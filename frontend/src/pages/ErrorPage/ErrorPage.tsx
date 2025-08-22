@@ -32,10 +32,13 @@ export default function ErrorPage({
     return (
         <>
             <Rooftop />
-            <div className="error-container">
-                <h1>{code} - {errorTitle}</h1>
-                <p>{errorMessage}</p>
-                <button onClick={() => window.location.href = '/'}>Retour à l'accueil</button>
+            <div className="error-page">
+
+                <div className="error-container">
+                    <h1>{code} - {errorTitle}</h1>
+                    <p>{errorMessage}</p>
+                    <button onClick={() => window.location.href = '/'}>Retour à l'accueil</button>
+                </div>
             </div>
             {'}'}
             <Footer />

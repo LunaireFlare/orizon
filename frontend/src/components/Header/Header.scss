@@ -15,10 +15,14 @@
     width: 100%;
   }
 
-  .one {
+.one {
     grid-column: 1 / 8;
     grid-row: 2 / 2;
     text-align: center;
+
+    button {
+      margin-top: 1rem;
+    }
 }
 
 .two {
@@ -29,6 +33,11 @@
 .three {
     grid-column: 4 / 8;
 }
+
+.title, .description {
+  padding: 0.3rem 0;
+}
+
 
 
 /* -----------------Version Desktop ----------------- */
