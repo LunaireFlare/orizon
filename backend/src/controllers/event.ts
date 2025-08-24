@@ -1,12 +1,13 @@
-import { Response, Request } from "express";
+import { Response, Request } from 'express';
 import { Event } from '../models/associations.js';
-import { eventSchema } from "../schemas/event.js";
+import { eventSchema } from '../schemas/event.js';
 
 const eventController = {
         /**
          * Retourne la liste des évènements.
          * @param req
-         * @param res 
+         * @param res
+         * @returns
         */
         async getAllEvents(_req: Request, res: Response) {
             const events = await Event.findAll();
@@ -48,7 +49,12 @@ const eventController = {
          */
         async createEvent(req: Request, res: Response) {
             const body = req.body;
-            // TODO: récupérer JWT d'authentification
+
+            const creator_id = req.user.id;
+            if (!creator_id) {
+                return res.status(401).json({ error: 'Accès non autorisé. Veuillez vous connecter' });
+            }
+
             const { error, data } = eventSchema.safeParse(body);
     
             if (error) {
@@ -57,9 +63,13 @@ const eventController = {
     
             const { name, start_date, end_date, description, address, zip_code, city } = data;
 
-            // ? vérification qu'évènement existe déjà ?
+            const eventExists = await Event.findOne({ where: { creator_id, start_date }});
+
+            if (eventExists) {
+                return res.status(400).json({ error: 'Vous avez déjà un évènement qui commence à la même heure ce jour-là.' });
+            }
     
-            const createdEvent = await Event.create({ name, start_date, end_date, description, address, zip_code, city });
+            const createdEvent = await Event.create({ name, start_date, end_date, description, address, zip_code, city, creator_id });
     
             res.status(201).json(createdEvent);
         },
