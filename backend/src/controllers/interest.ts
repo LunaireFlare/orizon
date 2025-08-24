@@ -2,7 +2,6 @@ import { Response, Request } from "express";
 import { Interest } from '../models/associations.js';
 import { interestSchema } from "../schemas/interest.js";
 
-
 const interestController = {
 
     /**
@@ -10,7 +9,7 @@ const interestController = {
      * @param req
      * @param res 
      */
-    async getAllInterests(req: Request, res: Response) {
+    async getAllInterests(_req: Request, res: Response) {
         const interests = await Interest.findAll();
         res.json(interests);
     },
@@ -28,9 +27,9 @@ const interestController = {
         };
         
         const { name } = data;
-        const userExists = await Interest.findOne({ where: { name: name } });
+        const interestExists = await Interest.findOne({ where: { name: name } });
         
-        if (userExists !== null) {
+        if (interestExists !== null) {
             return res.status(400).json({ error: 'Interest already exists.' });
         };
         
