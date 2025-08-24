@@ -8,6 +8,7 @@ eventRouter.route('/events')
     .post(authMiddleware, eventController.createEvent);
 
 eventRouter.route('/events/:id')
-    .get(authMiddleware, eventController.getOneEvent);
+    .get(authMiddleware, eventController.getOneEvent)
+    .delete(authMiddleware, eventController.deleteEvent);
 
 export { eventRouter };
