@@ -1,4 +1,4 @@
-import {useState } from 'react';
+import { useState } from 'react';
 import Modal from './Modal';
 import './CardEvent.scss';
 
@@ -18,7 +18,7 @@ type Event = {
 
 type User = {
     id: number,
-    firstname: string, 
+    firstname: string,
     lastname: string
 }
 
@@ -47,7 +47,7 @@ const mockEvent = [
         zip_code: 92100,
         description: "Apprenez à faire des pâtes fraîches, et les secrets de la cuisine italienne.",
         creator_id: "Elodie VINCENT",
-        interest_id: ["Cuisine"]
+        interest_id: ["Cuisine", "Musique"]
     },
     {
         id: 1,
@@ -93,70 +93,88 @@ export default function CardEvent() {
 
     const [users] = useState<User[]>(mockUser);
 
+    const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
+
+    const toggleInterest = (interest: string) => {
+        setSelectedInterests(prev =>
+            prev.includes(interest)
+                ? prev.filter(i => i !== interest)
+                : [...prev, interest]
+        );
+    };
+
     return (
         <div id="containerCard">
-            
-                {events.map(event => (
-                    <div className="elmCard">
-                        <div key={event.id}>
-                            <a onClick={() => { setSelectedCard(event); setModalOpen(true);}}><img src={event.photo} alt="photo evenement" /></a>
-                            <a onClick={() => { setSelectedCard(event); setModalOpen(true);}}><h3>{event.name}</h3></a>
-                            <p>{event.start_date} au {event.end_date}</p>
-                            <p><span>{event.city} ({event.zip_code})</span></p>
-                            <p className='eventDescription'>{event.description}</p>
-                            <button className="interestEvent">{event.interest_id}</button>
-                        </div>
+
+            {events.map(event => (
+                <div className="elmCard">
+                    <div key={event.id}>
+                        <a onClick={() => { setSelectedCard(event); setModalOpen(true); }}><img src={event.photo} alt="photo evenement" /></a>
+                        <a onClick={() => { setSelectedCard(event); setModalOpen(true); }}><h3>{event.name}</h3></a>
+                        <p>{event.start_date} au {event.end_date}</p>
+                        <p><span>{event.city} ({event.zip_code})</span></p>
+                        <p className='eventDescription'>{event.description}</p>
+                        {event.interest_id.map((interest, index) => (
+                            <button
+                                key={index}
+                                className={`interestEvent ${selectedInterests.includes(interest) ? 'active' : ''}`}
+                                onClick={() => toggleInterest(interest)}
+                            >
+                                {interest}
+                            </button>
+                        ))}
                     </div>
-                ))}
-                <Modal                     
-                    isOpen={isModalOpen}
-                    onClose={() => {
-                        setModalOpen(false);
-                        setSelectedCard(null);
-                        }}
-                    >
-                        <div>
-                            {selectedCard && (
-                                <div className="elmCardModal">
-                                    <div key={selectedCard.id} 
-                                         id="containerModal">
-                                        <div id="mdlSection1">
-                                            <img src={selectedCard.photo} alt="photo evenement" />
-                                            <h3>{selectedCard.name}</h3>
-                                            <p>{selectedCard.start_date} au {selectedCard.end_date}</p>
-                                            <p>{selectedCard.city} ({selectedCard.zip_code})</p>
-                                            <p>{selectedCard.address}</p>
-                                            <p>Organisateur: {selectedCard.creator_id}</p>
-                                            <p>{selectedCard.description}</p>
-                                            <button className="interestEvent">{selectedCard.interest_id}</button>
-                                            <div className="btnChoiseParticiped">
-                                                <button className="btnParticiped"> Participer</button>
-                                                <button className="btnDeclinePcp">Ne participe plus</button>
-                                            </div>
-                                            
-                                            {/* bouton pour le createur d'evenement
+                </div>
+            ))}
+            <Modal
+                isOpen={isModalOpen}
+                onClose={() => {
+                    setModalOpen(false);
+                    setSelectedCard(null);
+                }}
+            >
+                <div>
+                    {selectedCard && (
+                        <div className="elmCardModal">
+                            <div key={selectedCard.id}
+                                id="containerModal">
+                                <div id="mdlSection1">
+                                    <img src={selectedCard.photo} alt="photo evenement" />
+                                    <h3>{selectedCard.name}</h3>
+                                    <p>{selectedCard.start_date} au {selectedCard.end_date}</p>
+                                    <p>{selectedCard.city} ({selectedCard.zip_code})</p>
+                                    <p>{selectedCard.address}</p>
+                                    <p>Organisateur: {selectedCard.creator_id}</p>
+                                    <p>{selectedCard.description}</p>
+                                    <button className="interestEvent">{selectedCard.interest_id}</button>
+                                    <div className="btnChoiseParticiped">
+                                        <button className="btnParticiped"> Participer</button>
+                                        <button className="btnDeclinePcp">Ne participe plus</button>
+                                    </div>
+
+                                    {/* bouton pour le createur d'evenement
                                             <div className="btnChoisePathDel">
                                                 <button className="btnPahtParticiped"> participer</button>
                                                 <button className="btnDelParticiped">Ne participe plus</button>
                                             </div> */}
 
-                                        </div>
-                                        <div id="mdlSection2">
-                                            <h3>Liste des participants</h3>
-                                            {users.map(user => (
-                                                <div key={user.id}>
-                                                <p>{user.firstname} {user.lastname}</p>
-                                                </div>
-                                            ))}
-
-                                        </div>
-
-                                    </div>
                                 </div>
-                            )}
+                                <div id="mdlSection2">
+                                    <h3>Liste des participants</h3>
+                                    {users.map(user => (
+                                        <div key={user.id}>
+                                            <p>{user.firstname} {user.lastname}</p>
+                                        </div>
+                                    ))}
 
-                        </div>   
-                </Modal>  
+                                </div>
+
+                            </div>
+                        </div>
+                    )}
+
+                </div>
+            </Modal>
         </div>
     )
 }
