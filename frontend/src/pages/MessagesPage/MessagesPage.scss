@@ -21,7 +21,7 @@
     background-color: var(--blue-green-sky);
     border-radius: 20px ;
     margin: 0 auto;
-    padding: 0.5rem;
+    padding: 2rem 0.3rem;
 }
 
 #headMessages {
@@ -35,6 +35,7 @@
     color: #fff;
     padding-left: 0.5rem;
     overflow-wrap: break-word;
+    font-size: 1.5rem;
 }
 
 #headMessages img{
@@ -51,6 +52,7 @@
 
 .bodyConversation textarea{
     display: block;
+    font-size: 1rem;
     margin: 0 auto;
     background-color: var(--white-body);
     border-radius: 20px ;
@@ -65,7 +67,7 @@
 .leftMessages {
     display: flex;
     align-items: flex-end;
-    margin-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
 }
 
 .leftMessages img {
@@ -77,12 +79,14 @@
     padding: 1.5rem;
     border-radius: 20px 20px 20px 0px ;
     margin-left: 0.5rem;
+    text-align: justify;
 }
 
 .rightMessages {
     display: flex;
     align-items: flex-end;
     justify-content: flex-end;
+    margin-bottom: 1.5rem;
 }
 
 .rightMessages img {
@@ -94,6 +98,7 @@
     padding: 1.5rem;
     border-radius: 20px 20px 0px 20px ;
     margin-right: 0.5rem;
+    text-align: justify;
 }
 
 .sendMessage{
@@ -114,8 +119,16 @@
 @media (min-width: 1291px) {
 
     #fullContainerMessages {
-        width: 1280px;
         margin: 0 auto;
+    }
+
+    #containerConversation {
+        width: 1280px;
+        padding: 0rem;
+    }
+
+    #containerConversation h2 {
+        margin-top: 4rem;
     }
 
     #containerMessages .headMessages {
@@ -126,9 +139,19 @@
 
     .bodyConversation textarea{
         box-sizing: content-box;
+        font-size: 1rem;
     }
 
     .sendMessage{
         width: 20%;
+        font-size: 1rem;
+    }
+
+    .bodyConversation {
+        padding: 2.5rem;
+    }
+
+    #containerMessages {
+        padding: 3rem;
     }
 }

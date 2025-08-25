@@ -62,8 +62,9 @@ export default function Login() {
     }, [success, navigate]);
 
     return (
-        <>
+        <div id="testVH">
             <Rooftop />
+            <div id="containerLogin">
             <div className="auth-header">
 
                 <Link to="/" className="link">&#8626; Retour à l'accueil du site</Link>
@@ -96,7 +97,9 @@ export default function Login() {
                     </div>
                 </div>
             )}
+            </div>
             <Footer />
-        </>
+            
+        </div>
     );
 }

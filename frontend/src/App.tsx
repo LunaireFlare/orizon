@@ -23,6 +23,7 @@ function App() {
 
                 <Route path="/communaute" element={<CommunityPage />} />
                 <Route path="/evenements" element={<EventPage />} />
+
                 <Route path="/conversations" element={<ConversationsPage />} />
                 <Route path="/messages" element={<MessagesPage />} />
 
