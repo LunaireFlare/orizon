@@ -49,6 +49,14 @@
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }
 
+.elmCard h3 {
+    cursor: pointer;
+}
+
+.elmCard img {
+    cursor: pointer;
+}
+
 /* *************** Version Desktop ************* */
 
 @media (min-width: 1291px) {
@@ -74,6 +82,7 @@
 
     .mdlSection1 img {
         width: 100%;
+        cursor: pointer;
     }
 
     #mdlSection2 {
