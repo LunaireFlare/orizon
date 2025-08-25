@@ -21,19 +21,14 @@ type User = {
     zip_code: string,
     city: string,
     date_of_birth: string,
-    description: string
+    description: string,
+    interests: Interest[]
 }
 
 type Interest = {
     id: number,
     name: string
 }
-
-const mockInterests: Interest[] = [
-    { id: 1, name: "cuisine" },
-    { id: 2, name: "sport" },
-    { id: 3, name: "cinema" }
-];
 
 function getAge(dateOfBirth: Date | string): number {
     const dob = new Date(dateOfBirth);
@@ -56,7 +51,6 @@ export default function ProfilPage() {
         setActiveModal('modifyAccount');
     };
 
-    const [interests] = useState<Interest[]>(mockInterests);
     const {id} = useParams();
 
     React.useEffect(() => {
@@ -69,6 +63,9 @@ export default function ProfilPage() {
             .catch((err) => console.error("Erreur API:", err));
 
         },  [id]);
+
+
+        
 
     const [_success, setSuccess] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -111,7 +108,7 @@ export default function ProfilPage() {
                 body: JSON.stringify({ ...formData, confirmPassword: undefined }),
             });            
 
-            const data = await response.json();
+            const data = await response.json(); 
 
             if (!response.ok) {
                 setError(data.error || "Erreur lors de la modification.");
@@ -165,7 +162,7 @@ export default function ProfilPage() {
                             )}
                         </div>
                         <div className="contentInterest">
-                                {interests.map((interest) => (
+                                {user.interests && user.interests.map((interest) => (
                                 <div key={interest.id}>
                                 <button className="intButton">{interest.name}</button>
                                 </div>
