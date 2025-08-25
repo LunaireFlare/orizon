@@ -44,10 +44,10 @@ export default function Register() {
         setLoading(true);
 
         try {
-            // On excluse le confirmPassword de l'envoi au backend (éviter la répétition)
+            // On exclus le confirmPassword de l'envoi au backend (éviter la répétition)
             const { confirmPassword, ...userData } = form;
 
-            const response = await fetch('http://localhost:3000/users', {
+            const response = await fetch('http://backend.localhost:81/users', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -82,7 +82,7 @@ export default function Register() {
     useEffect(() => {
         if (success) {
             const timeout = setTimeout(() => {
-                navigate('/se connecter');
+                navigate('/connexion');
             }, 2000);
             return () => clearTimeout(timeout);
         }

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router';
 
-import Rooftop from '../../components/Rooftop/Rooftop.tsx'
+import RooftopConnected from '../../components/Rooftop/RooftopConnected';
 import Banner from '../../components/Banner/Banner.tsx'
 import Footer from '../../components/Footer/Footer.tsx';
 import CardEvent from '../../components/CardEvent/CardEvent.tsx';
@@ -61,7 +61,7 @@ export default function ProfilPage() {
 
     React.useEffect(() => {
 
-        fetch(`http://localhost:3000/users/${id}`)
+        fetch(`http://backend.localhost:81/users/${id}`)
             .then((res) => res.json())
             .then((data: User) => {
                 setUser(data);
@@ -103,7 +103,7 @@ export default function ProfilPage() {
 
         try {
 
-            const response = await fetch(`http://localhost:3000/users/${id}`, {
+            const response = await fetch(`http://backend.localhost:81/users/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -131,7 +131,7 @@ export default function ProfilPage() {
 
     return (
         <div id="fullContainerProfil">
-            <Rooftop />
+            <RooftopConnected />
             <Banner />
 
             <div  id="containerProfil">

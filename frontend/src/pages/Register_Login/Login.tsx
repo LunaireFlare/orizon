@@ -23,7 +23,7 @@ export default function Login() {
         setLoading(true);
 
         try {
-            const response = await fetch('http://localhost:3000/login', {
+            const response = await fetch('http://backend.localhost:81/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -55,15 +55,16 @@ export default function Login() {
     useEffect(() => {
         if (success) {
             const timeout = setTimeout(() => {
-                navigate('/');
+                navigate('/profil/:id');
             }, 2000);
             return () => clearTimeout(timeout);
         }
     }, [success, navigate]);
 
     return (
-        <>
+        <div id="testVH">
             <Rooftop />
+            <div id="containerLogin">
             <div className="auth-header">
 
                 <Link to="/" className="link">&#8626; Retour à l'accueil du site</Link>
@@ -96,7 +97,9 @@ export default function Login() {
                     </div>
                 </div>
             )}
+            </div>
             <Footer />
-        </>
+            
+        </div>
     );
 }

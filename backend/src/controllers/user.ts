@@ -26,15 +26,15 @@ const userController = {
     async getOneUser(req: Request, res: Response) {
         const id = parseInt(req.params.id);
 
-        const user = await User.findByPk(id,{
+        const user = await User.findByPk(id, {
             include: [
                 {
-                    association: 'interests',
+                    association: "interests",
                 },
                 {
-                    association: 'events',
+                    association: "events",
                 },
-            ]
+            ],
         });
 
         if (!user) {
