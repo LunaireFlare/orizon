@@ -21,10 +21,47 @@
     width: 3rem;
 }
 
+#navMobile .navButton {
+    cursor: pointer;
+}
+
+.mobileMenu {
+    width: 100%;
+    margin: 0 auto;
+    position: absolute;
+    top: 60px;
+    right: 0;
+    background: var(--blue-green-sky);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    text-align: right;
+  
+    a {
+      padding: 0.5rem 0;
+      text-decoration: none;
+      color: #fff;
+    }
+
+  }
+
+  .mobileMenu a:hover {
+    background-color: #fff;
+    color: #000000;
+    padding-right: 0.5rem;
+    border-radius: 0.5rem;
+  }
+
 /* -----------------Version Desktop ----------------- */
 
 @media (min-width: 1291px) {
     #navMobile {
+        display: none;
+    }
+
+    .mobileMenu {
         display: none;
     }
 

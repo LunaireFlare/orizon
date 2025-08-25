@@ -1,5 +1,4 @@
 .auth-header {
-    width: 1280px;
     margin: 1.5rem auto;
 }
 
@@ -66,4 +65,14 @@
         text-align: center;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     }
+}
+
+
+@media (min-width: 1291px) {
+
+    .auth-header {
+        width: 1280px;
+        margin: 1.5rem auto;
+    }
+
 }
