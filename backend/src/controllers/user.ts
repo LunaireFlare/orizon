@@ -88,7 +88,9 @@ const userController = {
             description,
         });
 
-        res.status(201).json(createdUser);
+        const { password: undefined, ...userWithoutPassword } = createdUser.toJSON();
+        
+        res.status(201).json(userWithoutPassword);
     },
 
     /**
@@ -142,7 +144,9 @@ const userController = {
 
         await user.save();
 
-        res.json(user);
+        const { password: undefined, ...userWithoutPassword } = user.toJSON();
+
+        res.json(userWithoutPassword);
     },
 
     /**
