@@ -130,7 +130,7 @@ export default function CardEvent() {
                                             <p>{selectedCard.description}</p>
                                             <button className="interestEvent">{selectedCard.interest_id}</button>
                                             <div className="btnChoiseParticiped">
-                                                <button className="btnParticiped"> participer</button>
+                                                <button className="btnParticiped"> Participer</button>
                                                 <button className="btnDeclinePcp">Ne participe plus</button>
                                             </div>
                                             
