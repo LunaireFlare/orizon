@@ -14,7 +14,7 @@ const eventController = {
         },
 
         /**
-        * Retourne un évènement à partir de son id.
+        * Retourne un évènement avec intérêts et participants à partir de son id.
         * @param req 
         * @param res 
         */
