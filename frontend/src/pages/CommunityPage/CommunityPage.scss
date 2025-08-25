@@ -21,8 +21,19 @@
     width: 100%;
     display: block;
     font-size: 1rem;
-    padding: 0.5rem;
+    padding: 0.8rem;
     border-radius: 3rem;
+    border: solid 2px #0FA3B1;
+}
+
+#containerSearchUser input::placeholder {
+    font-style: italic;
+}
+
+#containerSearchUser input:focus,
+#containerSearchUser input:active {
+    border: solid 2px #F0B64A;
+    outline: none;
 }
 
 #containerSearchUser form {
@@ -33,8 +44,11 @@
     width: 100%;
     display: block;
     font-size: 1rem;
-    padding: 0.5rem;
+    padding: 0.8rem;
     border-radius: 3rem;
+    border: none;
+    background-color: #0FA3B1;
+    color: #fff;
 }
 
 #searchUser {
@@ -66,6 +80,14 @@
     background-color: #fff;
 }
 
+.elmCardUser h3 {
+    margin-top: 1rem;
+}
+
+.interestUser {
+    margin-top: 1rem;
+}
+
 /* ------------- Card user ---------------- */
 
 #userCommunity {
@@ -79,7 +101,6 @@
 @media (min-width: 1291px) {
 
     #containerSearchUser {
-        width: 1280px;
         padding: 5rem 1rem 5rem 1rem;
     }
 
@@ -90,7 +111,7 @@
     }
 
     .searchUser {
-        width: 1291px;
+        width: 1280px;
         margin: 0 auto;
     }
 
