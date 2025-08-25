@@ -18,7 +18,7 @@ export default function EventPage() {
     const [options, setOptions] = useState<Search[]>([]);
     const [query, setQuery] = useState<string>("");
     const [filtered, setFiltered] = useState<Search[]>([]);
-    const [selected, setSelected] = useState<string>("");
+    const [_selected, setSelected] = useState<string>("");
 
 
     // Appel de l'Api 

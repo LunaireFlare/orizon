@@ -17,7 +17,7 @@ export default function HomePage() {
 
                     <div className="blcFigure">
                         <div className="elemFigure">
-                            <img width="150px" src="../../src/assets/images/communauteactive.webp" alt="picto-communauté-active" />
+                            <img width="150px" src="../../src/assets/images/communauteactive.webp" alt="-active" />
                             <h4>COMMUNAUTÉ ACTIVE</h4>
                             <p>Rejoignez un espace bienveillant où entraide, bonne humeur et échanges authentiques sont au cœur de chaque interaction.</p>
                         </div>

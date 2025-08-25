@@ -153,7 +153,9 @@ export default function Register() {
                         onChange={handleChange}
                         required
                     />
-                    <button className="buttonHover" type="submit">S'inscrire</button>
+                    <button className="buttonHover" type="submit" disabled={loading}>
+                        {loading ? "Chargement..." : "S'inscrire"}
+                    </button>
                     {error && <p className="error-msg">{error}</p>}
                 </form>
             </div>
