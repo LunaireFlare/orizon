@@ -146,7 +146,7 @@ const eventController = {
             };
 
             // TODO: erreur ==> update or delete on table \"event\" violates foreign key constraint \"event_participant_event_id_fkey\" on table \"event_participant\". Faut d'abord supprimer enregistrements event_participant associés à cet évènement car utilisent clef primaire de event et donc event ne peut pas être supprimé avant les enregistrements qui en dépendent.
-            // ? marche 2 fois sur 3
+            // ? fonctionne si évènement n'a pas de participant associé.
 
             await event.destroy();
 
