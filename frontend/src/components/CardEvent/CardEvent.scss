@@ -57,6 +57,89 @@
     cursor: pointer;
 }
 
+#containerModal {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    grid-gap: 1.2rem;
+}
+
+.mdlSection1 img {
+    width: 100%;
+    cursor: pointer;
+}
+
+.elmCardModal .interestEvent {
+    background-color: var(--blue-green-sky);
+    color: #fff;
+    font-size: 1rem;
+    font-style: italic;
+    padding: 0.3rem 1.5rem;
+    border: none;
+    margin-top: 0.5rem;
+    border-radius: 3rem;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.btnChoiseParticiped {
+    display: flex;
+    justify-content: end;
+}
+
+#containerModal .btnParticiped {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    background-color: #F0B64A;
+    color: #fff;
+    border: none;
+    border-radius: 3rem;
+    margin-top: 0.5rem;
+    margin-right: 1rem;
+}
+
+#containerModal .btnDeclinePcp {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    background-color: #c52525;
+    color: #fff;
+    border: none;
+    border-radius: 3rem;
+    margin-top: 0.5rem;
+    margin-right: 1rem;
+}
+
+
+
+
+#containerModal .btnParticiped {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    background-color: #F0B64A;
+    color: #fff;
+    border: none;
+    border-radius: 3rem;
+    margin-top: 0.5rem;
+    margin-right: 1rem;
+}
+
+#containerModal .btnDeclinePcp {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    background-color: #c52525;
+    color: #fff;
+    border: none;
+    border-radius: 3rem;
+    margin-top: 0.5rem;
+    margin-right: 1rem;
+}
+
+
+
+
+
 /* *************** Version Desktop ************* */
 
 @media (min-width: 1291px) {
@@ -73,16 +156,11 @@
     #containerModal {
         display: grid;
         grid-template-columns: repeat(6, 1fr);
-        grid-gap: 1.2rem;
+        grid-gap: 3rem;
     }
 
     #mdlSection1 {
         grid-column: 1 / 5;
-    }
-
-    .mdlSection1 img {
-        width: 100%;
-        cursor: pointer;
     }
 
     #mdlSection2 {
@@ -90,45 +168,12 @@
         grid-column: 5 / 6;
     }
 
-    .elmCardModal .interestEvent {
-        background-color: var(--blue-green-sky);
-        color: #fff;
-        font-size: 1rem;
-        font-style: italic;
-        padding: 0.3rem 1.5rem;
-        border: none;
-        margin-top: 0.5rem;
-        border-radius: 3rem;
-        box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-    }
 
     .btnChoiseParticiped {
         display: flex;
         justify-content: end;
     }
 
-    #containerModal .btnParticiped {
-        padding: 0.6rem 1.2rem;
-        font-size: 0.8rem;
-        font-weight: 600;
-        background-color: #F0B64A;
-        color: #fff;
-        border: none;
-        border-radius: 3rem;
-        margin-top: 0.5rem;
-        margin-right: 1rem;
-    }
-    
-    #containerModal .btnDeclinePcp {
-        padding: 0.6rem 1.2rem;
-        font-size: 0.8rem;
-        font-weight: 600;
-        background-color: #c52525;
-        color: #fff;
-        border: none;
-        border-radius: 3rem;
-        margin-top: 0.5rem;
-        margin-right: 1rem;
-    }
+
 
 }
