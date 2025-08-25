@@ -1,20 +1,33 @@
+import { useState } from 'react';
 import { NavLink } from 'react-router';
 import logo from '../../assets/images/Logo_Orizon.webp';
 import pictonav from '../../assets/images/navburger.webp';
 
 import './Rooftop.scss';
 
+
 export default function Rooftop() {
+
+    const [ bgrOpen, setBgrOpen ] = useState(false);
+
     return (
         <div>
             <div id='navMobile'>
                 <NavLink to='/'> {/* ✅ Redirection via logo mobile */}
                     <img src={logo} alt='logo orizon' />
                 </NavLink>
-                <div className='navButton'>
+                <div className='navButton' onClick={() => setBgrOpen(!bgrOpen)}>
                     <img width='20px' src={pictonav} alt='navigation' />
                 </div>
             </div>
+
+            {bgrOpen && (
+                <div className="mobileMenu">
+                    <NavLink to='/inscription' onClick={() => setBgrOpen(false)}>S'inscrire</NavLink>
+                    <NavLink to='/connexion' onClick={() => setBgrOpen(false)}>Connexion</NavLink>
+                </div>
+            )
+            }
 
             <div id='elemRoof'>
                 <NavLink to='/'> {/*  Redirection via logo desktop */}

@@ -1,6 +1,5 @@
 .auth-header {
-  width: 1280px;
-  margin: 1.5rem auto;
+    margin: 1.5rem auto;
 }
 
 .auth-header .link {
@@ -71,14 +70,24 @@
   align-items: center;
   z-index: 1000;
 
-  .modal-content {
-    background-color: white;
-    padding: 2rem;
-    border-radius: 8px;
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #047925;
-    text-align: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  }
+    .modal-content {
+        background-color: white;
+        padding: 2rem;
+        border-radius: 8px;
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #047925;
+        text-align: center;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+}
+
+
+@media (min-width: 1291px) {
+
+    .auth-header {
+        width: 1280px;
+        margin: 1.5rem auto;
+    }
+
 }
