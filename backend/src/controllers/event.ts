@@ -2,6 +2,8 @@ import { Response, Request } from 'express';
 import { Event, User } from '../models/associations.js';
 import { createEventSchema, updateEventSchema } from '../schemas/event.js';
 
+import { Event_Participant } from '../models/associations.js';
+
 const eventController = {
         /**
          * Retourne la liste des évènements.
@@ -26,6 +28,9 @@ const eventController = {
                     include: [
                         {
                             association: 'interests',
+                        },
+                        {
+                            association: 'creator',
                         },
                         {
                             association: 'users',
@@ -167,9 +172,14 @@ const eventController = {
                 return res.status(400).json({ error: 'User not found.' });
             };
 
-            await event.addUser(user);
+            // await event.addUser(user);
 
-            const eventWithUpdatedParticipants = await Event.findByPk(event_id, { include: 'users' });
+            // const eventWithUpdatedParticipants = await Event.findByPk(event_id, { include: 'users' });
+
+            const eventWithUpdatedParticipants = await Event_Participant.create({
+                event_id,
+                participant_id : user_id
+            });
 
             res.json(eventWithUpdatedParticipants);
         },

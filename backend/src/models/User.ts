@@ -1,7 +1,7 @@
 import "dotenv/config";
 import { sequelize } from '../database/sequelize/client.js';
 
-import { BelongsToManyAddAssociationMixin } from "sequelize";
+// import { BelongsToManyAddAssociationMixin } from "sequelize";
 import {
     Table,
     Column,
@@ -13,8 +13,8 @@ import {
     BelongsToMany
 } from "sequelize-typescript";
 
-import { Event } from "./Event.js";
-import { Event_Participant } from "./Event_Participant.js";
+// import { Event } from "./Event.js";
+// import { Event_Participant } from "./Event_Participant.js";
 
 @Table({
     tableName: "user",
@@ -77,8 +77,8 @@ export class User extends Model {
     @Column(DataType.ENUM("en_attente", "valide", "bloqué", "désactivé"))
     declare status: "en_attente" | "valide" | "bloqué" | "désactivé";
 
-    @BelongsToMany(() => Event, () => Event_Participant)
-    declare participating_events?: Event[];
+    // @BelongsToMany(() => Event, () => Event_Participant)
+    // declare participating_events?: Event[];
 }
 
 sequelize.addModels([User]);
