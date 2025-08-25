@@ -94,7 +94,7 @@ export default function CardEvent() {
                 <div className="elmCard" key={event.id}>
                     <div>
                         <a onClick={() => { setSelectedCard(event); setModalOpen(true); }}>
-                            <img src={event.photo} alt="photo evenement" />
+                            <img src={event.photo} alt="photo évènement" />
                         </a>
                         <a onClick={() => { setSelectedCard(event); setModalOpen(true); }}>
                             <h3>{event.name}</h3>
@@ -124,7 +124,7 @@ export default function CardEvent() {
                         <div className="elmCardModal">
                             <div key={selectedCard.id} id="containerModal">
                                 <div id="mdlSection1">
-                                    <img src={selectedCard.photo} alt="photo evenement" />
+                                    <img src={selectedCard.photo} alt="photo évènement" />
                                     <h3>{selectedCard.name}</h3>
                                     <p>{selectedCard.start_date} au {selectedCard.end_date}</p>
                                     <p>{selectedCard.city} ({selectedCard.zip_code})</p>
