@@ -25,7 +25,7 @@ export default function RooftopConnected() {
                     <div className='buttonHover'><NavLink to='/evenements'>Événements</NavLink></div>
                     <div className='buttonHover'><NavLink to='/communaute'>Communauté</NavLink></div>
                     <div className='buttonHover'><NavLink to='/profil'>Profil</NavLink></div>
-                    <div className='buttonHover'><NavLink to='/messages'>Messagerie</NavLink></div>
+                    <div className='buttonHover'><NavLink to='/conversations'>Messagerie</NavLink></div>
                     <div className='buttonHover3'><NavLink to='/'>Déconnexion</NavLink></div>
                 </div>
             </div>
