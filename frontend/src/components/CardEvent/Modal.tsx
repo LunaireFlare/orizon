@@ -1,4 +1,4 @@
-import { FC, ReactNode, MouseEvent } from "react";
+import type { FC, ReactNode, MouseEvent } from "react";
 import "./Modal.scss";
 
 interface ModalProps {
