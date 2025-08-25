@@ -1,5 +1,5 @@
 import { Response, Request } from 'express';
-import { Event } from '../models/associations.js';
+import { Event, User } from '../models/associations.js';
 import { createEventSchema, updateEventSchema } from '../schemas/event.js';
 
 const eventController = {
@@ -151,8 +151,28 @@ const eventController = {
             await event.destroy();
 
             res.status(204).end();
+        },
 
-        }
+        async associateEventToParticipant(req: Request, res: Response) {
+            const event_id = parseInt(req.params.event_id);
+            const user_id = parseInt(req.params.user_id);
+
+            const event = await Event.findByPk(event_id);
+            if (!event) {
+                return res.status(400).json({ error: 'Event not found.' });
+            };
+
+            const user = await User.findByPk(user_id);
+            if (!user) {
+                return res.status(400).json({ error: 'User not found.' });
+            };
+
+            await event.addUser(user);
+
+            const eventWithUpdatedParticipants = await Event.findByPk(event_id, { include: 'users' });
+
+            res.json(eventWithUpdatedParticipants);
+        },
 
 };
 

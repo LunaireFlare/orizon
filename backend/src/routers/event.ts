@@ -12,4 +12,7 @@ eventRouter.route('/events/:id')
     .patch(authMiddleware, eventController.updateEvent)
     .delete(authMiddleware, eventController.deleteEvent);
 
+eventRouter.route('/events/:event_id/users/:user_id')
+    .post(eventController.associateEventToParticipant);
+
 export { eventRouter };
