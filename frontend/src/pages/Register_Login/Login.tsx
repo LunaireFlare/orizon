@@ -10,6 +10,7 @@ export default function Login() {
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
+    const [user, setUser] = useState<{ id: number } | null>(null); // 
 
     const navigate = useNavigate();
 
@@ -39,7 +40,7 @@ export default function Login() {
             } else if (data?.token) {
                 // Stockage du token
                 localStorage.setItem('token', data.token);
-
+                setUser(data.user);
                 setSuccess(true);
             } else {
                 setError('Réponse invalide du serveur.');
@@ -106,3 +107,7 @@ export default function Login() {
         </div>
     );
 }
+function setUser(user: any) {
+    throw new Error('Function not implemented.');
+}
+
