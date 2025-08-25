@@ -1,60 +1,61 @@
 /* *************** Version Mobile ************* */
 
 #containerCard {
-    display: grid;
-    grid-template-columns: repeat(1, 6fr);
-    grid-gap: 1rem;
+  display: grid;
+  grid-template-columns: repeat(1, 6fr);
+  grid-gap: 1rem;
 }
 
 #containerCard img {
-    width: 100%;
-    border-radius: 1rem;
-    margin-bottom: 0.5rem;
+  width: 100%;
+  border-radius: 1rem;
+  margin-bottom: 0.5rem;
 }
 
 #containerCard h3 {
-    margin-bottom: 0.2rem;
+  margin-bottom: 0.2rem;
 }
 
 #containerCard p {
-    padding: 0.2rem 0;
-    text-align: justify;
+  padding: 0.2rem 0;
+  text-align: justify;
 }
 
 #containerCard span {
-    font-weight: 700;
+  font-weight: 700;
 }
 
 .elmCard {
-    background-color: #ececec;
-    margin-top: 1rem;
-    padding: 1rem;
-    margin: 1rem;
-    border-radius: 1rem;
+  background-color: #ececec;
+  margin-top: 1rem;
+  padding: 1rem;
+  margin: 1rem;
+  border-radius: 1rem;
 }
 
 .eventDescription {
-    margin: 0.5rem 0;
+  margin: 0.5rem 0;
 }
 
 .elmCard .interestEvent {
-    background-color: var(--blue-green-sky);
-    color: #fff;
-    font-size: 1rem;
-    font-style: italic;
-    padding: 0.6rem 1.5rem;
-    border: none;
-    margin-top: 0.5rem;
-    border-radius: 3rem;
-    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  background-color: var(--blue-green-sky);
+  color: #fff;
+  font-size: 1rem;
+  font-style: italic;
+  padding: 0.6rem 1.5rem;
+  border: none;
+  margin-top: 0.5rem;
+  margin-right: 0.5rem;
+  border-radius: 3rem;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }
 
 .elmCard h3 {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .elmCard img {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 #containerModal {
@@ -143,6 +144,14 @@
 /* *************** Version Desktop ************* */
 
 @media (min-width: 1291px) {
+  #containerCard {
+    width: 1280px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 3fr);
+    grid-gap: 1rem;
+    margin-top: 2rem;
+  }
 
     #containerCard {
         width: 1280px;
@@ -174,6 +183,54 @@
         justify-content: end;
     }
 
+  .mdlSection1 img {
+    width: 100%;
+    cursor: pointer;
+  }
 
+  #mdlSection2 {
+    margin-top: 2rem;
+    grid-column: 5 / 6;
+  }
 
+  .elmCardModal .interestEvent {
+    background-color: var(--blue-green-sky);
+    color: #fff;
+    font-size: 1rem;
+    font-style: italic;
+    padding: 0.3rem 1.5rem;
+    border: none;
+    margin-top: 0.5rem;
+    border-radius: 3rem;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  }
+
+  .btnChoiseParticiped {
+    display: flex;
+    justify-content: end;
+  }
+
+  #containerModal .btnParticiped {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    background-color: #f0b64a;
+    color: #fff;
+    border: none;
+    border-radius: 3rem;
+    margin-top: 0.5rem;
+    margin-right: 1rem;
+  }
+
+  #containerModal .btnDeclinePcp {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    background-color: #c52525;
+    color: #fff;
+    border: none;
+    border-radius: 3rem;
+    margin-top: 0.5rem;
+    margin-right: 1rem;
+  }
 }
