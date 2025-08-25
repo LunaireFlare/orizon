@@ -55,7 +55,7 @@ export default function Login() {
     useEffect(() => {
         if (success) {
             const timeout = setTimeout(() => {
-                navigate('/profil/:id');
+                navigate(`/profil/${user.id}`);
             }, 2000);
             return () => clearTimeout(timeout);
         }
@@ -65,41 +65,41 @@ export default function Login() {
         <div id="testVH">
             <Rooftop />
             <div id="containerLogin">
-            <div className="auth-header">
+                <div className="auth-header">
 
-                <Link to="/" className="link">&#8626; Retour à l'accueil du site</Link>
+                    <Link to="/" className="link">&#8626; Retour à l'accueil du site</Link>
 
-                <form onSubmit={handleSubmit} className="auth-form">
-                    <h2>Connexion</h2>
-                    <input
-                        type="email"
-                        name="email"
-                        placeholder="Email"
-                        onChange={handleChange}
-                        required
-                    />
-                    <input
-                        type="password"
-                        name="password"
-                        placeholder="Mot de passe"
-                        onChange={handleChange}
-                        required
-                    />
-                    <button type="submit" className='buttonHover'>Se connecter</button>
-                    {error && <p className="error-msg">{error}</p>}
-                </form>
-            </div>
-
-            {success && (
-                <div className="modal">
-                    <div className="modal-content">
-                        <p>Connexion réussie ! Redirection...</p>
-                    </div>
+                    <form onSubmit={handleSubmit} className="auth-form">
+                        <h2>Connexion</h2>
+                        <input
+                            type="email"
+                            name="email"
+                            placeholder="Email"
+                            onChange={handleChange}
+                            required
+                        />
+                        <input
+                            type="password"
+                            name="password"
+                            placeholder="Mot de passe"
+                            onChange={handleChange}
+                            required
+                        />
+                        <button type="submit" className='buttonHover'>Se connecter</button>
+                        {error && <p className="error-msg">{error}</p>}
+                    </form>
                 </div>
-            )}
+
+                {success && (
+                    <div className="modal">
+                        <div className="modal-content">
+                            <p>Connexion réussie ! Redirection...</p>
+                        </div>
+                    </div>
+                )}
             </div>
             <Footer />
-            
+
         </div>
     );
 }
