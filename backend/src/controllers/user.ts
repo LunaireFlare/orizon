@@ -88,7 +88,9 @@ const userController = {
             description,
         });
 
-        res.status(201).json(createdUser);
+        const { password: undefined, ...userWithoutPassword } = createdUser.toJSON();
+        
+        res.status(201).json(userWithoutPassword);
     },
 
     /**
@@ -142,7 +144,9 @@ const userController = {
 
         await user.save();
 
-        res.json(user);
+        const { password: undefined, ...userWithoutPassword } = user.toJSON();
+
+        res.json(userWithoutPassword);
     },
 
     /**
@@ -154,25 +158,21 @@ const userController = {
         const id = parseInt(req.params.id);
 
         const user = await User.findByPk(id);
-
+        
         if (!user) {
             return res.status(404).json({ error: "User not found." });
         }
-
-        // await user.destroy();
+        
         user.lastname = "";
         user.firstname = "";
         user.password = "";
-        user.zip_code = "";
+        user.zip_code = "00000";
         user.city = "";
-        const parsed = userSchema.parse({
-            date_of_birth: "1900-01-01T00:00:00.000Z",
-        });
-        user.date_of_birth = parsed.date_of_birth;
+        user.date_of_birth = new Date('1900-01-01');
         user.photo = null;
         user.description = null;
-        user.status = "désactivé";
-
+        user.status="désactivé"
+        
         await user.save();
 
         res.status(204).end();
