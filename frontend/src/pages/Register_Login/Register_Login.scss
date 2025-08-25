@@ -1,5 +1,10 @@
-.auth.header {
-    min-height: 80vh;
+.auth-header {
+    width: 1280px;
+    margin: 1.5rem auto;
+}
+
+.auth-header .link {
+    color: var(--blue-green-sky);
 }
 
 .auth-form {

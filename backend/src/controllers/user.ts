@@ -10,19 +10,7 @@ const userController = {
      * @param res
      */
     async getAllUsers(req: Request, res: Response) {
-        const users = await User
-            .findAll
-            //     {
-            //     include: [
-            //         {
-            //             association: 'interests',
-            //         },
-            //         {
-            //             association: 'events',
-            //         },
-            //     ]
-            // }
-            ();
+        const users = await User.findAll();
         const usersWithoutPasswords = users.map((u) => {
             const { password, ...rest } = u.toJSON();
             return rest;
@@ -38,7 +26,16 @@ const userController = {
     async getOneUser(req: Request, res: Response) {
         const id = parseInt(req.params.id);
 
-        const user = await User.findByPk(id);
+        const user = await User.findByPk(id,{
+            include: [
+                {
+                    association: 'interests',
+                },
+                {
+                    association: 'events',
+                },
+            ]
+        });
 
         if (!user) {
             return res.status(404).json({ error: "User not found." });
@@ -91,7 +88,9 @@ const userController = {
             description,
         });
 
-        res.status(201).json(createdUser);
+        const { password: undefined, ...userWithoutPassword } = createdUser.toJSON();
+        
+        res.status(201).json(userWithoutPassword);
     },
 
     /**
@@ -145,7 +144,9 @@ const userController = {
 
         await user.save();
 
-        res.json(user);
+        const { password: undefined, ...userWithoutPassword } = user.toJSON();
+
+        res.json(userWithoutPassword);
     },
 
     /**
@@ -157,12 +158,22 @@ const userController = {
         const id = parseInt(req.params.id);
 
         const user = await User.findByPk(id);
-
+        
         if (!user) {
             return res.status(404).json({ error: "User not found." });
         }
-
-        await user.destroy();
+        
+        user.lastname = "";
+        user.firstname = "";
+        user.password = "";
+        user.zip_code = "00000";
+        user.city = "";
+        user.date_of_birth = new Date('1900-01-01');
+        user.photo = null;
+        user.description = null;
+        user.status="désactivé"
+        
+        await user.save();
 
         res.status(204).end();
     },

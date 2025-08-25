@@ -2,6 +2,7 @@ import { Router } from "express";
 const mainRouter = Router();
 
 import { userRouter } from './user.js';
+import { interestRouter } from './interest.js';
 import { authRouter } from "./auth.js";
 import { eventRouter } from './event.js';
 
@@ -11,6 +12,8 @@ mainRouter.get("/", (_req, res) => {
 });
 
 mainRouter.use(userRouter);
+mainRouter.use(interestRouter);
+
 mainRouter.use(authRouter);
 mainRouter.use(eventRouter);
 
