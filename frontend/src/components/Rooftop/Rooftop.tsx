@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router';
-import logo from '../../assets/images/Logo_Orizon.png';
-import pictonav from '../../assets/images/navburger.png';
+import logo from '../../assets/images/Logo_Orizon.webp';
+import pictonav from '../../assets/images/navburger.webp';
 
 import './Rooftop.scss';
 
