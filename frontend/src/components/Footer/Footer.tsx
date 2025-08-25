@@ -9,7 +9,7 @@ export default function Footer() {
             <div className="containerFooter">
                 <div>
                     <Link to="/">Sitemap</Link>
-                    <Link to="/">Mentions lgales</Link>
+                    <Link to="/">Mentions légales</Link>
                     <Link to="/">Politiques de confidentialité</Link>
                     <Link to="/">Cookie</Link>
                 </div>
@@ -22,7 +22,7 @@ export default function Footer() {
                     <img width="350px" src={logo} alt="logo-orizon" />
                 </div>
             </div>
-                <p>leap into electronic typesetting, remaining essentially</p>
+            <p>Copyright © 2025 tous droits réservés à Orizon</p>
         </div>
     )
 }
