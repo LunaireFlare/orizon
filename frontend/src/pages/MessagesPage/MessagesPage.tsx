@@ -5,7 +5,7 @@ import Footer from '../../components/Footer/Footer.tsx';
 import './MessagesPage.scss';
 
 
-export default function MessagePage() {
+export default function MessagesPage() {
 
     return (
         <div id="fullContainerMessages">
