@@ -1,11 +1,5 @@
 /* *************** Version Mobile ************* */
 
-#containerCard {
-    display: grid;
-    grid-template-columns: repeat(1, 6fr);
-    grid-gap: 1rem;
-}
-
 #containerCard img {
     width: 100%;
     border-radius: 1rem;
@@ -45,6 +39,7 @@
     padding: 0.6rem 1.5rem;
     border: none;
     margin-top: 0.5rem;
+    margin-right: 0.5rem;
     border-radius: 3rem;
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }
@@ -61,14 +56,14 @@
 
 @media (min-width: 1291px) {
 
-    #containerCard {
-        width: 1280px;
-        margin: 0 auto;
-        display: grid;
-        grid-template-columns: repeat(3, 3fr);
-        grid-gap: 1rem;
-        margin-top: 2rem;
-    }
+    // #containerCard {
+    //     width: 1280px;
+    //     margin: 0 auto;
+    //     display: grid;
+    //     grid-template-columns: repeat(3, 3fr);
+    //     grid-gap: 1rem;
+    //     margin-top: 2rem;
+    // }
 
     #containerModal {
         display: grid;

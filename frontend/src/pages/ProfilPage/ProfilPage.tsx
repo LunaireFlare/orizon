@@ -22,7 +22,22 @@ type User = {
     city: string,
     date_of_birth: string,
     description: string,
-    interests: Interest[]
+    interests: Interest[],
+    events: Event[]
+}
+
+type Event = {
+    id: number,
+    photo: string,
+    name: string,
+    start_date: string,
+    end_date: string,
+    address: string,
+    city: string,
+    zip_code: number,
+    description: string,
+    creator_id: number,
+    interests:Interest[]
 }
 
 type Interest = {
@@ -63,9 +78,6 @@ export default function ProfilPage() {
             .catch((err) => console.error("Erreur API:", err));
 
         },  [id]);
-
-
-        
 
     const [_success, setSuccess] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -174,26 +186,41 @@ export default function ProfilPage() {
                 </div>
             </div>
 
-            <div id="eventsCreated">
-                <div className="eventOptions">
-                    <h2>Les évènements créés par moi</h2>
-                    <button className="pathButton" onClick={() => setActiveModal('createEvent')}>
-                        Créer un évènement</button>
+                <div id="eventsCreated">
+                    <div className="eventOptions">
+                        <h2>Les évènements créés par moi</h2>
+                        <button className="pathButton" onClick={() => setActiveModal('createEvent')}>Créer un évènement</button>
+                    </div>
+                    <div id="containerCards">
+                        {user.events
+                        ?.filter(event => event.creator_id === user.id)
+                        .map(event => <CardEvent key={event.id} event={event} />)
+                        }   
+                    </div>
                 </div>
-                <CardEvent />  
-            </div>
 
             <div id="eventsParticiped">
                 <div className="eventOptions">
                     <h2>Les évènements auxquels je participe</h2>
                     <button className="pathButton"><Link to="/evenements" className="link">Trouver d'autres évènements</Link></button>
                 </div>
-                <CardEvent />  
+                <div id="containerCards">
+                    {user.events && user.events
+                    .filter((event)=> new Date(event.end_date) >= new Date())
+                    .map((event) => (
+                        <CardEvent key={event.id} event={event}/> 
+                    ))} 
+                </div>
             </div>
 
             <div id="eventsPassed">
                 <h2>Les évènements auxquels j'ai participé</h2>
-                <CardEvent />  
+                <div id="containerCards">
+                    {user.events
+                        ?.filter(event => new Date(event.end_date)  < new Date())
+                        .map(event => <CardEvent key={event.id} event={event} />)
+                    }   
+                </div>         
             </div>
 
             <Modal isOpen={activeModal === 'createEvent'} onClose={() => setActiveModal(null)}>
