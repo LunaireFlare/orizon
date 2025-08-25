@@ -14,8 +14,6 @@
 |  008  |    Champs vides     | Cliquer sur "S'inscrire" sans avoir rempli tous les champs | Le premier champ en erreur est surligné avec un message d'erreur ("Veuillez renseigner ce champ") |
 |  009  |    Double soumission     | Cliquer deux fois rapidement sur "Créer un compte"  | Un seul compte est créé, le bouton devient inactif pendant le traitement |
 
-_TODO: test pour âge inférieur à 60 ans ou pas ?_
-
 ---
 
 ## Connexion
