@@ -107,14 +107,14 @@ CREATE TABLE "interest" (
 ALTER TABLE "conversation_user" ADD FOREIGN KEY (conversation_id) REFERENCES "conversation" (id);
 ALTER TABLE "conversation_user" ADD FOREIGN KEY (user_id) REFERENCES "user" (id);
 
-ALTER TABLE "event_participant" ADD FOREIGN KEY (event_id) REFERENCES "event" (id);
+ALTER TABLE "event_participant" ADD FOREIGN KEY (event_id) REFERENCES "event" (id) ON DELETE CASCADE;
 ALTER TABLE "event_participant" ADD FOREIGN KEY (participant_id) REFERENCES "user" (id);
 
 ALTER TABLE "interest_user" ADD FOREIGN KEY (interest_id) REFERENCES "interest" (id);
 ALTER TABLE "interest_user" ADD FOREIGN KEY (user_id) REFERENCES "user" (id);
 
-ALTER TABLE "event_interest" ADD FOREIGN KEY (event_id) REFERENCES "event" (id);
-ALTER TABLE "event_interest" ADD FOREIGN KEY (interest_id) REFERENCES "interest" (id);
+ALTER TABLE "event_interest" ADD FOREIGN KEY (event_id) REFERENCES "event" (id) ON DELETE CASCADE;
+ALTER TABLE "event_interest" ADD FOREIGN KEY (interest_id) REFERENCES "interest" (id) ON DELETE CASCADE;
 
 ALTER TABLE "message" ADD FOREIGN KEY (sender_id) REFERENCES "user" (id);
 ALTER TABLE "message" ADD FOREIGN KEY (conversation_id) REFERENCES "conversation" (id);
