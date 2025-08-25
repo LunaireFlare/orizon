@@ -61,7 +61,7 @@ export default function ProfilPage() {
 
     React.useEffect(() => {
 
-        fetch(`http://localhost:3000/users/${id}`)
+        fetch(`http://backend.localhost:81/users/${id}`)
             .then((res) => res.json())
             .then((data: User) => {
                 setUser(data);
@@ -103,7 +103,7 @@ export default function ProfilPage() {
 
         try {
 
-            const response = await fetch(`http://localhost:3000/users/${id}`, {
+            const response = await fetch(`http://backend.localhost:81/users/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
