@@ -85,6 +85,9 @@ export default function Login() {
                             onChange={handleChange}
                             required
                         />
+                        <div className="forgot-password">
+                            <Link to="/mot-de-passe-oublie">Mot de passe oublié ?</Link>
+                        </div>
                         <button type="submit" className='buttonHover'>Se connecter</button>
                         {error && <p className="error-msg">{error}</p>}
                     </form>
