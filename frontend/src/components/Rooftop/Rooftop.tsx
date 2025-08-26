@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router';
 import logo from '../../assets/images/Logo_Orizon.webp';
 import pictonav from '../../assets/images/navburger.webp';
@@ -8,8 +8,16 @@ import './Rooftop.scss';
 export default function Rooftop() {
 
     const [ bgrOpen, setBgrOpen ] = useState(false);
+    const [currentUser, setCurrentUser] = useState<{ id: number } | null>(null);
     const navigate = useNavigate();
     const token = localStorage.getItem("token");
+
+    useEffect(() => {
+        if (token) {
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            setCurrentUser({ id: payload.id });
+        }
+    }, [token]);
 
     function handleLogout() {
         localStorage.removeItem("token");
@@ -81,7 +89,7 @@ export default function Rooftop() {
                             <div className='buttonBox'>
                                 <div className='buttonHover'><NavLink to='/evenements'>Événements</NavLink></div>
                                 <div className='buttonHover'><NavLink to='/communaute'>Communauté</NavLink></div>
-                                <div className='buttonHover'><NavLink to='/profil'>Profil</NavLink></div>
+                                <div className='buttonHover'><NavLink to={`/profil/${currentUser?.id}`}>Profil</NavLink></div>
                                 <div className='buttonHover'><NavLink to='/conversations'>Messagerie</NavLink></div>
                                 <div className='buttonHover3' onClick={handleLogout}><NavLink to='/'>Déconnexion</NavLink></div>
                             </div>
