@@ -1,3 +1,4 @@
+import { Link } from 'react-router';
 import './CardUser.scss';
 import avatarWoman from '../../assets/images/avatarWomen.webp';
 import avatarMan from '../../assets/images/avatarMen.webp';
@@ -25,11 +26,17 @@ type Props = {
 
 export default function CardUser({ user }: Props) {
     return (
-        <div className="elmCardUser" key={user.id}>
-            <img
-                src={avatarWoman} width="50px" alt={`Photo de ${user.firstname}`}
-            />
-            <h3>{user.firstname} {user.lastname}</h3>
+        <div className="elmCardUser">
+            <Link to={`/profil/${user.id}`} className="profileLink">
+                <img
+                    src={avatarWoman}
+                    width="50px"
+                    alt={`Photo de ${user.firstname}`}
+                />
+            </Link>
+            <Link to={`/profil/${user.id}`} className="nameLink">
+                <h3>{user.firstname} {user.lastname}</h3>
+            </Link>
             <p><strong>{user.city} ({user.zip_code})</strong></p>
             <p>{user.email}</p>
             {user.description && <p>Description : {user.description}</p>}
