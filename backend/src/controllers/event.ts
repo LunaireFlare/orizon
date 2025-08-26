@@ -181,13 +181,14 @@ const eventController = {
                 return res.status(400).json({ error: 'L\'évènement a déjà commencé, vous ne pouvez plus vous inscrire.'});
             };
 
+            // [x] si créateur, message vous êtes déjà inscrit
             const user = await User.findByPk(user_id);
             if (!user) {
                 return res.status(400).json({ error: 'User not found.' });
+            } else if (user.id === event.creator_id) { 
+                return res.status(400).json({ error: 'Vous êtes déjà inscrit(e) à cet évènement.' });
             };
 
-            // TODO: [ ] si user existe déjà dans la liste ou créateur, message vous êtes déjà inscrit
-            
             const eventWithUpdatedParticipants = await Event_Participant.create({
                 event_id,
                 participant_id : user_id
@@ -222,20 +223,19 @@ const eventController = {
             } else if (event.start_date < new Date()) {
                 return res.status(400).json({ error: 'L\'évènement a déjà commencé, vous ne pouvez plus vous désinscrire.'});
             };
-
+            
+            // [x] si user est créateur, ne peut pas se désinscrire
             const user = await User.findByPk(user_id);
             if (!user) {
                 return res.status(400).json({ error: 'User not found.' });
+            } else if (user.id === event.creator_id) { 
+                return res.status(400).json({ error: 'Vous ne pouvez pas vous désinscrire de votre évènement.' });
             };
-
-            // TODO: [ ] si user est créateur, ne peut pas se désinscrire
-            // if (user.id === event.creator_id) { ==> erreur, creator_id n'existe pas
-            // }
 
             const eventToDelete = await Event_Participant.findOne({ where: { 
                 event_id,
                 participant_id : user_id
-            }})
+            }});
 
             await eventToDelete?.destroy();
 
