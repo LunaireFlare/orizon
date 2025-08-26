@@ -13,9 +13,10 @@ eventRouter.route('/events/:id')
     .delete(authMiddleware, eventController.deleteEvent);
 
 eventRouter.route('/events/:event_id/users/:user_id')
-    .post(eventController.associateEventToParticipant);
+    .post(authMiddleware, eventController.associateEventToParticipant)
+    .delete(authMiddleware, eventController.dissociateEventFromParticipant);
 
 eventRouter.route('/events/:event_id/interests/:interest_id')
-    .post(eventController.associateEventToInterest);
+    .post(authMiddleware, eventController.associateEventToInterest);
 
 export { eventRouter };

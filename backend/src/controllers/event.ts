@@ -185,6 +185,35 @@ const eventController = {
         },
 
         /**
+         * Dissocier un évènement d'un utilisateur.
+         * @param req
+         * @param res
+         */
+        async dissociateEventFromParticipant(req: Request, res: Response) {
+            const event_id = parseInt(req.params.event_id);
+            const user_id = parseInt(req.params.user_id);
+
+            const event = await Event.findByPk(event_id);
+            if (!event) {
+                return res.status(400).json({ error: 'Event not found.' });
+            };
+
+            const user = await User.findByPk(user_id);
+            if (!user) {
+                return res.status(400).json({ error: 'User not found.' });
+            };
+
+            const eventToDelete = await Event_Participant.findOne({ where: { 
+                event_id,
+                participant_id : user_id
+            }})
+
+            await eventToDelete?.destroy();
+
+            res.json({ message: 'Vous n\'êtes plus inscrit à cet évènement.'});
+        },
+
+        /**
          * Associer un évènement à un intérêt.
          * @param req
          * @param res
