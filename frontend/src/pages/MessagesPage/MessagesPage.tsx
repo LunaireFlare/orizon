@@ -4,7 +4,6 @@ import Footer from '../../components/Footer/Footer.tsx';
 
 import './MessagesPage.scss';
 
-// ✅ Import des images d'avatars
 import avatarWoman from '../../assets/images/avatarWomen.webp';
 import avatarMan from '../../assets/images/avatarMen.webp';
 
