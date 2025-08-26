@@ -149,9 +149,6 @@ const eventController = {
                 return res.status(401).json({ error: 'Vous ne pouvez supprimer que les évènements que vous avez créés.' });
             };
 
-            // TODO: erreur ==> update or delete on table \"event\" violates foreign key constraint \"event_participant_event_id_fkey\" on table \"event_participant\". Faut d'abord supprimer enregistrements event_participant associés à cet évènement car utilisent clef primaire de event et donc event ne peut pas être supprimé avant les enregistrements qui en dépendent.
-            // ? fonctionne si évènement n'a pas de participant associé.
-
             await event.destroy();
 
             res.status(204).end();
