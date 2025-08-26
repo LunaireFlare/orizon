@@ -101,6 +101,7 @@ export default function BackOfficePage() {
                                     <th scope="col">creator_id</th>
                                     <th scope="col">created_at</th>
                                     <th scope="col">updated_at</th>
+                                    <th scope="col">Valider/Bloque</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -119,6 +120,12 @@ export default function BackOfficePage() {
                                             <td>{user.creator_id}</td>
                                             <td>{user.created_at}</td>
                                             <td>{user.updated_at}</td>
+                                            <td>
+                                                <div className="modoBtn">
+                                                    <button className="validateStatus btnValid">Validate</button>
+                                                    <button className="blockedStatus btnBlock">Block</button>
+                                                </div>
+                                            </td>
                                         </tr>
                                     ))}
                                 
