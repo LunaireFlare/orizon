@@ -7,8 +7,11 @@ import {
     Model,
     AllowNull,
     DataType,
-    Default
+    Default,
+    ForeignKey,
+    BelongsTo
 } from "sequelize-typescript";
+import { User } from "./associations.js";
 
 @Table({
     tableName: "event",
@@ -54,6 +57,14 @@ export class Event extends Model {
     @Default("en_attente")
     @Column(DataType.ENUM("en_attente", "valide", "bloqué"))
     declare status: "en_attente" | "valide" | "bloqué";
+
+    @ForeignKey(() => User)
+    @AllowNull(false)
+    @Column(DataType.INTEGER)
+    declare creator_id: number;
+
+    @BelongsTo(() => User, 'creator_id')
+    declare creator: User;
 };
 
 sequelize.addModels([Event]);

@@ -32,7 +32,7 @@ const userController = {
                     association: "interests",
                 },
                 {
-                    association: "participating_events",
+                    association: "events",
                 },
             ],
         });
