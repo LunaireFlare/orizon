@@ -22,6 +22,7 @@ type User = {
     description: string;
     photo: string;
     interests?: { id: number; name: string }[];
+    status?: string;
 }
 
 export default function CommunityPage() {
@@ -36,7 +37,6 @@ export default function CommunityPage() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    // Appel API villes (avec await)
     useEffect(() => {
         const fetchVilles = async () => {
             if (query.length > 2) {
@@ -68,7 +68,6 @@ export default function CommunityPage() {
         }
     }, [query, options]);
 
-    // Récupération dynamique des utilisateurs avec await
     useEffect(() => {
         const fetchUsers = async () => {
             setLoading(true);
@@ -77,23 +76,21 @@ export default function CommunityPage() {
                 const res = await fetch('http://backend.localhost:81/users');
                 const data: User[] = await res.json();
 
-                let filteredData = data;
+                const forbiddenStatus = ["bloqué", "désactivé", undefined];
+                let filteredData = data.filter(user => !forbiddenStatus.includes(user.status));
 
-                // Filtrage nom/prénom
                 if (name.length > 0) {
                     filteredData = filteredData.filter((user: User) =>
                         `${user.firstname} ${user.lastname}`.toLowerCase().includes(name.toLowerCase())
                     );
                 }
 
-                // Filtrage ville
                 if (selected.length > 0) {
                     filteredData = filteredData.filter((user: User) =>
                         user.city?.toLowerCase() === selected.toLowerCase()
                     );
                 }
 
-                // Filtrage centre d’intérêt
                 if (interest.length > 0) {
                     filteredData = filteredData.filter((user: User) =>
                         user.interests?.some(i => i.name.toLowerCase() === interest.toLowerCase())
@@ -141,7 +138,6 @@ export default function CommunityPage() {
                                     placeholder="Tapez votre ville"
                                 />
 
-                                {/* Suggestions */}
                                 {filtered.length > 0 && (
                                     <ul className="suggestions">
                                         {filtered.map((opt) => (
@@ -181,7 +177,6 @@ export default function CommunityPage() {
                 </div>
             </div>
 
-            {/* *************** Liste utilisateurs en grille *************** */}
             <div id="containerCardUser">
                 {loading && <p>Chargement des utilisateurs...</p>}
                 {error && <p style={{ color: 'red' }}>{error}</p>}
