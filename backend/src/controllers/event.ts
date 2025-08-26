@@ -1,5 +1,6 @@
 import { Response, Request } from 'express';
-import { Event } from '../models/associations.js';
+import { Event, User, Interest } from '../models/associations.js';
+import { Event_Participant, Event_Interest } from '../models/associations.js';
 import { createEventSchema, updateEventSchema } from '../schemas/event.js';
 
 const eventController = {
@@ -26,6 +27,9 @@ const eventController = {
                     include: [
                         {
                             association: 'interests',
+                        },
+                        {
+                            association: 'creator',
                         },
                         {
                             association: 'users',
@@ -145,14 +149,154 @@ const eventController = {
                 return res.status(401).json({ error: 'Vous ne pouvez supprimer que les évènements que vous avez créés.' });
             };
 
-            // TODO: erreur ==> update or delete on table \"event\" violates foreign key constraint \"event_participant_event_id_fkey\" on table \"event_participant\". Faut d'abord supprimer enregistrements event_participant associés à cet évènement car utilisent clef primaire de event et donc event ne peut pas être supprimé avant les enregistrements qui en dépendent.
-            // ? fonctionne si évènement n'a pas de participant associé.
-
             await event.destroy();
 
             res.status(204).end();
+        },
 
-        }
+        /**
+         * Associer un évènement à un utilisateur.
+         * @param req
+         * @param res
+         */
+        async associateEventToParticipant(req: Request, res: Response) {
+            const requestor_id = req.user.id;
+            if (!requestor_id) {
+                return res.status(401).json({ error: 'Accès non autorisé. Veuillez vous connecter' });
+            };
+
+            const event_id = parseInt(req.params.event_id);
+            const user_id = parseInt(req.params.user_id);
+            
+            // [x] si user essaie d'ajouter autre personne que lui, erreur
+            if (requestor_id !== user_id) {
+                return res.status(401).json({ error: 'Accès non autorisé. Vous ne pouvez pas inscrire d\'autres personnes que vous.' });
+            }
+
+            // [x] date d'évènement doit être dans le futur
+            const event = await Event.findByPk(event_id);
+            if (!event) {
+                return res.status(400).json({ error: 'Event not found.' });
+            } else if (event.start_date < new Date()) {
+                return res.status(400).json({ error: 'L\'évènement a déjà commencé, vous ne pouvez plus vous inscrire.'});
+            };
+
+            // [x] si créateur, message vous êtes déjà inscrit
+            const user = await User.findByPk(user_id);
+            if (!user) {
+                return res.status(400).json({ error: 'User not found.' });
+            } else if (user.id === event.creator_id) { 
+                return res.status(400).json({ error: 'Vous êtes déjà inscrit(e) à cet évènement.' });
+            };
+
+            const eventWithUpdatedParticipants = await Event_Participant.create({
+                event_id,
+                participant_id : user_id
+            });
+
+            res.json(eventWithUpdatedParticipants);
+        },
+
+        /**
+         * Dissocier un évènement d'un utilisateur.
+         * @param req
+         * @param res
+         */
+        async dissociateEventFromParticipant(req: Request, res: Response) {
+            const requestor_id = req.user.id;
+            if (!requestor_id) {
+                return res.status(401).json({ error: 'Accès non autorisé. Veuillez vous connecter' });
+            };
+
+            const event_id = parseInt(req.params.event_id);
+            const user_id = parseInt(req.params.user_id);
+            
+            // [x] si user essaie de supprimer autre personne que lui, erreur
+            if (requestor_id !== user_id) {
+                return res.status(401).json({ error: 'Accès non autorisé. Vous ne pouvez pas désinscrire d\'autres personnes que vous.' });
+            }
+            
+            // [x] date d'évènement doit être dans le futur
+            const event = await Event.findByPk(event_id);
+            if (!event) {
+                return res.status(400).json({ error: 'Event not found.' });
+            } else if (event.start_date < new Date()) {
+                return res.status(400).json({ error: 'L\'évènement a déjà commencé, vous ne pouvez plus vous désinscrire.'});
+            };
+            
+            // [x] si user est créateur, ne peut pas se désinscrire
+            const user = await User.findByPk(user_id);
+            if (!user) {
+                return res.status(400).json({ error: 'User not found.' });
+            } else if (user.id === event.creator_id) { 
+                return res.status(400).json({ error: 'Vous ne pouvez pas vous désinscrire de votre évènement.' });
+            };
+
+            const eventToDelete = await Event_Participant.findOne({ where: { 
+                event_id,
+                participant_id : user_id
+            }});
+
+            await eventToDelete?.destroy();
+
+            res.json({ message: 'Vous n\'êtes plus inscrit à cet évènement.'});
+        },
+
+        /**
+         * Associer un évènement à un intérêt.
+         * @param req
+         * @param res
+         */
+        async associateEventToInterest(req: Request, res: Response) {
+            const event_id = parseInt(req.params.event_id);
+            const interest_id = parseInt(req.params.interest_id);
+
+            const event = await Event.findByPk(event_id);
+            if (!event) {
+                return res.status(400).json({ error: 'Event not found.' });
+            };
+
+            const interest = await Interest.findByPk(interest_id);
+            if (!interest) {
+                return res.status(400).json({ error: 'Interest not found.' });
+            };
+
+            const eventWithUpdatedInterests = await Event_Interest.create({
+                event_id,
+                interest_id
+            });
+
+            res.json(eventWithUpdatedInterests);
+        },
+
+                /**
+         * Dissocier un évènement d'un intérêt.
+         * @param req
+         * @param res
+         */
+        async dissociateEventFromInterest(req: Request, res: Response) {
+            const event_id = parseInt(req.params.event_id);
+            const interest_id = parseInt(req.params.interest_id);
+
+            const event = await Event.findByPk(event_id);
+            if (!event) {
+                return res.status(400).json({ error: 'Event not found.' });
+            };
+
+            const interest = await Interest.findByPk(interest_id);
+            if (!interest) {
+                return res.status(400).json({ error: 'Interest not found.' });
+            };
+
+            const eventToDelete = await Event_Interest.findOne({ where: { 
+                event_id,
+                interest_id
+            }})
+
+            await eventToDelete?.destroy();
+
+            res.json({ message: 'Cet intérêt n\'est plus associé à cet évènement.'});
+        },
 
 };
 

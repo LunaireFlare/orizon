@@ -53,6 +53,7 @@ Message.belongsTo(Conversation, {
 
 /* USER-EVENT (CREATOR) */
 
+// ! association commentée car déclarée dans modèle Event.ts (obligatoire avec TS sinon on ne peut pas référencer la clef étrangère) et fait doublon.
 // User.hasMany(Event, {
 //     foreignKey: 'creator_id',
 //     as: 'events'
