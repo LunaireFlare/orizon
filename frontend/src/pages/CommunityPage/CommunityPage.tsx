@@ -12,44 +12,104 @@ type Search = {
     codesPostaux: string[]
 }
 
+type User = {
+    id: number;
+    firstname: string;
+    lastname: string;
+    email: string;
+    city: string;
+    zip_code: string;
+    description: string;
+    photo: string;
+    interests?: { id: number; name: string }[];
+}
 
-export default function EventPage() {
+export default function CommunityPage() {
+    const [options, setOptions] = useState<Search[]>([]);
+    const [query, setQuery] = useState<string>('');
+    const [filtered, setFiltered] = useState<Search[]>([]);
+    const [selected, setSelected] = useState<string>('');
 
-    const [ options, setOptions ] = useState<Search[]>([]); 
-    const [ query, setQuery ] = useState<string>("");
-    const [ filtered, setFiltered ] = useState<Search[]>([]);
-    const [ selected, setSelected ] = useState<string>("");
+    const [name, setName] = useState('');
+    const [interest, setInterest] = useState('');
+    const [users, setUsers] = useState<User[]>([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
-
-    // Appel de l'Api 
+    // Appel API villes (avec await)
     useEffect(() => {
-        if (query.length > 2) { // attendre au moins 3 lettres
-        fetch(`https://geo.api.gouv.fr/communes?nom=${query}&fields=nom,codesPostaux,code`)
-            .then(res => res.json())
-            .then((data: Search[]) => {
-            setOptions(data);
-            setFiltered(data); // suggestions directes
-            })
-            .catch(err => console.error("Erreur API :", err));
-        } else {
-        setOptions([]);
-        setFiltered([]);
-        }
+        const fetchVilles = async () => {
+            if (query.length > 2) {
+                try {
+                    const res = await fetch(`https://geo.api.gouv.fr/communes?nom=${query}&fields=nom,codesPostaux,code`);
+                    const data: Search[] = await res.json();
+                    setOptions(data);
+                    setFiltered(data);
+                } catch (err) {
+                    console.error("Erreur API :", err);
+                }
+            } else {
+                setOptions([]);
+                setFiltered([]);
+            }
+        };
+
+        fetchVilles();
     }, [query]);
 
+    useEffect(() => {
+        if (query.length > 0) {
+            const results = options.filter(opt =>
+                opt.nom.toLowerCase().includes(query.toLowerCase())
+            );
+            setFiltered(results);
+        } else {
+            setFiltered([]);
+        }
+    }, [query, options]);
 
-  // Filtrer les résultats dès que l'utilisateur tape quelque chose
-  useEffect(() => {
-    if (query.length > 0) {
-        const results = options.filter(opt =>
-            opt.nom.toLowerCase().includes(query.toLowerCase())
-        );
-        setFiltered(results);
-    } else {
-        setFiltered([]);
-    }
-  }, [query, options]);
+    // Récupération dynamique des utilisateurs avec await
+    useEffect(() => {
+        const fetchUsers = async () => {
+            setLoading(true);
+            setError(null);
+            try {
+                const res = await fetch('http://backend.localhost:81/users');
+                const data: User[] = await res.json();
 
+                let filteredData = data;
+
+                // Filtrage nom/prénom
+                if (name.length > 0) {
+                    filteredData = filteredData.filter((user: User) =>
+                        `${user.firstname} ${user.lastname}`.toLowerCase().includes(name.toLowerCase())
+                    );
+                }
+
+                // Filtrage ville
+                if (selected.length > 0) {
+                    filteredData = filteredData.filter((user: User) =>
+                        user.city?.toLowerCase() === selected.toLowerCase()
+                    );
+                }
+
+                // Filtrage centre d’intérêt
+                if (interest.length > 0) {
+                    filteredData = filteredData.filter((user: User) =>
+                        user.interests?.some(i => i.name.toLowerCase() === interest.toLowerCase())
+                    );
+                }
+
+                setUsers(filteredData);
+            } catch (err) {
+                setError('Erreur lors du chargement des utilisateurs.');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchUsers();
+    }, [name, selected, interest]);
 
     return (
         <div>
@@ -60,48 +120,56 @@ export default function EventPage() {
                 <div className="searchUser">
                     <h2>Rechercher un utilisateur</h2>
                     <form action="/">
-                        <label htmlFor="">Nom ou prénom</label>
-                        <input type="text" id="name" name="name" placeholder="Tapez votre nom ou prénom"/>
+                        <label htmlFor="name">Nom ou prénom</label>
+                        <input
+                            type="text"
+                            id="name"
+                            name="name"
+                            placeholder="Tapez votre nom ou prénom"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                        />
 
                         <div className="twoForm">
                             <div>
-                                <label htmlFor="Ville">Ville</label>
+                                <label htmlFor="ville">Ville</label>
                                 <input
-                                    type="text" 
-                                    id="ville" 
+                                    type="text"
+                                    id="ville"
                                     value={query}
                                     onChange={(e) => setQuery(e.target.value)}
-                                    placeholder="Tapez votre ville" />
+                                    placeholder="Tapez votre ville"
+                                />
 
-                                {/* Liste de suggestions */}
+                                {/* Suggestions */}
                                 {filtered.length > 0 && (
                                     <ul className="suggestions">
-                                    {filtered.map(opt => (
-                                        <div id="contentFilter">
+                                        {filtered.map((opt) => (
                                             <li
-                                            key={opt.code}
-                                            onClick={() => {
-                                                setSelected(opt.nom);
-                                                setQuery(opt.nom); // Remplit l'input
-                                                setFiltered([]); // Ferme la liste
-                                            }}
+                                                key={opt.code}
+                                                onClick={() => {
+                                                    setSelected(opt.nom);
+                                                    setQuery(opt.nom);
+                                                    setFiltered([]);
+                                                }}
                                             >
-                                            {opt.nom} ({opt.codesPostaux})
+                                                {opt.nom} ({opt.codesPostaux.join(', ')})
                                             </li>
-                                        </div>
-                                    ))}
+                                        ))}
                                     </ul>
                                 )}
 
-                                {/* Valeur choisie (pour debug) */}
-                                { selected && <p>Catégorie choisie : {selected}</p> }
-
-
+                                {selected && <p>Ville sélectionnée : {selected}</p>}
                             </div>
+
                             <div>
-                                <label>Centre d’intérêt</label>
-                                <select id="interet">
-                                    <option value="">-- Choisissez un centre d'interêt --</option>
+                                <label htmlFor="interet">Centre d’intérêt</label>
+                                <select
+                                    id="interet"
+                                    value={interest}
+                                    onChange={(e) => setInterest(e.target.value)}
+                                >
+                                    <option value="">-- Choisissez un centre d'intérêt --</option>
                                     <option value="sport">Sport</option>
                                     <option value="musique">Musique</option>
                                     <option value="voyage">Voyage</option>
@@ -110,14 +178,20 @@ export default function EventPage() {
                             </div>
                         </div>
                     </form>
-
-                </div> 
+                </div>
             </div>
-            <div id="userCommunity">
-                <CardUser />
+
+            {/* *************** Liste utilisateurs en grille *************** */}
+            <div id="containerCardUser">
+                {loading && <p>Chargement des utilisateurs...</p>}
+                {error && <p style={{ color: 'red' }}>{error}</p>}
+                {!loading && users.length === 0 && <p>Aucun utilisateur trouvé.</p>}
+                {users.map((user) => (
+                    <CardUser key={user.id} user={user} />
+                ))}
             </div>
 
             <Footer />
         </div>
-    )
+    );
 }
