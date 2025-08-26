@@ -15,4 +15,7 @@ eventRouter.route('/events/:id')
 eventRouter.route('/events/:event_id/users/:user_id')
     .post(eventController.associateEventToParticipant);
 
+eventRouter.route('/events/:event_id/interests/:interest_id')
+    .post(eventController.associateEventToInterest);
+
 export { eventRouter };

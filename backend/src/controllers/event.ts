@@ -1,8 +1,7 @@
 import { Response, Request } from 'express';
-import { Event, User } from '../models/associations.js';
+import { Event, User, Interest } from '../models/associations.js';
+import { Event_Participant, Event_Interest } from '../models/associations.js';
 import { createEventSchema, updateEventSchema } from '../schemas/event.js';
-
-import { Event_Participant } from '../models/associations.js';
 
 const eventController = {
         /**
@@ -158,6 +157,11 @@ const eventController = {
             res.status(204).end();
         },
 
+        /**
+         * Associer un évènement à un utilisateur.
+         * @param req
+         * @param res
+         */
         async associateEventToParticipant(req: Request, res: Response) {
             const event_id = parseInt(req.params.event_id);
             const user_id = parseInt(req.params.user_id);
@@ -178,6 +182,33 @@ const eventController = {
             });
 
             res.json(eventWithUpdatedParticipants);
+        },
+
+        /**
+         * Associer un évènement à un intérêt.
+         * @param req
+         * @param res
+         */
+        async associateEventToInterest(req: Request, res: Response) {
+            const event_id = parseInt(req.params.event_id);
+            const interest_id = parseInt(req.params.interest_id);
+
+            const event = await Event.findByPk(event_id);
+            if (!event) {
+                return res.status(400).json({ error: 'Event not found.' });
+            };
+
+            const interest = await Interest.findByPk(interest_id);
+            if (!interest) {
+                return res.status(400).json({ error: 'Interest not found.' });
+            };
+
+            const eventWithUpdatedInterests = await Event_Interest.create({
+                event_id,
+                interest_id
+            });
+
+            res.json(eventWithUpdatedInterests);
         },
 
 };
