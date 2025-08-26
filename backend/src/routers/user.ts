@@ -6,13 +6,14 @@ const userRouter = Router();
 
 userRouter
   .route("/users")
-  .get(authMiddleware, userController.getAllUsers)
+  .get( userController.getAllUsers)
   .post(userController.createUser);
 
 userRouter
   .route("/users/:id")
-  .get(authMiddleware, userController.getOneUser)
+  .get(userController.getOneUser)
   .put(authMiddleware, userController.updateUser)
-  .delete(authMiddleware, userController.deleteUser);
+  .delete(authMiddleware, userController.deleteUser)
+  .post(userController.addOneInterestToUser);
 
 export { userRouter };

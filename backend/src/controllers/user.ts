@@ -1,6 +1,6 @@
 import { Response, Request } from "express";
 import * as argon2 from "argon2";
-import { User } from "../models/associations.js";
+import { Interest_User, User } from "../models/associations.js";
 import { userSchema } from "../schemas/user.js";
 
 const userController = {
@@ -33,6 +33,10 @@ const userController = {
                 },
                 {
                     association: "events",
+                    include: [
+                    {
+                        association: "interests"
+                    }]
                 },
             ],
         });
@@ -157,6 +161,12 @@ const userController = {
     async deleteUser(req: Request, res: Response) {
         const id = parseInt(req.params.id);
 
+        const requestor_id = req.user.id;
+
+        if (id != requestor_id){
+            return res.status(401).json({ error: "Vous n'êtes pas authorisé à supprimer cet utilisateur" });
+        }
+
         const user = await User.findByPk(id);
         
         if (!user) {
@@ -177,6 +187,19 @@ const userController = {
 
         res.status(204).end();
     },
+
+    async addOneInterestToUser(req: Request, res: Response){
+        const id = parseInt(req.params.id);
+        const user = await User.findByPk(id);
+        const {interestId} = req.body;
+        if (!user || !interestId) return res.status(404).json({ error: "Not found" });
+    
+        const createdInterest = await Interest_User.create({
+            interestId,
+            id});
+
+        res.status(201).json(createdInterest);
+    }
 };
 
 export { userController };

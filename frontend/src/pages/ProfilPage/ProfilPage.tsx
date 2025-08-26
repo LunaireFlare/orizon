@@ -22,6 +22,7 @@ type User = {
     city: string,
     date_of_birth: string,
     description: string,
+    status: "en-attente" | "valide" | "bloqué" | "désactivé",
     interests: Interest[],
     events: Event[]
 }
@@ -73,7 +74,6 @@ export default function ProfilPage() {
             setCurrentUser({ id: payload.id });
         }
     }, [token]);
- 
     
     const openModifyModal = () => {
         setFormData(user);
@@ -87,7 +87,12 @@ export default function ProfilPage() {
         fetch(`http://backend.localhost:81/users/${id}`)
             .then((res) => res.json())
             .then((data: User) => {
-                setUser(data);
+                const forbiddenStatus= ["bloqué" , "désactivé"]
+                if (forbiddenStatus.includes(data.status)){
+                    navigate("/404", { replace: true });
+                } else {
+                    setUser(data);
+                }
             })
             .catch((err) => console.error("Erreur API:", err));
 
@@ -107,6 +112,9 @@ export default function ProfilPage() {
         return <p>Chargement en cours…</p>;
     }
 
+    console.log(user);
+    
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!formData) return;
@@ -125,11 +133,12 @@ export default function ProfilPage() {
         setLoading(true);
 
         try {
-
+            if (!token) throw new Error("Utilisateur non authentifié");
             const response = await fetch(`http://backend.localhost:81/users/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify({ ...formData, confirmPassword: undefined }),
             });            
@@ -191,12 +200,16 @@ export default function ProfilPage() {
                         <div>
                             <h2>Mon profil</h2>
                         </div>
-                        {currentUser?.id === user.id && (
+                        {currentUser?.id === user.id ? (
                         <div>
                             <button onClick={openModifyModal} className="pathButton">Modifier mon profil</button>
                             <button className="delButton" onClick={() => setActiveModal('deleteAccount')}>Supprimer mon compte</button>
                         </div>
-                        )}
+                        ) : 
+                        (
+                            <button className="pathButton">Envoyer un message à {user.firstname}</button>
+                        )
+                        }
                     </div>
                     <div className="bodyProfil">
                     <div>
