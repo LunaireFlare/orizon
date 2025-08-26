@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 
 import RooftopConnected from '../../components/Rooftop/RooftopConnected';
 import Banner from '../../components/Banner/Banner.tsx'
@@ -21,19 +21,30 @@ type User = {
     zip_code: string,
     city: string,
     date_of_birth: string,
-    description: string
+    description: string,
+    status: "en-attente" | "valide" | "bloqué" | "désactivé",
+    interests: Interest[],
+    events: Event[]
+}
+
+type Event = {
+    id: number,
+    photo: string,
+    name: string,
+    start_date: string,
+    end_date: string,
+    address: string,
+    city: string,
+    zip_code: number,
+    description: string,
+    creator_id: number,
+    interests:Interest[]
 }
 
 type Interest = {
     id: number,
     name: string
 }
-
-const mockInterests: Interest[] = [
-    { id: 1, name: "cuisine" },
-    { id: 2, name: "sport" },
-    { id: 3, name: "cinema" }
-];
 
 function getAge(dateOfBirth: Date | string): number {
     const dob = new Date(dateOfBirth);
@@ -50,13 +61,25 @@ export default function ProfilPage() {
 
     const [user, setUser] = useState<User | null >(null);
     const [formData, setFormData] = useState<User | null>(null);
+    const navigate = useNavigate();
+    
+    const [currentUser, setCurrentUser] = React.useState<{ id: number } | null>(null);
+    const token = localStorage.getItem("token");
 
+    
+    
+    React.useEffect(() => {
+        if (token) {
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            setCurrentUser({ id: payload.id });
+        }
+    }, [token]);
+    
     const openModifyModal = () => {
         setFormData(user);
         setActiveModal('modifyAccount');
     };
 
-    const [interests] = useState<Interest[]>(mockInterests);
     const {id} = useParams();
 
     React.useEffect(() => {
@@ -64,7 +87,12 @@ export default function ProfilPage() {
         fetch(`http://backend.localhost:81/users/${id}`)
             .then((res) => res.json())
             .then((data: User) => {
-                setUser(data);
+                const forbiddenStatus= ["bloqué" , "désactivé", undefined]
+                if (forbiddenStatus.includes(data.status)){
+                    navigate("/404", { replace: true });
+                } else {
+                    setUser(data);
+                }
             })
             .catch((err) => console.error("Erreur API:", err));
 
@@ -84,6 +112,9 @@ export default function ProfilPage() {
         return <p>Chargement en cours…</p>;
     }
 
+    console.log(user);
+    
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!formData) return;
@@ -102,16 +133,17 @@ export default function ProfilPage() {
         setLoading(true);
 
         try {
-
+            if (!token) throw new Error("Utilisateur non authentifié");
             const response = await fetch(`http://backend.localhost:81/users/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify({ ...formData, confirmPassword: undefined }),
             });            
 
-            const data = await response.json();
+            const data = await response.json(); 
 
             if (!response.ok) {
                 setError(data.error || "Erreur lors de la modification.");
@@ -128,6 +160,34 @@ export default function ProfilPage() {
         }
     };
 
+    const handleDelete = async (e: React.FormEvent) => { 
+        e.preventDefault();
+        try {
+            if (!token) throw new Error("Utilisateur non authentifié");
+
+            const response = await fetch(`http://backend.localhost:81/users/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+            }); 
+
+            if (!response.ok) {
+                throw new Error(`Erreur lors de la suppression : ${response.statusText}`);
+            } else 
+            {
+                setSuccess(true);
+                setUser(null);
+                setActiveModal(null);
+                navigate('/');
+            }
+
+        } catch (err) {
+            console.error("Erreur lors de la modification :", err);
+            setError('Erreur réseau ou serveur.');
+        }
+    }
 
     return (
         <div id="fullContainerProfil">
@@ -140,10 +200,16 @@ export default function ProfilPage() {
                         <div>
                             <h2>Mon profil</h2>
                         </div>
+                        {currentUser?.id === user.id ? (
                         <div>
                             <button onClick={openModifyModal} className="pathButton">Modifier mon profil</button>
                             <button className="delButton" onClick={() => setActiveModal('deleteAccount')}>Supprimer mon compte</button>
                         </div>
+                        ) : 
+                        (
+                            <button className="pathButton">Envoyer un message à {user.firstname}</button>
+                        )
+                        }
                     </div>
                     <div className="bodyProfil">
                     <div>
@@ -165,7 +231,7 @@ export default function ProfilPage() {
                             )}
                         </div>
                         <div className="contentInterest">
-                                {interests.map((interest) => (
+                                {user.interests && user.interests.map((interest) => (
                                 <div key={interest.id}>
                                 <button className="intButton">{interest.name}</button>
                                 </div>
@@ -177,26 +243,41 @@ export default function ProfilPage() {
                 </div>
             </div>
 
-            <div id="eventsCreated">
-                <div className="eventOptions">
-                    <h2>Les évènements créés par moi</h2>
-                    <button className="pathButton" onClick={() => setActiveModal('createEvent')}>
-                        Créer un évènement</button>
+                <div id="eventsCreated">
+                    <div className="eventOptions">
+                        <h2>Les évènements créés par moi</h2>
+                        <button className="pathButton" onClick={() => setActiveModal('createEvent')}>Créer un évènement</button>
+                    </div>
+                    <div id="containerCards">
+                        {user.events
+                        ?.filter(event => event.creator_id === user.id)
+                        .map(event => <CardEvent key={event.id} event={event} />)
+                        }   
+                    </div>
                 </div>
-                <CardEvent />  
-            </div>
 
             <div id="eventsParticiped">
                 <div className="eventOptions">
                     <h2>Les évènements auxquels je participe</h2>
                     <button className="pathButton"><Link to="/evenements" className="link">Trouver d'autres évènements</Link></button>
                 </div>
-                <CardEvent />  
+                <div id="containerCards">
+                    {user.events && user.events
+                    .filter((event)=> new Date(event.end_date) >= new Date())
+                    .map((event) => (
+                        <CardEvent key={event.id} event={event}/> 
+                    ))} 
+                </div>
             </div>
 
             <div id="eventsPassed">
                 <h2>Les évènements auxquels j'ai participé</h2>
-                <CardEvent />  
+                <div id="containerCards">
+                    {user.events
+                        ?.filter(event => new Date(event.end_date)  < new Date())
+                        .map(event => <CardEvent key={event.id} event={event} />)
+                    }   
+                </div>         
             </div>
 
             <Modal isOpen={activeModal === 'createEvent'} onClose={() => setActiveModal(null)}>
@@ -279,7 +360,7 @@ export default function ProfilPage() {
                     <p>Attention ! Vous êtes sur le point de supprimer votre compte. Si vous cliquez sur le bouton "Je confirme", vous n'aurez plus accès au site et vos données personnelles seront effacées. Si vous ne souhaitez pas supprimer votre compte, cliquez sur la croix rouge en haut à droite ou n'importe où en dehors de cet encadré.</p>
                     <p>Êtes-vous sûr(e) de vouloir supprimer votre compte ?</p>
 
-                    <button className="delButton">Je confirme</button>
+                    <button className="delButton" type='submit' onClick={handleDelete}>Je confirme</button>
                 </div>
             </Modal>
 

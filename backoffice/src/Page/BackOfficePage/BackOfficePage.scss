@@ -1,0 +1,102 @@
+#containerTableBoard {
+    width: 100%;
+}
+
+#tableBoard {
+    display: flex;
+    gap: 1rem;
+}
+
+/* ------------------------- bloc de gauche ------------------------ */
+
+.leftContainer {
+    width: 20%;
+    height: 100vh;
+    text-align: center;
+    padding-top: 10vh;
+    background: url(../../Assets/images/backgrounImage.jpg);
+    background-size: cover;
+}
+
+.leftContainer img {
+    width: 80%;
+}
+
+.leftContainer a {
+    display: block;
+    text-decoration: none;
+    color: #fff;
+    font-size: 1.5rem;
+    padding-top: 1rem;
+    font-weight: 600;
+}
+
+/* ------------------------- bloc de droite ------------------------ */
+
+
+.rightContainer {
+    width: 80%;
+    margin-left: 1rem;
+    padding-top: 10vh;
+}
+
+.rightContainer caption {
+    text-align: left;
+    margin-bottom: 5px;
+}
+
+form {
+    display: flex;
+    padding: 1rem 0rem;
+}
+
+#elmFilter form .filterName {
+    display: flex;
+    flex-direction: column;
+    margin-right: 1rem;
+}
+
+#elmFilter form  .filterStatus {
+    display: flex;
+    flex-direction: column;
+}
+
+/* ------------------------- Tableau de donnees ------------------------ */
+
+
+.tableBdd {
+    max-height: 100%;
+    overflow: auto;
+}
+
+.rightContainer thead {
+    background-color: var(--blue-green-sky);
+    color: #fff;
+}
+
+.rightContainer tbody td {
+    padding: 0rem 1rem;
+}
+
+.rightContainer table {
+    border-collapse: collapse;  /* pour éviter les espaces doubles */
+    table-layout: auto;         /* largeur basée sur le contenu */
+    width: auto;                /* ne pas forcer 100% */
+
+    tbody td {
+        border: 0.2px solid #dbdbdb;
+        padding: 1.5rem 1rem;
+        white-space: nowrap;        /* (optionnel) empêche le retour à la ligne */
+      }
+    
+      tbody th {
+        border: 0.2px solid #dbdbdb;
+        padding: 1rem;
+        white-space: nowrap;        /* (optionnel) empêche le retour à la ligne */
+      }
+    
+      .primaryKey {
+        font-weight: 700;
+      }
+  }
+  

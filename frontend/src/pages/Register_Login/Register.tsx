@@ -112,7 +112,7 @@ export default function Register() {
                         required
                     />
                     <input
-                        type="text"
+                        type="date"
                         name="birth"
                         placeholder="Date de naissance (JJ/MM/AAAA)"
                         onChange={handleChange}

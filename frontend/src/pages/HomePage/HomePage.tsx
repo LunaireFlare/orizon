@@ -3,6 +3,14 @@ import Header from '../../components/Header/Header.tsx';
 import Testimonial from '../../components/Testimonial/Testimonial.tsx';
 import Footer from '../../components/Footer/Footer.tsx';
 
+import imgCommunaute from '../../assets/images/communauteactive.webp';
+import imgReseau from '../../assets/images/reseauxsecurise.webp';
+import imgMessagerie from '../../assets/images/messagerieprive.webp';
+import imgEvenement from '../../assets/images/evenement.webp';
+import imgRetraite from '../../assets/images/retraiteorizon.webp';
+import imgRencontre from '../../assets/images/rencontreorizon.webp';
+
+
 import './HomePage.scss';
 
 export default function HomePage() {
@@ -17,25 +25,25 @@ export default function HomePage() {
 
                     <div className="blcFigure">
                         <div className="elemFigure">
-                            <img width="150px" src="../../src/assets/images/communauteactive.webp" alt="-active" />
+                            <img width="150px" src={imgCommunaute} alt="-active" />
                             <h4>COMMUNAUTÉ ACTIVE</h4>
                             <p>Rejoignez un espace bienveillant où entraide, bonne humeur et échanges authentiques sont au cœur de chaque interaction.</p>
                         </div>
 
                         <div className="elemFigure">
-                            <img width="150px" src="../../src/assets/images/reseauxsecurise.webp" alt="picto-communauté-active" />
+                            <img width="150px" src={imgReseau} alt="picto-communauté-active" />
                             <h4>RÉSEAU SÉCURISÉ</h4>
                             <p>Profitez d’un environnement sécurisé : chaque inscription est validée par nos modérateurs pour garantir un espace respectueux et de confiance.</p>
                         </div>
 
                         <div className="elemFigure">
-                            <img width="150px" src="../../src/assets/images/messagerieprive.webp" alt="picto-communauté-active" />
+                            <img width="150px" src={imgMessagerie} alt="picto-communauté-active" />
                             <h4>MESSAGERIE PRIVÉE</h4>
                             <p>Discutez avec vos amis ou faites de nouvelles connaissances grâce à notre système de messagerie simple et sécurisé.</p>
                         </div>
 
                         <div className="elemFigure">
-                            <img width="150px" src="../../src/assets/images/evenement.webp" alt="picto-communauté-active" />
+                            <img width="150px" src={imgEvenement} alt="picto-communauté-active" />
                             <h4>ÉVÉNEMENTS LOCAUX</h4>
                             <p>Trouvez et organisez des événements : randonnées, ateliers, sorties culturelles… Il se passe toujours quelque chose près de chez vous !</p>
                         </div>
@@ -53,12 +61,12 @@ export default function HomePage() {
                             </p>
                         </div>
                         <div>
-                            <img src="../../src/assets/images/retraiteorizon.webp" alt="picto-communauté-active" />
+                            <img src={imgRetraite} alt="picto-communauté-active" />
                         </div>
                     </div>
                     <div className="containerAboutTwo">
                         <div>
-                            <img src="../../src/assets/images/rencontreorizon.webp" alt="picto-communauté-active" />
+                            <img src={imgRencontre} alt="picto-communauté-active" />
                         </div>
 
                         <div>

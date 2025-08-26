@@ -113,7 +113,7 @@ export default function EventPage() {
                 </div>
             </div>
             <div id="eventCommunity">
-                <CardEvent />
+                {/* <CardEvent /> */}
             </div>
 
             <Footer />

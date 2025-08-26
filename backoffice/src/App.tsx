@@ -1,18 +1,17 @@
-import { useState } from 'react'
-import './App.css'
+import { Routes, Route } from 'react-router';
+import BackOfficeUsersPage from './Page/BackOfficePage/BackOfficeUsersPage.tsx';
+import BackOfficeEventsPage from './Page/BackOfficePage/BackOfficeEventsPage.tsx';
+import './App.scss'
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
-    <>
-      <h1>Welcome the backoffice server!</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-      </div>
-    </>
+        <div>
+            <Routes>
+              <Route path="/" element={<BackOfficeUsersPage />} />
+              <Route path="/evenements" element={<BackOfficeEventsPage />} />
+            </Routes>
+        </div>
   )
 }
 
