@@ -9,6 +9,7 @@ eventRouter.route('/events')
 
 eventRouter.route('/events/:id')
     .get(authMiddleware, eventController.getOneEvent)
+    .patch(authMiddleware, eventController.updateEvent)
     .delete(authMiddleware, eventController.deleteEvent);
 
 export { eventRouter };

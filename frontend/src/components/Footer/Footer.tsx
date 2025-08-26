@@ -1,5 +1,5 @@
 import { Link } from 'react-router';
-import logo from '../../assets/images/Logo_OrizonBlanc.png';
+import logo from '../../assets/images/Logo_OrizonBlanc.webp';
 
 import './Footer.scss';
 

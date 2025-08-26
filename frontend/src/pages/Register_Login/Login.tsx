@@ -99,16 +99,15 @@ export default function Login() {
                     </form>
                 </div>
 
-            {success && (
-                <div className="modal">
-                    <div className="modal-content">
-                        <p>Connexion réussie ! Redirection...</p>
+                {success && (
+                    <div className="modal">
+                        <div className="modal-content">
+                            <p>Connexion réussie ! Redirection...</p>
+                        </div>
                     </div>
-                </div>
-            )}
+                )}
             </div>
             <Footer />
-            
         </div>
     );
 }

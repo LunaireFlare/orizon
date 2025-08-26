@@ -1,8 +1,8 @@
 import { NavLink } from 'react-router';
 
-import Seniorblue from '../../assets/images/Orizon1.png';
-import Seniorgreen from '../../assets/images/Orizon2.png';
-import Senioryellow from '../../assets/images/Orizon3.png';
+import Seniorblue from '../../assets/images/Orizon1.webp';
+import Seniorgreen from '../../assets/images/Orizon2.webp';
+import Senioryellow from '../../assets/images/Orizon3.webp';
 
 import './Header.scss';
 

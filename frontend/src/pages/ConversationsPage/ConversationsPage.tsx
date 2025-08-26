@@ -2,11 +2,13 @@ import React from 'react';
 import ConversationItem from '../../components/ConversationItem/ConversationItem';
 import type { Conversation } from '../../types';
 import './ConversationsPage.scss';
+import { useNavigate } from 'react-router';
 import RooftopConnected from '../../components/Rooftop/RooftopConnected';
 import Banner from '../../components/Banner/Banner';
 import Footer from '../../components/Footer/Footer';
 
 const ConversationsPage: React.FC = () => {
+    const navigate = useNavigate();
     const conversations: Conversation[] = [
         {
             id: 1,
@@ -43,7 +45,7 @@ const ConversationsPage: React.FC = () => {
                             <ConversationItem
                                 key={conv.id}
                                 conversation={conv}
-                                onClick={() => console.log('Clicked', conv.id)} />
+                                onClick={() => navigate(`/messages/${conv.id}`)} />
                         ))}
                     </div>
                 </section>

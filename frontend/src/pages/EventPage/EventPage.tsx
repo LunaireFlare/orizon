@@ -15,25 +15,25 @@ type Search = {
 
 export default function EventPage() {
 
-    const [ options, setOptions ] = useState<Search[]>([]); 
-    const [ query, setQuery ] = useState<string>("");
-    const [ filtered, setFiltered ] = useState<Search[]>([]);
-    const [ selected, setSelected ] = useState<string>("");
+    const [options, setOptions] = useState<Search[]>([]);
+    const [query, setQuery] = useState<string>("");
+    const [filtered, setFiltered] = useState<Search[]>([]);
+    const [_selected, setSelected] = useState<string>("");
 
 
     // Appel de l'Api 
     useEffect(() => {
         if (query.length > 2) { // attendre au moins 3 lettres
-        fetch(`https://geo.api.gouv.fr/communes?nom=${query}&fields=nom,codesPostaux,code`)
-            .then(res => res.json())
-            .then((data: Search[]) => {
-            setOptions(data);
-            setFiltered(data); // suggestions directes
-            })
-            .catch(err => console.error("Erreur API :", err));
+            fetch(`https://geo.api.gouv.fr/communes?nom=${query}&fields=nom,codesPostaux,code`)
+                .then(res => res.json())
+                .then((data: Search[]) => {
+                    setOptions(data);
+                    setFiltered(data); // suggestions directes
+                })
+                .catch(err => console.error("Erreur API :", err));
         } else {
-        setOptions([]);
-        setFiltered([]);
+            setOptions([]);
+            setFiltered([]);
         }
     }, [query]);
 
@@ -61,14 +61,14 @@ export default function EventPage() {
                     <h2>Rechercher un évènement</h2>
                     <form action="/">
                         <label htmlFor="keyword">Mots-clefs</label>
-                        <input type="text" id="keyword" name="keyword" placeholder="Tapez un ou plusieurs mots-clef"/>
+                        <input type="text" id="keyword" name="keyword" placeholder="Tapez un ou plusieurs mots-clef" />
 
                         <div className="twoForm">
                             <div>
                                 <label htmlFor="Ville">Ville</label>
                                 <input
-                                    type="text" 
-                                    id="ville" 
+                                    type="text"
+                                    id="ville"
                                     value={query}
                                     onChange={(e) => setQuery(e.target.value)}
                                     placeholder="Tapez votre ville" />
@@ -76,20 +76,20 @@ export default function EventPage() {
                                 {/* Liste de suggestions */}
                                 {filtered.length > 0 && (
                                     <ul className="suggestions">
-                                    {filtered.map(opt => (
-                                        <div id="contentFilter">
-                                            <li
-                                            key={opt.code}
-                                            onClick={() => {
-                                                setSelected(opt.nom);
-                                                setQuery(opt.nom); // Remplit l'input
-                                                setFiltered([]); // Ferme la liste
-                                            }}
-                                            >
-                                            {opt.nom} ({opt.codesPostaux[0]})
-                                            </li>
-                                        </div>
-                                    ))}
+                                        {filtered.map(opt => (
+                                            <div id="contentFilter">
+                                                <li
+                                                    key={opt.code}
+                                                    onClick={() => {
+                                                        setSelected(opt.nom);
+                                                        setQuery(`${opt.nom} (${opt.codesPostaux[0]})`); // Remplit l'input
+                                                        setFiltered([]); // Ferme la liste
+                                                    }}
+                                                >
+                                                    {opt.nom} ({opt.codesPostaux[0]})
+                                                </li>
+                                            </div>
+                                        ))}
                                     </ul>
                                 )}
 
@@ -110,7 +110,7 @@ export default function EventPage() {
                         </div>
                     </form>
 
-                </div> 
+                </div>
             </div>
             <div id="eventCommunity">
                 {/* <CardEvent /> */}

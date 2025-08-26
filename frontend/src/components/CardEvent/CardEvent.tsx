@@ -1,4 +1,4 @@
-import {useState } from 'react';
+import { useState } from 'react';
 import Modal from './Modal';
 import './CardEvent.scss';
 import { format  } from 'date-fns';
@@ -31,27 +31,10 @@ type Interest = {
 
 type User = {
     id: number,
-    firstname: string, 
+    firstname: string,
     lastname: string
 }
 
-const mockUser = [
-    {
-        id: 1,
-        firstname: " Julie",
-        lastname: "ANTOINE"
-    },
-    {
-        id: 2,
-        firstname: "Jean",
-        lastname: "ETIENNE"
-    },
-    {
-        id: 3,
-        firstname: "Franck",
-        lastname: "VICTOIRE"
-    }
-]
 
 interface CardEventProps {
     event: Event;
@@ -63,9 +46,7 @@ export default function CardEvent({ event }: CardEventProps) {
 
     //States ouverture fermeture Modal
     const [isModalOpen, setModalOpen] = useState<boolean>(false);
-
     const [selectedCard, setSelectedCard] = useState<Event | null>(null);
-
     const [users] = useState<User[]>(mockUser);
 
     return (
@@ -114,23 +95,51 @@ export default function CardEvent({ event }: CardEventProps) {
                                                 <button className="btnDelParticiped">Ne participe plus</button>
                                             </div> */}
 
-                                        </div>
-                                        <div id="mdlSection2">
-                                            <h3>Liste des participants</h3>
-                                            {users.map(user => (
-                                                <div key={user.id}>
-                                                <p>{user.firstname} {user.lastname}</p>
-                                                </div>
-                                            ))}
+            <Modal
+                isOpen={isModalOpen}
+                onClose={() => {
+                    setModalOpen(false);
+                    setSelectedCard(null);
+                }}
+            >
+                <div>
+                    {selectedCard && (
+                        <div className="elmCardModal">
+                            <div key={selectedCard.id} id="containerModal">
+                                <div id="mdlSection1">
+                                    <img src={selectedCard.photo} alt="photo évènement" />
+                                    <h3>{selectedCard.name}</h3>
+                                    <p>{selectedCard.start_date} au {selectedCard.end_date}</p>
+                                    <p>{selectedCard.city} ({selectedCard.zip_code})</p>
+                                    <p>{selectedCard.address}</p>
+                                    <p>Organisateur: {selectedCard.creator_id}</p>
+                                    <p>{selectedCard.description}</p>
 
-                                        </div>
+                                    {selectedCard.interest_id.map((interest, index) => (
+                                        <button key={index} className="interestEvent">
+                                            {interest}
+                                        </button>
+                                    ))}
 
+                                    <div className="btnChoiseParticiped">
+                                        <button className="btnParticiped">Participer</button>
+                                        <button className="btnDeclinePcp">Ne participe plus</button>
                                     </div>
                                 </div>
-                            )}
 
-                        </div>   
-                </Modal>  
+                                <div id="mdlSection2">
+                                    <h3>Liste des participants</h3>
+                                    {users.map(user => (
+                                        <div key={user.id}>
+                                            <p>{user.firstname} {user.lastname}</p>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            </Modal>
         </div>
-    )
+    );
 }
