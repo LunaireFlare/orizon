@@ -18,8 +18,8 @@ export default function Header() {
                 <img src={Seniorblue} alt='photo senior 1' />
             </div>
             <div className='three'>
-                <img src={Seniorgreen} alt='photo senior 2' />
                 <img src={Senioryellow} alt='photo senior 3' />
+                <img src={Seniorgreen} alt='photo senior 2' />
             </div>
         </div>
     );
