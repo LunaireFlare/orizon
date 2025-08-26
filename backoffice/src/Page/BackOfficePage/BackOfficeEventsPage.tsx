@@ -1,3 +1,4 @@
+import { Link } from 'react-router';
 import { useState } from 'react';
 import Logo from '../../Assets/images/Logo_OrizonBlanc.png';
 import './BackOfficePage.scss';
@@ -7,16 +8,16 @@ type UserBdd = {
     lastname: string,
     firstname: string,
     email: string,
-    password: void,
+    password: string,
     zip_code: number,
     city: string,
-    date_of_birth: Date,
+    date_of_birth: string,
     role: string,
     photo: string,
     description: string,
-    status: void,
-    created_at: Date,
-    updated_at: Date
+    status: string,
+    created_at: string,
+    updated_at: string
 }
 
 const mockUser = [
@@ -38,7 +39,7 @@ const mockUser = [
     },
     {
         id: 2,
-        lastname: "Beaux",
+        lastname: "BEAUX",
         firstname: "Thomas",
         email: "toto59@hotmail.fr",
         password: "25082025Hhsgidxgssgzg345",
@@ -56,46 +57,65 @@ const mockUser = [
 
 export default function BackOfficePage() {
 
-    const [ userBdd, setUserBdd ] = useState<UserBdd[]>(mockUser)
+    const [ userBdd ] = useState<UserBdd[]>(mockUser)
 
     return (
         <div id="containerTableBoard">
             <div id="tableBoard">
-                <div className="leftContainer gradiantBase">
-                    <img src={Logo} width="100px" alt="Logo Orizon"/>
+                <div className="leftContainer">
+                    <img src={Logo} alt="Logo Orizon"/>
                     <div>
-                        <a href="/">Utilisateurs</a>
-                        <a href="/">Evènements</a>
+                        <Link to="/">Utilisateurs</Link>
+                        <Link to="/">Evènements</Link>
                     </div>
                 </div>
-                <div id="rightContainer">
-                    <h1>Tableau de Bord</h1>
+                <div className="rightContainer">
+                    <h1>TABLEAU DE BORD - Evenements</h1>
+                    <div id="elmFilter">
+                        <form>
+                            <div className="filterName">
+                                <label htmlFor="searchName">Recherche par nom/prenom</label>
+                                <input type="text" name="name" id="nom"/>
+                            </div>
+                            <div className="filterStatus">
+                                <label htmlFor="searchName">Recherche par status</label>
+                                <select  id="status">
+                                    <option value="">-- status --</option>
+                                    <option value="en attente">En attente</option>
+                                    <option value="valide">Valide</option>
+                                    <option value="bloque">Bloque</option>
+                                </select>
+                            </div>
+                        </form>
+                    </div>
                 <div className="tableBdd">
                     <table>
                         <caption>
                             Retrouvez toutes les donnees de vos utilisateurs
                         </caption>
                             <thead>
-                                <th scope="col">id</th>
-                                <th scope="col">lastname</th>
-                                <th scope="col">firstname</th>
-                                <th scope="col">email</th>
-                                <th scope="col">password</th>
-                                <th scope="col">zip_code</th>
-                                <th scope="col">city</th>
-                                <th scope="col">date_of_birth</th>
-                                <th scope="col">role</th>
-                                <th scope="col">photo</th>
-                                <th scope="col">description</th>
-                                <th scope="col">status</th>
-                                <th scope="col">created_at</th>
-                                <th scope="col">updated_at</th>
+                                <tr>
+                                    <th scope="row">id</th>
+                                    <th scope="col">lastname</th>
+                                    <th scope="col">firstname</th>
+                                    <th scope="col">email</th>
+                                    <th scope="col">password</th>
+                                    <th scope="col">zip_code</th>
+                                    <th scope="col">city</th>
+                                    <th scope="col">date_of_birth</th>
+                                    <th scope="col">role</th>
+                                    <th scope="col">photo</th>
+                                    <th scope="col">description</th>
+                                    <th scope="col">status</th>
+                                    <th scope="col">created_at</th>
+                                    <th scope="col">updated_at</th>
+                                </tr>
                             </thead>
                             <tbody>
                                 
                                     {userBdd.map((user) => (
-                                        <tr key={user.id}>
-                                            <td>{user.id}</td>
+                                            <tr key={user.id}>
+                                            <td className="primaryKey">{user.id}</td>
                                             <td>{user.firstname}</td>
                                             <td>{user.lastname}</td>
                                             <td>{user.email}</td>
