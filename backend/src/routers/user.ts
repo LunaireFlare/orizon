@@ -14,6 +14,14 @@ userRouter
   .get(userController.getOneUser)
   .put(authMiddleware, userController.updateUser)
   .delete(authMiddleware, userController.deleteUser)
+  
+  
+userRouter  
+  .route("/users/:id/interests")
   .post(userController.addOneInterestToUser);
+
+userRouter  
+  .route("/users/:id/interests/:interest_id")
+  .delete(userController.deleteOneInterestToUser);
 
 export { userRouter };

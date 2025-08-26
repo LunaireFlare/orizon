@@ -191,14 +191,36 @@ const userController = {
     async addOneInterestToUser(req: Request, res: Response){
         const id = parseInt(req.params.id);
         const user = await User.findByPk(id);
-        const {interestId} = req.body;
-        if (!user || !interestId) return res.status(404).json({ error: "Not found" });
+        const {interest_id} = req.body;
+        if (!user || !interest_id) return res.status(400).json({ error: "Not found" });
     
         const createdInterest = await Interest_User.create({
-            interestId,
-            id});
+            interest_id,
+            user_id:id});
 
         res.status(201).json(createdInterest);
+    },
+
+    async deleteOneInterestToUser(req: Request, res: Response){
+        const user_id = parseInt(req.params.id);
+        const interest_id = parseInt(req.params.interest_id);
+        if (!user_id || !interest_id) return res.status(400).json({ error: "Not found" });
+
+        const association = await Interest_User.findOne({
+            where: { interest_id,  user_id }
+        });
+
+        const interests = await Interest_User.findAll()
+        console.log(interests );
+        
+
+        if (!association) {
+            return res.status(404).json({ error: "Intérêt non trouvé pour cet utilisateur" });
+        }
+
+        await association.destroy();
+
+        res.status(200).json({ message: "Intérêt supprimé avec succès" });
     }
 };
 

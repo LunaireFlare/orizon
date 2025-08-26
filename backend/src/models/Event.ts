@@ -12,7 +12,7 @@ import {
     BelongsTo
     
 } from "sequelize-typescript";
-import { User } from "./User.js";
+import { User } from "./associations.js";
 
 
 @Table({

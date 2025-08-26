@@ -60,13 +60,77 @@ function getAge(dateOfBirth: Date | string): number {
 export default function ProfilPage() {
 
     const [user, setUser] = useState<User | null >(null);
+    const [interests, setInterests] = useState<Interest[]>([]);
+
     const [formData, setFormData] = useState<User | null>(null);
     const navigate = useNavigate();
     
     const [currentUser, setCurrentUser] = React.useState<{ id: number } | null>(null);
     const token = localStorage.getItem("token");
 
-    
+    const [selectedInterest, setSelectedInterest] = useState<string>("");
+
+    const handleAddInterest = async () => {
+        if (!selectedInterest) return; 
+        if (!token) {
+            alert("Vous devez être connecté");
+            return;
+        }
+
+        try {
+            const response = await fetch(`http://backend.localhost:81/users/${id}/interests`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({ interest_id: selectedInterest }),
+            });
+
+            if (!response.ok) throw new Error("Erreur lors de l'ajout de l'intérêt");
+
+            const addedInterest = interests.find((i) => i.id === parseInt(selectedInterest));
+            if (addedInterest && user) {
+            setUser({ ...user, interests: [...user.interests, addedInterest] });
+            }
+
+            setSelectedInterest("");
+        } catch (err) {
+            console.error(err);
+        }
+        };
+
+    const handleDeleteInterest = async (interest_id: number) => {
+        if (!token) {
+            alert("Vous devez être connecté");
+            return;
+        }
+
+        try {
+            const response = await fetch(`http://backend.localhost:81/users/${id}/interests/${interest_id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+            }); 
+
+            if (!response.ok) {
+                throw new Error(`Erreur lors de la suppression : ${response.statusText}`);
+            } 
+
+            if (user) {
+            setUser({
+                ...user,
+                interests: user.interests.filter(i => i.id !== interest_id)
+            });
+        }
+
+        } catch (err) {
+            console.error(err);
+        }
+    }
+        
     
     React.useEffect(() => {
         if (token) {
@@ -83,7 +147,6 @@ export default function ProfilPage() {
     const {id} = useParams();
 
     React.useEffect(() => {
-
         fetch(`http://backend.localhost:81/users/${id}`)
             .then((res) => res.json())
             .then((data: User) => {
@@ -96,7 +159,16 @@ export default function ProfilPage() {
             })
             .catch((err) => console.error("Erreur API:", err));
 
-        },  [id]);
+        }, [id]);
+
+    React.useEffect(() => {
+        fetch('http://backend.localhost:81/interests')
+            .then((res) => res.json())
+            .then((data: Interest[]) => {  
+                setInterests(data);
+            })
+            .catch((err) => console.error("Erreur API:", err));
+        }, [id]);        
 
     const [_success, setSuccess] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -110,10 +182,7 @@ export default function ProfilPage() {
 
     if (!user) {
         return <p>Chargement en cours…</p>;
-    }
-
-    console.log(user);
-    
+    }    
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -230,15 +299,28 @@ export default function ProfilPage() {
                                 </div>
                             )}
                         </div>
-                        <div className="contentInterest">
+                        <div id='containerInterests'>
                                 {user.interests && user.interests.map((interest) => (
                                 <div key={interest.id}>
-                                <button className="intButton">{interest.name}</button>
+                                    <button className="intButton">{interest.name}</button>
+                                    <span className="" onClick={()=>handleDeleteInterest(interest.id)}>X</span>                                
                                 </div>
                             ))}
                         </div>
+                        {currentUser?.id === user.id && (
+                            <div id='containerSearchInterest'>
+                                <label>Centre d’intérêt</label>
+                                <select 
+                                    id="interet" 
+                                    value={selectedInterest}
+                                    onChange={(e) => setSelectedInterest(e.target.value)}>
+                                    <option value="">-- Choisissez un centre d'intérêt --</option>
+                                    {interests?.map((interest) =><option key={interest.id} value={interest.id}>{interest.name}</option>)}
+                                </select>
+                                <button onClick={handleAddInterest} className="pathButton">Ajouter</button>
+                            </div>
+                        )}
                     </div>
-
                     </div>
                 </div>
             </div>

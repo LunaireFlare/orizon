@@ -12,7 +12,6 @@ type Search = {
     codesPostaux: string[]
 }
 
-
 export default function EventPage() {
 
     const [ options, setOptions ] = useState<Search[]>([]); 
