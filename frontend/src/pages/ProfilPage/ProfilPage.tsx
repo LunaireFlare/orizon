@@ -87,7 +87,7 @@ export default function ProfilPage() {
         fetch(`http://backend.localhost:81/users/${id}`)
             .then((res) => res.json())
             .then((data: User) => {
-                const forbiddenStatus= ["bloqué" , "désactivé"]
+                const forbiddenStatus= ["bloqué" , "désactivé", undefined]
                 if (forbiddenStatus.includes(data.status)){
                     navigate("/404", { replace: true });
                 } else {
