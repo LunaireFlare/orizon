@@ -1,4 +1,4 @@
-import RooftopConnected from '../../components/Rooftop/RooftopConnected';
+import Rooftop from '../../components/Rooftop/Rooftop';
 import Banner from '../../components/Banner/Banner.tsx';
 import Footer from '../../components/Footer/Footer.tsx';
 
@@ -11,7 +11,7 @@ import avatarMan from '../../assets/images/avatarMen.webp';
 export default function MessagesPage() {
     return (
         <div id="fullContainerMessages">
-            <RooftopConnected />
+            <Rooftop />
             <Banner />
 
             <div id="containerConversation">

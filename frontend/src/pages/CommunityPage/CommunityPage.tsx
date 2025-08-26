@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import RooftopConnected from '../../components/Rooftop/RooftopConnected';
+import Rooftop from '../../components/Rooftop/Rooftop.tsx';
 import Banner from '../../components/Banner/Banner.tsx';
 import Footer from '../../components/Footer/Footer.tsx';
 import CardUser from '../../components/CardUser/CardUser.tsx';
@@ -53,7 +53,7 @@ export default function EventPage() {
 
     return (
         <div>
-            <RooftopConnected />
+            <Rooftop />
             <Banner />
 
             <div id="containerSearchUser">
