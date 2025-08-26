@@ -25,8 +25,11 @@ VALUES
 
 INSERT INTO event_participant (event_id, participant_id) VALUES
 (1, 2),
+(1, 1),
 (2, 1), 
-(3, 1), 
+(2, 2),
+(3, 1),
+(3, 3),  
 (3, 2);
 
 INSERT INTO event_interest (event_id, interest_id) VALUES

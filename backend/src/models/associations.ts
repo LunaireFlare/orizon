@@ -53,15 +53,15 @@ Message.belongsTo(Conversation, {
 
 /* USER-EVENT (CREATOR) */
 
-User.hasMany(Event, {
-    foreignKey: 'creator_id',
-    as: 'events'
-});
+// User.hasMany(Event, {
+//     foreignKey: 'creator_id',
+//     as: 'events'
+// });
 
-Event.belongsTo(User, {
-    foreignKey: 'creator_id',
-    as: 'creator'
-});
+// Event.belongsTo(User, {
+//     foreignKey: 'creator_id',
+//     as: 'creator'
+// });
 
 /* USER-EVENT (PARTICIPANT) */
 
@@ -69,7 +69,7 @@ User.belongsToMany(Event, {
     foreignKey: 'participant_id',
     otherKey: 'event_id',
     through: Event_Participant,
-    as: 'participating_events'
+    as: 'events'
 });
 
 Event.belongsToMany(User, {
