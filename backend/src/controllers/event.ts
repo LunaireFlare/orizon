@@ -160,12 +160,25 @@ const eventController = {
          * @param res
          */
         async associateEventToParticipant(req: Request, res: Response) {
+            const requestor_id = req.user.id;
+            if (!requestor_id) {
+                return res.status(401).json({ error: 'Accès non autorisé. Veuillez vous connecter' });
+            };
+
             const event_id = parseInt(req.params.event_id);
             const user_id = parseInt(req.params.user_id);
+            
+            // [x] si user essaie d'ajouter autre personne que lui, erreur
+            if (requestor_id !== user_id) {
+                return res.status(401).json({ error: 'Accès non autorisé. Vous ne pouvez pas inscrire d\'autres personnes que vous.' });
+            }
 
+            // [x] date d'évènement doit être dans le futur
             const event = await Event.findByPk(event_id);
             if (!event) {
                 return res.status(400).json({ error: 'Event not found.' });
+            } else if (event.start_date < new Date()) {
+                return res.status(400).json({ error: 'L\'évènement a déjà commencé, vous ne pouvez plus vous inscrire.'});
             };
 
             const user = await User.findByPk(user_id);
@@ -173,11 +186,7 @@ const eventController = {
                 return res.status(400).json({ error: 'User not found.' });
             };
 
-            // ajouter des vérifications : 
-            // - si user existe déjà dans la liste, message vous êtes déjà inscrit
-            // - si user est créateur, participe déjà
-            // - si user essaie d'ajouter autre personne que lui, erreur
-            // - date d'évènement doit être dans le futur
+            // TODO: [ ] si user existe déjà dans la liste ou créateur, message vous êtes déjà inscrit
             
             const eventWithUpdatedParticipants = await Event_Participant.create({
                 event_id,
@@ -193,12 +202,25 @@ const eventController = {
          * @param res
          */
         async dissociateEventFromParticipant(req: Request, res: Response) {
+            const requestor_id = req.user.id;
+            if (!requestor_id) {
+                return res.status(401).json({ error: 'Accès non autorisé. Veuillez vous connecter' });
+            };
+
             const event_id = parseInt(req.params.event_id);
             const user_id = parseInt(req.params.user_id);
-
+            
+            // [x] si user essaie de supprimer autre personne que lui, erreur
+            if (requestor_id !== user_id) {
+                return res.status(401).json({ error: 'Accès non autorisé. Vous ne pouvez pas désinscrire d\'autres personnes que vous.' });
+            }
+            
+            // [x] date d'évènement doit être dans le futur
             const event = await Event.findByPk(event_id);
             if (!event) {
                 return res.status(400).json({ error: 'Event not found.' });
+            } else if (event.start_date < new Date()) {
+                return res.status(400).json({ error: 'L\'évènement a déjà commencé, vous ne pouvez plus vous désinscrire.'});
             };
 
             const user = await User.findByPk(user_id);
@@ -206,10 +228,9 @@ const eventController = {
                 return res.status(400).json({ error: 'User not found.' });
             };
 
-            // ajouter des vérifications : 
-            // - si user est créateur, ne peut pas se désinscrire, faut supprimer évènement
-            // - si user essaie de supprimer autre personne que lui, erreur
-            // - date d'évènement doit être dans le futur
+            // TODO: [ ] si user est créateur, ne peut pas se désinscrire
+            // if (user.id === event.creator_id) { ==> erreur, creator_id n'existe pas
+            // }
 
             const eventToDelete = await Event_Participant.findOne({ where: { 
                 event_id,
