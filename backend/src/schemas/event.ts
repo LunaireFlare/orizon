@@ -2,10 +2,9 @@ import z from 'zod';
 
 export const eventSchema = z.object({
             name: z.string().min(1).max(255),
-            // start_date: z.coerce.date().refine((date) => date > new Date(), {
-            //     message: 'La date de début doit être dans le futur',
-            // }),
-            start_date: z.coerce.date(),
+            start_date: z.coerce.date().refine((date) => date > new Date(), {
+                message: 'La date de début doit être dans le futur',
+            }),
             end_date: z.coerce.date(),
             description: z.string().min(1).max(255),
             address: z.string().min(1).max(255),
