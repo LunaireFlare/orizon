@@ -173,6 +173,12 @@ const eventController = {
                 return res.status(400).json({ error: 'User not found.' });
             };
 
+            // ajouter des vérifications : 
+            // - si user existe déjà dans la liste, message vous êtes déjà inscrit
+            // - si user est créateur, participe déjà
+            // - si user essaie d'ajouter autre personne que lui, erreur
+            // - date d'évènement doit être dans le futur
+            
             const eventWithUpdatedParticipants = await Event_Participant.create({
                 event_id,
                 participant_id : user_id
@@ -199,6 +205,11 @@ const eventController = {
             if (!user) {
                 return res.status(400).json({ error: 'User not found.' });
             };
+
+            // ajouter des vérifications : 
+            // - si user est créateur, ne peut pas se désinscrire, faut supprimer évènement
+            // - si user essaie de supprimer autre personne que lui, erreur
+            // - date d'évènement doit être dans le futur
 
             const eventToDelete = await Event_Participant.findOne({ where: { 
                 event_id,
@@ -235,6 +246,35 @@ const eventController = {
             });
 
             res.json(eventWithUpdatedInterests);
+        },
+
+                /**
+         * Dissocier un évènement d'un intérêt.
+         * @param req
+         * @param res
+         */
+        async dissociateEventFromInterest(req: Request, res: Response) {
+            const event_id = parseInt(req.params.event_id);
+            const interest_id = parseInt(req.params.interest_id);
+
+            const event = await Event.findByPk(event_id);
+            if (!event) {
+                return res.status(400).json({ error: 'Event not found.' });
+            };
+
+            const interest = await Interest.findByPk(interest_id);
+            if (!interest) {
+                return res.status(400).json({ error: 'Interest not found.' });
+            };
+
+            const eventToDelete = await Event_Interest.findOne({ where: { 
+                event_id,
+                interest_id
+            }})
+
+            await eventToDelete?.destroy();
+
+            res.json({ message: 'Cet intérêt n\'est plus associé à cet évènement.'});
         },
 
 };

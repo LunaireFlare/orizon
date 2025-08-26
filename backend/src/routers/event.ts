@@ -17,6 +17,7 @@ eventRouter.route('/events/:event_id/users/:user_id')
     .delete(authMiddleware, eventController.dissociateEventFromParticipant);
 
 eventRouter.route('/events/:event_id/interests/:interest_id')
-    .post(authMiddleware, eventController.associateEventToInterest);
+    .post(authMiddleware, eventController.associateEventToInterest)
+    .delete(authMiddleware, eventController.dissociateEventFromInterest);
 
 export { eventRouter };
