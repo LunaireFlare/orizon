@@ -10,11 +10,20 @@ const userController = {
    * @param res
    */
   async getAllUsers(req: Request, res: Response) {
-    const users = await User.findAll();
+    const users = await User.findAll({
+      include: [
+        {
+          association: "interests",
+          attributes: ["id", "name"],
+        },
+      ],
+    });
+
     const usersWithoutPasswords = users.map((u) => {
       const { password, ...rest } = u.toJSON();
       return rest;
     });
+
     res.json(usersWithoutPasswords);
   },
 
