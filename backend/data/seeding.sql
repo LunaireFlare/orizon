@@ -2,9 +2,9 @@ BEGIN;
 
 INSERT INTO "user" (lastname, firstname, email, password, zip_code, city, date_of_birth, role, photo,description, status)
 VALUES 
-('Dupont', 'Jean', 'jean.dupont@example.com', 'hashed_password1', '75001', 'Paris', '1990-05-15', 'user', NULL,'Bonjour, je suis passionné de foot', 'valide'),
-('Martin', 'Claire', 'claire.martin@example.com', 'hashed_password2', '69001', 'Lyon', '1985-03-22', 'user', NULL, 'Bonjour, je suis passionné de couture', 'valide'),
-('Durand', 'Paul', 'paul.durand@example.com', 'hashed_password3', '31000', 'Toulouse', '1995-07-09', 'admin', NULL,'Bonjour, je suis passionné de cuisine', 'valide');
+('Dupont', 'Jean', 'jean.dupont@example.com', '$argon2id$v=19$m=65536,t=3,p=4$9tmgBGeVmvCBtrsfqukeWw$aS36cPoTBLkGWELbXTPj0wpNWgQaSLaiTNOXwVHgpIc', '75001', 'Paris', '1990-05-15', 'user', NULL,'Bonjour, je suis passionné de foot', 'valide'),
+('Martin', 'Claire', 'claire.martin@example.com', '$argon2id$v=19$m=65536,t=3,p=4$ZEzwMwwspVgLS2xjrf57mQ$88DkpyyEGjZMLeydUBErVvu0lhCcxIr0smBS8AJGP0k', '69001', 'Lyon', '1985-03-22', 'user', NULL, 'Bonjour, je suis passionné de couture', 'valide'),
+('Durand', 'Paul', 'paul.durand@example.com', '$argon2id$v=19$m=65536,t=3,p=4$ZkJ911yOAj/V5LsF9jIUDg$MKq24UyO4J4hc6+yEwUbSKPeWPQerihiFJplIDkUefY', '31000', 'Toulouse', '1995-07-09', 'admin', NULL,'Bonjour, je suis passionné de cuisine', 'valide');
 
 INSERT INTO interest (name) VALUES
 ('Sport'),
