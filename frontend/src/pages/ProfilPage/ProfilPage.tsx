@@ -10,7 +10,7 @@ import Modal from '../../components/Modal/Modal.tsx';
 
 import './ProfilPage.scss';
 
-import type { User, Interest } from "../../types/index.d.ts"
+import type { User, Interest, Event } from "../../types/index.d.ts"
 
 function getAge(dateOfBirth: Date | string): number {
     const dob = new Date(dateOfBirth);
@@ -29,12 +29,24 @@ export default function ProfilPage() {
     const [interests, setInterests] = useState<Interest[]>([]);
 
     const [formData, setFormData] = useState<User | null>(null);
+    const [formDataEvent, setFormDataEvent] = useState<Partial<Event>>({
+        name: "",
+        start_date: "",
+        end_date: "",
+        description: "",
+        address: "",
+        zip_code: "",
+        city: "",
+        interests:[]
+    });
     const navigate = useNavigate();
 
     const [currentUser, setCurrentUser] = React.useState<{ id: number } | null>(null);
     const token = localStorage.getItem("token");
 
     const [selectedInterest, setSelectedInterest] = useState<string>(""); 
+    const [selectedInterestEvent, setSelectedInterestEvent] = useState<number>(); 
+
     
     React.useEffect(() => {
         if (token) {
@@ -149,6 +161,13 @@ export default function ProfilPage() {
         return <p>Chargement en cours…</p>;
     }
 
+    const handleChangeEvent = (e: React.ChangeEvent<HTMLInputElement  | HTMLTextAreaElement | HTMLSelectElement>) => {
+        console.log(formDataEvent);
+
+        if (!formDataEvent) return;
+        setFormDataEvent({ ...formDataEvent, [e.target.name]: e.target.value });
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!formData) return;
@@ -193,6 +212,64 @@ export default function ProfilPage() {
             setLoading(false);
         }
     };
+
+    const handleSubmitNewEvent =  async (e: React.FormEvent) => {
+        e.preventDefault();
+        
+        if (!formDataEvent) return;
+        setError(null);
+        setLoading(true);
+        try {
+            if (!token) throw new Error("Utilisateur non authentifié");
+            const response = await fetch(`http://backend.localhost:81/events`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ ...formDataEvent, creator_id: user.id, photo: undefined , interests: undefined, creator:undefined }),
+            });
+            const data = await response.json();
+            const response2 = await fetch(`http://backend.localhost:81/events/${data.id}/interests/${selectedInterestEvent}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({event_id:data.id, interest_id:selectedInterestEvent }),
+            });
+            
+            await response2.json();
+            
+            if (!response.ok && !response2.ok) {
+                setError(data.error || "Erreur lors de la modification.");
+            } else {
+                const addedInterest = interests.find(i => i.id === selectedInterestEvent);
+                const eventWithInterest = addedInterest ? { ...data, interests: [addedInterest] } : data;
+                setUser(prevUser => prevUser ? { 
+                ...prevUser, 
+                events: [...prevUser.events,  eventWithInterest] 
+            } : prevUser);
+                setSuccess(true);
+                setActiveModal(null);
+                setFormDataEvent({
+                name: "",
+                start_date: "",
+                end_date: "",
+                description: "",
+                address: "",
+                zip_code: "",
+                city: "",
+                interests: []
+            });
+            }
+        } catch (err) {
+            console.error("Erreur lors de la création de l'évènement :", err);
+            setError('Erreur réseau ou serveur.');
+        } finally {
+            setLoading(false);
+        }
+    }
 
     const handleDelete = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -332,73 +409,75 @@ export default function ProfilPage() {
 
                     <p>Tous les champs doivent obligatoirement être remplis.</p>
 
-                    <form className='eventForm'>
-                        <label htmlFor="eventName">Nom de l'évènement</label>
+                    <form className='eventForm' onSubmit={handleSubmitNewEvent}>
+                        <label htmlFor="name">Nom de l'évènement</label>
                         <input
                             type="text"
-                            name="eventName"
+                            name="name"
                             placeholder="Cours de cuisine, exposition au musée..."
-                            // onChange={handleChange}
+                            onChange={handleChangeEvent}
                             required
                         />
                             <label>Centre d’intérêt</label>
                         <select
                             id="interet"
-                            value={selectedInterest}
-                            onChange={(e) => setSelectedInterest(e.target.value)}>
+                            value={selectedInterestEvent}
+                            onChange={(e) => {setSelectedInterestEvent(Number(e.target.value)); handleChangeEvent(e)}}
+                            required
+                            >
                             <option value="">-- Choisissez un centre d'intérêt --</option>
                             {interests?.map((interest) => <option key={interest.id} value={interest.id}>{interest.name}</option>)}
                         </select>
 
-                        <label htmlFor="eventStartDate">Date et heure de début de l'évènement</label>
+                        <label htmlFor="start_date">Date et heure de début de l'évènement</label>
                         <input
                             type="datetime-local"
-                            name="eventStartDate"
-                            // onChange={handleChange}
+                            name="start_date"
+                            onChange={handleChangeEvent}
                             required
                         />
 
-                        <label htmlFor="eventEndDate">Date et heure de fin de l'évènement</label>
+                        <label htmlFor="end_date">Date et heure de fin de l'évènement</label>
                         <input
                             type="datetime-local"
-                            name="eventEndDate"
-                            // onChange={handleChange}
+                            name="end_date"
+                            onChange={handleChangeEvent}
                             required
                         />
 
-                        <label htmlFor="eventDescription">Description</label>
+                        <label htmlFor="description">Description</label>
                         <textarea
-                            name="eventDescription"
+                            name="description"
                             placeholder="Décrivez votre évènement en quelques lignes !"
-                            // onChange={handleChange}
+                            onChange={handleChangeEvent}
                             required
                         />
 
-                        <label htmlFor="eventAddress">Adresse</label>
+                        <label htmlFor="address">Adresse</label>
                         <input
                             type="text"
-                            name="eventAddress"
+                            name="address"
                             placeholder="75 rue Honoré de Balzac"
-                            // onChange={handleChange}
+                            onChange={handleChangeEvent}
                             required
                         />
 
                         <div className="eventDetails">
-                            <label htmlFor="eventCity">Ville</label>
+                            <label htmlFor="city">Ville</label>
                             <input
                                 type="text"
-                                name="eventCity"
+                                name="city"
                                 placeholder="Paris"
-                                // onChange={handleChange}
+                                onChange={handleChangeEvent}
                                 required
                             />
 
-                            <label htmlFor="eventZipCode">Code postal</label>
+                            <label htmlFor="zip_code">Code postal</label>
                             <input
                                 type="text"
-                                name="eventZipCode"
+                                name="zip_code"
                                 placeholder="75000"
-                                // onChange={handleChange}
+                                onChange={handleChangeEvent}
                                 required
                             />
                         </div>
