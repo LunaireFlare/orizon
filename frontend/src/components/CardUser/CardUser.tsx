@@ -38,8 +38,7 @@ export default function CardUser({ user }: Props) {
                 <h3>{user.firstname} {user.lastname}</h3>
             </Link>
             <p><strong>{user.city} ({user.zip_code})</strong></p>
-            <p>{user.email}</p>
-            {user.description && <p>Description : {user.description}</p>}
+            {user.description && <p>{user.description}</p>}
             {user.interests && user.interests.length > 0 && (
                 <div className="interests">
                     <strong>Centres d'intérêt :</strong>
