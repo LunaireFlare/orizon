@@ -78,10 +78,23 @@
 }
 
 #eventCommunity {
-    padding-top: 3rem;
+    // display: grid;
+    // grid-template-columns: repeat(2, 1fr);
+    // padding-top: 3rem;
+    display: grid;
+    grid-template-columns: repeat(1, 6fr);
+    grid-gap: 1rem;
 }
 
 
+/* ****************** Version Tablette ******************* */
+@media (min-width: 680px) {
+
+    #eventCommunity {
+        grid-template-columns: repeat(2, 3fr);
+        grid-gap: 0rem;
+    }
+}
 
 
 @media (min-width: 1280px) {
@@ -104,5 +117,9 @@
 
     #containerSearchEvent form {
         width: 100%;
+    }
+
+    #eventCommunity {
+        grid-template-columns: repeat(3, 3fr);
     }
 }

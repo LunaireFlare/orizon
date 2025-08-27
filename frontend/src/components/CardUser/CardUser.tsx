@@ -3,22 +3,24 @@ import './CardUser.scss';
 import avatarWoman from '../../assets/images/avatarWomen.webp';
 import avatarMan from '../../assets/images/avatarMen.webp';
 
-type Interest = {
-    id: number;
-    name: string;
-};
+import type { User } from '../../types/index.d.ts'
 
-type User = {
-    id: number;
-    firstname: string;
-    lastname: string;
-    email: string;
-    city: string;
-    zip_code: string;
-    description: string | null;
-    photo: string | null;
-    interests?: Interest[];
-};
+// type Interest = {
+//     id: number;
+//     name: string;
+// };
+
+// type User = {
+//     id: number;
+//     firstname: string;
+//     lastname: string;
+//     email: string;
+//     city: string;
+//     zip_code: string;
+//     description: string | null;
+//     photo: string | null;
+//     interests?: Interest[];
+// };
 
 type Props = {
     user: User;

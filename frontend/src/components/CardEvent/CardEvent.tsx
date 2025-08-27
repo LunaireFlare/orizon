@@ -7,7 +7,8 @@ import { fr } from "date-fns/locale";
 const interestImages: Record<string, string> = {
     Sport: "https://cdn.pixabay.com/photo/2022/10/23/19/38/womens-football-7541990_1280.jpg",
     Cuisine: "https://cdn.pixabay.com/photo/2017/12/10/14/47/pizza-3010062_1280.jpg",
-    Musique: "https://cdn.pixabay.com/photo/2016/11/23/15/48/audience-1853662_1280.jpg"
+    Musique: "https://cdn.pixabay.com/photo/2016/11/23/15/48/audience-1853662_1280.jpg",
+    Voyage:"https://cdn.pixabay.com/photo/2016/11/23/15/48/audience-1853662_1280.jpg"
 };
 
 type Event = {
