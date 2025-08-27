@@ -74,7 +74,7 @@ export default function BackOfficePage() {
                     <img src={Logo} alt="Logo Orizon"/>
                 </div>
                 <div className="rightContainer">
-                    <div>
+                    <div className="containerBoxCnx">
                     <form onSubmit={handleSubmit}  className="boxConexion">
                         <h2>Connexion</h2>
                         <input
