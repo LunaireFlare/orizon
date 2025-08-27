@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router';
 import ConversationItem from '../../components/ConversationItem/ConversationItem';
 import type { Conversation } from '../../types';
 
-import RooftopConnected from '../../components/Rooftop/RooftopConnected';
+import Rooftop from '../../components/Rooftop/Rooftop';
 import Banner from '../../components/Banner/Banner';
 import Footer from '../../components/Footer/Footer';
 
@@ -42,7 +42,7 @@ const ConversationsPage: React.FC = () => {
 
     return (
         <>
-            <RooftopConnected />
+            <Rooftop />
             <Banner />
 
             <div id="container-content">

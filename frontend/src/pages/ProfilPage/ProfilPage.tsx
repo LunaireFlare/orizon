@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 
-import RooftopConnected from '../../components/Rooftop/RooftopConnected';
+import Rooftop from '../../components/Rooftop/Rooftop';
 import Banner from '../../components/Banner/Banner.tsx'
 import Footer from '../../components/Footer/Footer.tsx';
 import CardEvent from '../../components/CardEvent/CardEvent.tsx';
@@ -191,7 +191,7 @@ export default function ProfilPage() {
 
     return (
         <div id="fullContainerProfil">
-            <RooftopConnected />
+            <Rooftop />
             <Banner />
 
             <div  id="containerProfil">
