@@ -64,7 +64,43 @@ export default function CardEvent({ event }: CardEventProps) {
         };
 
         fetchEvent();
-    }, [token, event.id])
+    }, [token, event.id]);
+
+    async function handleDelete() {
+        if (!token) {
+            alert('Vous devez être connecté');
+            return;
+        };
+
+        const isConfirmed = confirm('Êtes-vous sûr(e) de vouloir supprimer cet évènement ?');
+
+        if (!isConfirmed) {
+            setModalOpen(false);
+            return;
+        }
+
+        try {
+            const res = await fetch(`http://backend.localhost:81/events/${event.id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+            });
+
+            if (!res.ok) {
+            throw new Error('Erreur lors de la suppression de l\'évènement');
+        } 
+                
+        setSelectedEvent(null);
+        setModalOpen(false);
+
+        // TODO: fonctionnel mais ne disparaît pas immédiatement, pour l'instant faut rafraîchir page manuellement
+        
+        } catch (error) {
+            setError('Erreur lors du chargement des données.');
+        }
+    };
 
     async function subscribeToEvent() {
         if (!token) {
@@ -108,6 +144,7 @@ export default function CardEvent({ event }: CardEventProps) {
         try {
             if (!selectedEvent?.users.some(user => user.id === currentUser?.id)) {
                 alert('Vous n\'êtes pas inscrit(e) à cet évènement.');
+                return;
             };
             
             const res = await fetch(`http://backend.localhost:81/events/${selectedEvent?.id}/users/${currentUser?.id}`, {
@@ -178,7 +215,7 @@ export default function CardEvent({ event }: CardEventProps) {
                                             { currentUser?.id === selectedEvent.creator_id ? (
                                                 <>
                                                     <button className='btnUpdate'>Modifier</button>
-                                                    <button className='btnDelete'>Supprimer</button>
+                                                    <button className='btnDelete' onClick={handleDelete}>Supprimer</button>
                                                 </>
                                             ):(
                                                 <>
