@@ -34,8 +34,95 @@ export default function ProfilPage() {
     const [currentUser, setCurrentUser] = React.useState<{ id: number } | null>(null);
     const token = localStorage.getItem("token");
 
-    const [selectedInterest, setSelectedInterest] = useState<string>(""); 
-    
+    const [selectedInterest, setSelectedInterest] = useState<string>("");
+
+    const [eventForm, setEventForm] = useState({
+        eventName: '',
+        interest_id: '',
+        eventStartDate: '',
+        eventEndDate: '',
+        eventDescription: '',
+        eventAddress: '',
+        eventCity: '',
+        eventZipCode: '',
+    });
+
+    // Fonction qui met à jour l'état quand on modifie un champ du formulaire
+    const handleEventChange = (
+        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    ) => {
+        const { name, value } = e.target;
+        setEventForm((prev) => ({ ...prev, [name]: value }));
+    };
+
+    // Fonction appelée à la soumission du formulaire
+    const handleCreateEventSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        // Validation locale
+        const now = new Date();
+        const startDate = new Date(eventForm.eventStartDate);
+        const endDate = new Date(eventForm.eventEndDate);
+
+        if (startDate <= now) {
+            alert("La date de début doit être dans le futur");
+            return;
+        }
+
+        if (endDate <= startDate) {
+            alert("La date de fin doit être après la date de début");
+            return;
+        }
+
+        const token = localStorage.getItem('token');
+        if (!token) {
+            alert('Vous devez être connecté pour créer un évènement');
+            return;
+        }
+
+        try {
+            const response = await fetch('http://backend.localhost:81/events', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                    name: eventForm.eventName,
+                    interest_id: Number(eventForm.interest_id),
+                    start_date: startDate.toISOString(),
+                    end_date: endDate.toISOString(),
+                    description: eventForm.eventDescription,
+                    address: eventForm.eventAddress,
+                    city: eventForm.eventCity,
+                    zip_code: eventForm.eventZipCode,
+                }),
+            });
+
+            if (!response.ok) {
+                const data = await response.json();
+                throw new Error(data.error || "Erreur lors de la création de l'évènement");
+            }
+
+            alert('Évènement créé avec succès !');
+            setActiveModal(null);
+            setEventForm({
+                eventName: '',
+                interest_id: '',
+                eventStartDate: '',
+                eventEndDate: '',
+                eventDescription: '',
+                eventAddress: '',
+                eventCity: '',
+                eventZipCode: '',
+            });
+        } catch (err: any) {
+            alert(err.message || 'Erreur inconnue');
+        }
+    };
+
+
+
     React.useEffect(() => {
         if (token) {
             const payload = JSON.parse(atob(token.split('.')[1]));
@@ -332,29 +419,37 @@ export default function ProfilPage() {
 
                     <p>Tous les champs doivent obligatoirement être remplis.</p>
 
-                    <form className='eventForm'>
+                    <form className="eventForm" onSubmit={handleCreateEventSubmit}>
                         <label htmlFor="eventName">Nom de l'évènement</label>
                         <input
                             type="text"
                             name="eventName"
                             placeholder="Cours de cuisine, exposition au musée..."
-                            // onChange={handleChange}
+                            value={eventForm.eventName}
+                            onChange={handleEventChange}
                             required
                         />
-                            <label>Centre d’intérêt</label>
+
+                        <label>Centre d’intérêt</label>
                         <select
                             id="interet"
-                            value={selectedInterest}
-                            onChange={(e) => setSelectedInterest(e.target.value)}>
+                            name="interest_id"
+                            value={eventForm.interest_id}
+                            onChange={handleEventChange}
+                            required
+                        >
                             <option value="">-- Choisissez un centre d'intérêt --</option>
-                            {interests?.map((interest) => <option key={interest.id} value={interest.id}>{interest.name}</option>)}
+                            {interests?.map((interest) => (
+                                <option key={interest.id} value={interest.id}>{interest.name}</option>
+                            ))}
                         </select>
 
                         <label htmlFor="eventStartDate">Date et heure de début de l'évènement</label>
                         <input
                             type="datetime-local"
                             name="eventStartDate"
-                            // onChange={handleChange}
+                            value={eventForm.eventStartDate}
+                            onChange={handleEventChange}
                             required
                         />
 
@@ -362,7 +457,8 @@ export default function ProfilPage() {
                         <input
                             type="datetime-local"
                             name="eventEndDate"
-                            // onChange={handleChange}
+                            value={eventForm.eventEndDate}
+                            onChange={handleEventChange}
                             required
                         />
 
@@ -370,7 +466,8 @@ export default function ProfilPage() {
                         <textarea
                             name="eventDescription"
                             placeholder="Décrivez votre évènement en quelques lignes !"
-                            // onChange={handleChange}
+                            value={eventForm.eventDescription}
+                            onChange={handleEventChange}
                             required
                         />
 
@@ -379,7 +476,8 @@ export default function ProfilPage() {
                             type="text"
                             name="eventAddress"
                             placeholder="75 rue Honoré de Balzac"
-                            // onChange={handleChange}
+                            value={eventForm.eventAddress}
+                            onChange={handleEventChange}
                             required
                         />
 
@@ -389,7 +487,8 @@ export default function ProfilPage() {
                                 type="text"
                                 name="eventCity"
                                 placeholder="Paris"
-                                // onChange={handleChange}
+                                value={eventForm.eventCity}
+                                onChange={handleEventChange}
                                 required
                             />
 
@@ -398,15 +497,17 @@ export default function ProfilPage() {
                                 type="text"
                                 name="eventZipCode"
                                 placeholder="75000"
-                                // onChange={handleChange}
+                                value={eventForm.eventZipCode}
+                                onChange={handleEventChange}
                                 required
                             />
                         </div>
 
-                        <input type="submit" value="Valider" className=""></input>
+                        <input type="submit" value="Valider" className="" />
                     </form>
                 </div>
             </Modal>
+
 
             <Modal isOpen={activeModal === 'deleteAccount'} onClose={() => setActiveModal(null)}>
                 <div id="containerDeleteAccount">
