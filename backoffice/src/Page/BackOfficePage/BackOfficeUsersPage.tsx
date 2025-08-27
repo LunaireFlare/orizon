@@ -58,14 +58,32 @@ type UserBdd = {
 export default function BackOfficePage() {
 
     const [ userBdd, setUserBdd ] = useState<UserBdd[]>([]);
+
+    /* State de filtrage par nom prenom */
     const [ searchName, setSearchName ] = useState('');
+
+    /* State de filtrage par status */
     const [ searchStatus, setSearchStatus ] = useState('')
 
+    /* State systeme de interupteur bouton bloque / valider */
+    const [ selectedStatus, setSelectedStatus ] = useState<{ [key: number]: string }>({});
 
+
+    const handleClick = (id: number, status: string) => {
+        setSelectedStatus((prev) => ({
+            ...prev,
+            [id]: status,
+        }));
+    };
+
+
+
+
+    /* Fetch de l'API users */
     useEffect(() => {
         async function fetchUsers() {
             try {
-                const response = await fetch("http://backend.localhost:81/users"); 
+                const response = await fetch("https://jsonplaceholder.typicode.com/users"); 
                 const data = await response.json();
                 setUserBdd(data);
             } catch (error) {
@@ -97,12 +115,15 @@ export default function BackOfficePage() {
                 <div className="leftContainer">
                     <img src={Logo} alt="Logo Orizon"/>
                     <div>
-                        <Link to="/">Utilisateurs</Link>
+                        <Link to="/users">Utilisateurs</Link>
                         <Link to="/evenements">Evènements</Link>
                     </div>
                 </div>
                 <div className="rightContainer">
-                    <h1>TABLEAU DE BORD - Utilisateurs</h1>
+                    <div className="headRightContainer">                    
+                        <h1>TABLEAU DE BORD - Utilisateurs</h1>
+                        <button>Deconnexion</button>
+                    </div>
                     <div id="elmFilter">
                         <form>
                             <div className="filterName">
@@ -124,6 +145,7 @@ export default function BackOfficePage() {
                                     <option value="en attente">En attente</option>
                                     <option value="valide">Valide</option>
                                     <option value="bloque">Bloque</option>
+                                    <option value="desactive">Desactive</option>
                                 </select>
                             </div>
                         </form>
@@ -172,8 +194,17 @@ export default function BackOfficePage() {
                                             <td>{user.updated_at}</td>
                                             <td>
                                                 <div className="modoBtn">
-                                                    <button className="validateStatus btnValid">Validate</button>
-                                                    <button className="blockedStatus btnBlock">Block</button>
+                                                    <button className={ `validateStatus btnValid 
+                                                        ${selectedStatus[user.id] === "validate" ? "active" : "" }`} 
+                                                        onClick={() => handleClick(user.id, "validate")}>
+                                                            Validate
+                                                        </button>
+
+                                                    <button className={ `blockedStatus btnBlock 
+                                                        ${selectedStatus[user.id] === "block" ? "active" : "" }`} 
+                                                        onClick={() => handleClick(user.id, "block")}>
+                                                            Block
+                                                        </button>
                                                 </div>
                                             </td>
                                         </tr>

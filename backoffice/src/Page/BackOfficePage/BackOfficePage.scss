@@ -88,9 +88,9 @@ table td .modoBtn button {
     padding: 5px 15px;
     border-radius: 3rem;
     border: none;
-}
+} 
 
-table td .modoBtn button.btnValid {
+/* table td .modoBtn button.btnValid {
     background-color: #2fb72f;
     color: #fff;
 }
@@ -98,26 +98,48 @@ table td .modoBtn button.btnValid {
 table td .modoBtn button.btnBlock {
     background-color: #fd1616;
     color: #fff;
-}
+} */
+
+/* Style initial des boutons */
+.btnValid, .btnBlock {
+    background-color: lightgray;
+    color: black;
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+    margin-right: 5px;
+    border-radius: 4px;
+  }
+  
+  /* Quand le bouton est actif */
+  .btnValid.active {
+    background-color: rgb(2, 165, 2);
+    color: white;
+  }
+  
+  .btnBlock.active {
+    background-color: rgb(255, 63, 63);
+    color: white;
+  }
 
 
 
 
 .rightContainer table {
-    border-collapse: collapse;  /* pour éviter les espaces doubles */
-    table-layout: auto;         /* largeur basée sur le contenu */
-    width: auto;                /* ne pas forcer 100% */
+    border-collapse: collapse;  
+    table-layout: auto;         
+    width: auto;               
 
     tbody td {
         border: 0.2px solid #dbdbdb;
         padding: 1.5rem 1rem;
-        white-space: nowrap;        /* (optionnel) empêche le retour à la ligne */
+        white-space: nowrap;      
       }
     
       tbody th {
         border: 0.2px solid #dbdbdb;
         padding: 1rem;
-        white-space: nowrap;        /* (optionnel) empêche le retour à la ligne */
+        white-space: nowrap;       
       }
     
       .primaryKey {
@@ -129,7 +151,19 @@ table td .modoBtn button.btnBlock {
 
 
 
+  .rightContainer .headRightContainer {
+    display: flex;
+    justify-content: space-between;
+  }
 
+  .rightContainer .headRightContainer button {
+    margin-right: 3rem;
+    padding: 1rem 2rem;
+    border-radius: 3rem;
+    border: none;
+    background-color: var(--blue-green-sky);
+    color: #fff;
+  }
 
   
   .rightContainer .boxConexion {
@@ -144,7 +178,7 @@ table td .modoBtn button.btnBlock {
     gap: 1rem;
   }
 
-  input {
+  .boxConexion input {
     padding: 0.75rem;
     border: 1px solid #ccc;
     border-radius: 4px;
