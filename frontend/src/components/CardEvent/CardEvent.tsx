@@ -90,6 +90,40 @@ export default function CardEvent({ event }: CardEventProps) {
             };
 
             // TODO: afficher nom de l'inscrit immédiatement (pour l'instant faut rechargement manuel de page pour le voir)
+            alert('Vous êtes bien inscrit à l\'évènement.');
+
+        } catch (error) {
+                setError('Erreur lors du chargement des données.');
+        } finally {
+                setLoading(false);
+        };
+    }
+
+    async function unsubscribeFromEvent() {
+        if (!token) {
+            alert('Vous devez être connecté');
+            return;
+        };
+
+        try {
+            if (!selectedEvent?.users.some(user => user.id === currentUser?.id)) {
+                alert('Vous n\'êtes pas inscrit(e) à cet évènement.');
+            };
+            
+            const res = await fetch(`http://backend.localhost:81/events/${selectedEvent?.id}/users/${currentUser?.id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+            });
+
+            if(!res.ok) {
+                throw new Error('Erreur lors de la désinscription. Veuillez réessayer.');
+            };
+
+            // TODO: afficher nom de l'inscrit immédiatement (pour l'instant faut rechargement manuel de page pour le voir)
+            alert('Vous êtes bien désinscrit de l\'évènement.');
 
         } catch (error) {
                 setError('Erreur lors du chargement des données.');
@@ -149,7 +183,7 @@ export default function CardEvent({ event }: CardEventProps) {
                                             ):(
                                                 <>
                                                     <button className='btnSubscribe' onClick={subscribeToEvent}> S'inscrire</button>
-                                                    <button className='btnUnsubscribe'>Se désinscrire</button>
+                                                    <button className='btnUnsubscribe' onClick={unsubscribeFromEvent}>Se désinscrire</button>
                                                 </>
                                             )}
                                         </div>
