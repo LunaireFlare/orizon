@@ -69,15 +69,13 @@ export default function BackOfficePage() {
     const [ selectedStatus, setSelectedStatus ] = useState<{ [key: number]: string }>({});
 
 
+    /* Function de changement des boutons bloquer / valider */
     const handleClick = (id: number, status: string) => {
         setSelectedStatus((prev) => ({
             ...prev,
             [id]: status,
         }));
     };
-
-
-
 
     /* Fetch de l'API users */
     useEffect(() => {
@@ -93,7 +91,7 @@ export default function BackOfficePage() {
         fetchUsers();
     }, []);
 
-        // --- Filtrage ---
+        /* Filtrage des utilisateurs par nom prenom */
         const filteredUsers = userBdd.filter(user => {
             const fullName = (user.firstname + " " + user.lastname).toLowerCase();
     
