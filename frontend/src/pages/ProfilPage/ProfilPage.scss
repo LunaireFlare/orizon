@@ -17,11 +17,6 @@
     margin-bottom: 1rem;
 }
 
-
-#containerInterests{
-    display: flex;
-}
-
 #containerSearchInterest {
     margin-top: 2rem;
 }
@@ -46,6 +41,21 @@
 #containerSearchInterest input:active {
     border: solid 2px #F0B64A;
     outline: none;
+}
+
+#containerInterests{
+    display: flex;
+    flex-wrap: wrap;    
+    gap: 1rem;
+    align-items: center;
+}
+
+#containerInterests span{
+    color: #000;
+    margin-left: 8px;
+}
+#containerInterests span:hover{
+    cursor: pointer;
 }
 
 #containerCards {
@@ -219,6 +229,7 @@
 }
 
 .eventForm input,
+.eventForm select,
 .eventForm textarea {
     width: 100%;
     display: block;
@@ -246,6 +257,8 @@
 
 .eventForm input:focus,
 .eventForm input:active,
+.eventForm select:focus,
+.eventForm select:active,
 .eventForm textarea:focus,
 .eventForm textarea:active {
     border: solid 2px #F0B64A;
@@ -258,18 +271,26 @@
     border-radius: 1.6rem;
 }
 
-.eventAddressDetails {
+.eventDetails {
     display: flex;
     flex-direction: row;
     gap: 1rem;
 }
 
-.eventAddressDetails label {
+.eventDetails label {
     display: block;
 }
 
-/* *************** Version Desktop ************* */
+/* ****************** Version Tablette ******************* */
+@media (min-width: 680px) {
 
+    #containerCards {
+        grid-template-columns: repeat(2, 3fr);
+        grid-gap: 0rem;
+    }
+}
+
+/* *************** Version Desktop ************* */
 
 @media (min-width: 1291px) {
 

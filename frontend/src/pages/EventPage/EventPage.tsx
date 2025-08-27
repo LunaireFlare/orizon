@@ -6,6 +6,22 @@ import CardEvent from '../../components/CardEvent/CardEvent.tsx';
 
 import './EventPage.scss';
 
+import type { Event } from '../../types/index.d.ts';
+
+// type Event = {
+//     id: number,
+//     photo: string,
+//     name: string,
+//     start_date: string,
+//     end_date: string,
+//     address: string,
+//     city: string,
+//     zip_code: number,
+//     description: string,
+//     creator_id: number,
+//     interests:Interest[]
+// }
+
 type Search = {
     code: number,
     nom: string,
@@ -18,6 +34,13 @@ export default function EventPage() {
     const [query, setQuery] = useState<string>("");
     const [filtered, setFiltered] = useState<Search[]>([]);
     const [_selected, setSelected] = useState<string>("");
+
+    const token = localStorage.getItem("token");
+
+    const [events, setEvents] = useState<Event[]>([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null)
+    
 
     // Appel de l'API avec async/await
     useEffect(() => {
@@ -54,6 +77,34 @@ export default function EventPage() {
         }
     }, [query, options]);
 
+    useEffect(() => {
+        async function fetchEvents() {
+            setLoading(true);
+            setError(null);
+
+            try {                
+                const res = await fetch('http://backend.localhost:81/events', {
+                    headers: {
+                    "Authorization": `Bearer ${token}`
+                    },
+                });
+                if (!res.ok) {
+                    throw new Error('Erreur lors du chargement des données.')
+                };
+
+                const events = await res.json();
+
+                setEvents(events);
+            } catch (error) {
+                setError('Erreur lors du chargement des données.');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchEvents();
+    }, [token])
+    
     return (
         <div>
             <Rooftop />
@@ -109,8 +160,14 @@ export default function EventPage() {
                     </form>
                 </div>
             </div>
+
             <div id="eventCommunity">
-                {/* <CardEvent /> */}
+                {loading && <p>Chargement des évènements...</p>}
+                {error && <p>{error}</p>}
+                {!loading && events.length === 0 && <p>Aucun évènement trouvé.</p>}
+                {events.map((event) => (
+                    <CardEvent key={event.id} event={event} />
+                ))}
             </div>
 
             <Footer />
