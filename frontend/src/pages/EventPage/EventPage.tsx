@@ -12,7 +12,6 @@ type Search = {
     codesPostaux: string[]
 }
 
-
 export default function EventPage() {
 
     const [options, setOptions] = useState<Search[]>([]);
@@ -20,23 +19,28 @@ export default function EventPage() {
     const [filtered, setFiltered] = useState<Search[]>([]);
     const [_selected, setSelected] = useState<string>("");
 
-
-    // Appel de l'Api 
+    // Appel de l'API avec async/await
     useEffect(() => {
-        if (query.length > 2) { // attendre au moins 3 lettres
-            fetch(`https://geo.api.gouv.fr/communes?nom=${query}&fields=nom,codesPostaux,code`)
-                .then(res => res.json())
-                .then((data: Search[]) => {
+        const fetchVilles = async () => {
+            if (query.length > 2) {
+                try {
+                    const res = await fetch(`https://geo.api.gouv.fr/communes?nom=${query}&fields=nom,codesPostaux,code`);
+                    const data: Search[] = await res.json();
                     setOptions(data);
-                    setFiltered(data); // suggestions directes
-                })
-                .catch(err => console.error("Erreur API :", err));
-        } else {
-            setOptions([]);
-            setFiltered([]);
-        }
-    }, [query]);
+                    setFiltered(data);
+                } catch (err) {
+                    console.error("Erreur API :", err);
+                    setOptions([]);
+                    setFiltered([]);
+                }
+            } else {
+                setOptions([]);
+                setFiltered([]);
+            }
+        };
 
+        fetchVilles();
+    }, [query]);
 
     // Filtrer les résultats dès que l'utilisateur tape quelque chose
     useEffect(() => {
@@ -49,7 +53,6 @@ export default function EventPage() {
             setFiltered([]);
         }
     }, [query, options]);
-
 
     return (
         <div>
@@ -77,13 +80,12 @@ export default function EventPage() {
                                 {filtered.length > 0 && (
                                     <ul className="suggestions">
                                         {filtered.map(opt => (
-                                            <div id="contentFilter">
+                                            <div id="contentFilter" key={opt.code}>
                                                 <li
-                                                    key={opt.code}
                                                     onClick={() => {
                                                         setSelected(opt.nom);
-                                                        setQuery(`${opt.nom} (${opt.codesPostaux[0]})`); // Remplit l'input
-                                                        setFiltered([]); // Ferme la liste
+                                                        setQuery(`${opt.nom} (${opt.codesPostaux[0]})`);
+                                                        setFiltered([]);
                                                     }}
                                                 >
                                                     {opt.nom} ({opt.codesPostaux[0]})
@@ -92,10 +94,6 @@ export default function EventPage() {
                                         ))}
                                     </ul>
                                 )}
-
-                                {/* Valeur choisie (pour debug) */}
-                                {/* { selected && <p>Catégorie choisie : {selected}</p> } */}
-
                             </div>
                             <div>
                                 <label>Centre d’intérêt</label>
@@ -109,7 +107,6 @@ export default function EventPage() {
                             </div>
                         </div>
                     </form>
-
                 </div>
             </div>
             <div id="eventCommunity">
