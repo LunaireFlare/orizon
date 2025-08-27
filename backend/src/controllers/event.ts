@@ -83,6 +83,11 @@ const eventController = {
             };
     
             const createdEvent = await Event.create({ name, start_date, end_date, description, address, zip_code, city, creator_id });
+
+            await Event_Participant.create({ 
+                event_id: createdEvent.id,
+                participant_id: createdEvent.creator_id 
+            });
     
             res.status(201).json(createdEvent);
         },
