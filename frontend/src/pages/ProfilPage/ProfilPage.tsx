@@ -34,8 +34,8 @@ export default function ProfilPage() {
     const [currentUser, setCurrentUser] = React.useState<{ id: number } | null>(null);
     const token = localStorage.getItem("token");
 
-    const [selectedInterest, setSelectedInterest] = useState<string>("");
-
+    const [selectedInterest, setSelectedInterest] = useState<string>(""); 
+    
     React.useEffect(() => {
         if (token) {
             const payload = JSON.parse(atob(token.split('.')[1]));
