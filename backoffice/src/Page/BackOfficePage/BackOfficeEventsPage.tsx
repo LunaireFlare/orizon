@@ -12,7 +12,6 @@ type EventBdd = {
     status: string;
     created_at: string;
     updated_at: string;
-    // ajoute d'autres champs si besoin
 }
 
 export default function BackOfficeEventsPage() {
