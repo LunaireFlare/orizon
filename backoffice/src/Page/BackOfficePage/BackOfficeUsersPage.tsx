@@ -1,4 +1,4 @@
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { useEffect, useState } from 'react';
 import Logo from '../../Assets/images/Logo_OrizonBlanc.png';
 import './BackOfficePage.scss';
@@ -32,19 +32,25 @@ export default function BackOfficePage() {
     const [ searchStatus, setSearchStatus ] = useState('')
 
 
-
     /* State systeme de interupteur bouton bloque / valider */
     const [ selectedStatus, setSelectedStatus ] = useState<{ [key: number]: string }>({});
 
-    /* Sauvegarder les status dans le localStorage 
-    useEffect(() => {
-        const savedStatus = localStorage.getItem("selectedStatus");
-        if (savedStatus) {
-            setSelectedStatus(JSON.parse(savedStatus));
-        }
-    }, []); */
+/*--------------------------------------------- */
 
-    /* Sauvegarder a chaque modification */
+    /* Constante de navigation */
+    const navigate = useNavigate(); 
+
+    /* Fonction de déconnexion */
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("selectedStatus"); 
+        navigate("/"); 
+    };
+
+/*---------------------------------------------------- */
+
+
+    /* Sauvegarder a chaque modification dans le localStorage */
     useEffect(() => {
         const savedStatus = localStorage.getItem("selectedStatus");
         if (savedStatus) {
@@ -81,16 +87,6 @@ export default function BackOfficePage() {
         };
     };
     
-    /* Met à jour le status dans le tableau d'utilisateurs
-    setUserBdd((prevUsers) =>
-        prevUsers.map((user) =>
-                user.id === id ? { ...user, status: status === "validate" ? "valide" : "bloque" } : user
-        )
-    );
-    }; */
-
-
-
 
     /* Fetch de l'API users */
     useEffect(() => {
@@ -120,6 +116,7 @@ export default function BackOfficePage() {
     
             return matchName && matchStatus;
         });
+        
 
 
     return (
@@ -135,7 +132,7 @@ export default function BackOfficePage() {
                 <div className="rightContainer">
                     <div className="headRightContainer">                    
                         <h1>TABLEAU DE BORD - Utilisateurs</h1>
-                        <button>Deconnexion</button>
+                        <button onClick={handleLogout}>Deconnexion</button>
                     </div>
                     <div id="elmFilter">
                         <form>

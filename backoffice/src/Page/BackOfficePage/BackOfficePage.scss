@@ -90,15 +90,6 @@ table td .modoBtn button {
     border: none;
 } 
 
-/* table td .modoBtn button.btnValid {
-    background-color: #2fb72f;
-    color: #fff;
-}
-
-table td .modoBtn button.btnBlock {
-    background-color: #fd1616;
-    color: #fff;
-} */
 
 /* Style initial des boutons */
 .btnValid, .btnBlock {
@@ -163,6 +154,7 @@ table td .modoBtn button.btnBlock {
     border: none;
     background-color: var(--blue-green-sky);
     color: #fff;
+    cursor: pointer;
   }
 
   

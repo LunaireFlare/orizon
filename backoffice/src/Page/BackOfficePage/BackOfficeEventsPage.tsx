@@ -1,5 +1,5 @@
-import { Link } from 'react-router';
-import { useState } from 'react';
+import { Link, useNavigate } from 'react-router';
+import { useEffect, useState } from 'react';
 import Logo from '../../Assets/images/Logo_OrizonBlanc.png';
 import './BackOfficePage.scss';
 
@@ -18,40 +18,104 @@ type UserBdd = {
     updated_at: string,
 }
 
-const mockEvent = [
-    {
-        id: 1,
-        name: "Match de foot",
-        start_date: "10/09/2025",
-        end_date: "10/09/2025",
-        description: "Un grand tournoi de football local",
-        address: "4 rue de la paix",
-        zip_code: "75013",
-        city: "Paris",
-        status: "e attente",
-        creator_id: "Fabien DOCLAIR",
-        created_at: "23/08/2025",
-        updated_at: "26/08/2025",
-    },
-    {
-        id: 2,
-        name: "Match de foot",
-        start_date: "10/09/2025",
-        end_date: "10/09/2025",
-        description: "Un grand tournoi de football local",
-        address: "4 rue de la paix",
-        zip_code: "75013",
-        city: "Paris",
-        status: "e attente",
-        creator_id: "Fabien DOCLAIR",
-        created_at: "23/08/2025",
-        updated_at: "26/08/2025",
-    }
-]
 
 export default function BackOfficePage() {
 
-    const [ userBdd ] = useState<UserBdd[]>(mockEvent)
+    const [ eventsBdd, setEventsBdd ] = useState<UserBdd[]>([]);
+
+    /* State de filtrage par evenements */
+    const [ searchEvents, setSearchEvents] = useState('');
+
+    /* State de filtrage par status de l'evenement */
+    const [ searchStatusEvents, setSearchStatusEvents ] = useState('');
+
+    /* State systeme de interupteur bouton bloque / valider */
+    const [ selectedStatusEvents, setSelectedStatusEvents ] = useState<{ [key: number]: string }>({});
+
+
+/*--------------------------------------------- */
+
+    /* Constante de navigation */
+    const navigate = useNavigate(); 
+
+    /* Fonction de déconnexion */
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("selectedStatus"); 
+        navigate("/"); 
+    };
+
+/*---------------------------------------------------- */
+
+
+
+    /* Sauvegarder a chaque modification dans le localStorage */
+    useEffect(() => {
+        const savedStatusEvt = localStorage.getItem("selectedStatus");
+        if (savedStatusEvt) {
+            setSelectedStatusEvents(JSON.parse(savedStatusEvt));
+        }
+    }, []);
+
+
+    /* Function de changement des boutons bloquer / valider + changement du status en BBD */
+    const handleClick = async (id: number, status: string) => {
+        const newStatus = status === "validate" ? "valide" : "bloqué";
+
+        setSelectedStatusEvents(prev => {
+            const newSelected = { ...prev, [id]: status };
+            localStorage.setItem("selectedStatusEvents", JSON.stringify(newSelected));
+            return newSelected;
+        });
+
+        setEventsBdd(prev => prev.map(u => u.id === id ? { ...u, status: newStatus } : u));
+
+        try {
+            const token = localStorage.getItem("token")
+
+            await fetch(`http://backend.localhost:81/events/${id}`, {
+                method: "PATCH", // ou PUT selon ton API
+                headers: { 
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}` 
+                },
+                body: JSON.stringify({ status: newStatus })
+            });
+        } catch (error) {
+            console.error("Erreur lors de la mise à jour du status :", error);
+        };
+    };
+
+
+    /* Fetch de l'API users */
+    useEffect(() => {
+        async function fetchEvents() {
+            try {
+                const response = await fetch("http://backend.localhost:81/events"); 
+                const data = await response.json();
+                setEventsBdd(data);
+            } catch (error) {
+                console.error("Erreur de chargement utilisateurs :", error);
+            }
+        }
+        fetchEvents();
+    }, []);
+
+        /* Filtrage des utilisateurs par nom prenom */
+        const filteredEvents = eventsBdd.filter(event => {
+            const fullName = (event.name).toLowerCase();
+    
+            const matchName = searchEvents.length < 3 
+                ? true 
+                : fullName.includes(searchEvents.toLowerCase());
+    
+            const matchStatus = searchStatusEvents === "" 
+                ? true 
+                : event.status.toLowerCase() === searchStatusEvents.toLowerCase();
+    
+            return matchName && matchStatus;
+        });
+
 
     return (
         <div id="containerTableBoard">
@@ -60,7 +124,7 @@ export default function BackOfficePage() {
                     <img src={Logo} alt="Logo Orizon"/>
                     <div>
                         <Link to="/users">Utilisateurs</Link>
-                        <Link to="/evenements">Evènements</Link>
+                        <Link to="/evenements" onClick={handleLogout}>Evènements</Link>
                     </div>
                 </div>
                 <div className="rightContainer">
@@ -72,11 +136,18 @@ export default function BackOfficePage() {
                         <form>
                             <div className="filterName">
                                 <label htmlFor="searchName">Rechercher nom d'evènement</label>
-                                <input type="text" name="name" id="nom"/>
+                                <input type="text"
+                                    name="name" 
+                                    id="nom"
+                                    value={searchEvents}
+                                    onChange={(e) => setSearchEvents(e.target.value)}
+                                    placeholder="Tapez au moins 3 lettres"/>
                             </div>
                             <div className="filterStatus">
                                 <label htmlFor="searchName">Recherche par status</label>
-                                <select  id="status">
+                                <select  id="status"
+                                    value={searchEvents}
+                                    onChange={(e) => setSearchStatusEvents(e.target.value)}>
                                     <option value="">-- status --</option>
                                     <option value="en attente">En attente</option>
                                     <option value="valide">Valide</option>
@@ -109,31 +180,33 @@ export default function BackOfficePage() {
                             </thead>
                             <tbody>
                                 
-                                    {userBdd.map((user) => (
-                                            <tr key={user.id}>
-                                            <td className="primaryKey">{user.id}</td>
-                                            <td>{user.name}</td>
-                                            <td>{user.start_date}</td>
-                                            <td>{user.end_date}</td>
-                                            <td>{user.description}</td>
-                                            <td>{user.address}</td>
-                                            <td>{user.zip_code}</td>
-                                            <td>{user.city}</td>
-                                            <td>{user.status}</td>
-                                            <td>{user.creator_id}</td>
-                                            <td>{user.created_at}</td>
-                                            <td>{user.updated_at}</td>
+                                    {eventsBdd.map((event) => (
+                                            <tr key={event.id}>
+                                            <td className="primaryKey">{event.id}</td>
+                                            <td>{event.name}</td>
+                                            <td>{event.start_date}</td>
+                                            <td>{event.end_date}</td>
+                                            <td>{event.description}</td>
+                                            <td>{event.address}</td>
+                                            <td>{event.zip_code}</td>
+                                            <td>{event.city}</td>
+                                            <td>{selectedStatusEvents[event.id]
+                                                    ? (selectedStatusEvents[event.id] === "validate" ? "valide" : "bloqué")
+                                                    : event.status}</td>
+                                            <td>{event.creator_id}</td>
+                                            <td>{event.created_at}</td>
+                                            <td>{event.updated_at}</td>
                                             <td>
                                                 <div className="modoBtn">
                                                     <button className={`validateStatus btnValid 
-                                                        ${selectedStatus[user.id]} === "validate" ? "active" : "" }`} 
-                                                        onClick={() => handleClick(user.id, "validate")}>
+                                                        ${selectedStatusEvents[event.id]} === "validate" ? "active" : "" }`} 
+                                                        onClick={() => handleClick(event.id, "validate")}>
                                                             Validate
                                                         </button>
 
                                                     <button className={ `blockedStatus btnBlock 
-                                                        ${selectedStatus[user.id] === "block" ? "active" : "" }`} 
-                                                        onClick={() => handleClick(user.id, "block")}>
+                                                        ${selectedStatusEvents[event.id] === "block" ? "active" : "" }`} 
+                                                        onClick={() => handleClick(event.id, "block")}>
                                                             Block
                                                         </button>
                                                 </div>
@@ -143,6 +216,7 @@ export default function BackOfficePage() {
                                 
                             </tbody>
                     </table>
+                    {filteredEvents.length === 0 && <p>Aucun utilisateur trouvé.</p>}
                 </div>    
                 </div>
             </div>

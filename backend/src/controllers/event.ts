@@ -333,6 +333,42 @@ const eventController = {
             res.json({ message: 'Cet intérêt n\'est plus associé à cet évènement.'});
         },
 
+
+
+
+        async updateStatus(req: Request, res: Response) {
+            const eventId = Number(req.params.id);
+            const { status } = req.body;
+        
+            const validStatuses = ["en_attente", "valide", "bloqué"];
+        
+            if (typeof status !== "string" || !validStatuses.includes(status)) {
+              return res.status(400).json({
+                error: `Statut invalide. Utilisez l'un des suivants : ${validStatuses.join(
+                  ", "
+                )}.`,
+              });
+            }
+        
+            try {
+              const event = await Event.findByPk(eventId);
+        
+              if (!event) {
+                return res.status(404).json({ error: "Utilisateur non trouvé." });
+              }
+        
+              event.status = status;
+              await event.save();
+        
+              return res.json({
+                message: `Statut mis à jour en '${status}' pour l'utilisateur ${event.email}.`,
+              });
+            } catch (err) {
+              console.error(err);
+              return res.status(500).json({ error: "Erreur serveur." });
+            }
+          },
+
 };
 
 export { eventController };
