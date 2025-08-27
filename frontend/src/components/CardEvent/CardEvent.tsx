@@ -1,4 +1,4 @@
-import {useState } from 'react';
+import {useState, useEffect } from 'react';
 import Modal from './Modal';
 import './CardEvent.scss';
 import { format  } from 'date-fns';
@@ -11,70 +11,57 @@ const interestImages: Record<string, string> = {
     Voyage:"https://cdn.pixabay.com/photo/2016/11/23/15/48/audience-1853662_1280.jpg"
 };
 
-type Event = {
-    id: number,
-    photo: string,
-    name: string,
-    start_date: string,
-    end_date: string,
-    address: string,
-    city: string,
-    zip_code: number,
-    description: string,
-    creator_id: number,
-    interests:Interest[]
-}
-
-type Interest = {
-    id: number,
-    name: string
-}
-
-type User = {
-    id: number,
-    firstname: string, 
-    lastname: string
-}
-
-const mockUser = [
-    {
-        id: 1,
-        firstname: " Julie",
-        lastname: "ANTOINE"
-    },
-    {
-        id: 2,
-        firstname: "Jean",
-        lastname: "ETIENNE"
-    },
-    {
-        id: 3,
-        firstname: "Franck",
-        lastname: "VICTOIRE"
-    }
-]
+import type { Event } from '../../types/index.d.ts';
 
 interface CardEventProps {
     event: Event;
-}
+};
 
 export default function CardEvent({ event }: CardEventProps) {
 
-    // const [events] = useState<Event[]>(mockEvent);
-
-    //States ouverture fermeture Modal
     const [isModalOpen, setModalOpen] = useState<boolean>(false);
-
     const [selectedCard, setSelectedCard] = useState<Event | null>(null);
 
-    const [users] = useState<User[]>(mockUser);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
+    const token = localStorage.getItem("token");
+
+    useEffect(() => {
+        async function fetchEvent() {
+
+            setLoading(true);
+            setError(null);
+
+            try {                
+                const res = await fetch(`http://backend.localhost:81/events/${event.id}`, {
+                    headers: {
+                    "Authorization": `Bearer ${token}`
+                    },
+                });
+                if (!res.ok) {
+                    throw new Error('Erreur lors du chargement des données.')
+                };
+
+                const eventSelected = await res.json();
+
+                setSelectedCard(eventSelected);
+            } catch (error) {
+                setError('Erreur lors du chargement des données.');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchEvent();
+    }, [token, event.id])
 
     return (
         <div id="containerCard">
                     <div className="elmCard">
                         <div key={event.id}>
-                            <a onClick={() => { setSelectedCard(event); setModalOpen(true);}}><img src={interestImages[event.interests[0].name]} /></a>
-                            <a onClick={() => { setSelectedCard(event); setModalOpen(true);}}><h3>{event.name}</h3></a>
+                            <a onClick={() => { setModalOpen(true) }}><img src={interestImages[event.interests[0]?.name]} /></a>
+                            <a onClick={() => { setModalOpen(true) }}><h3>{event.name}</h3></a>
                             <p>Début: {format(event.start_date,"d MMMM yyyy 'à' HH'h'mm", { locale: fr })} </p>
                             <p>Fin: {format(event.end_date,"d MMMM yyyy 'à' HH'h'mm", { locale: fr })}</p>
                             <p><span>{event.city} ({event.zip_code})</span></p>
@@ -101,7 +88,7 @@ export default function CardEvent({ event }: CardEventProps) {
                                             <p>Fin: {format(selectedCard.end_date,"d MMMM yyyy 'à' HH'h'mm", { locale: fr })}</p>
                                             <p>{selectedCard.city} ({selectedCard.zip_code})</p>
                                             <p>{selectedCard.address}</p>
-                                            <p>Organisateur: {selectedCard.creator_id}</p>
+                                            <p>Organisateur: {selectedCard.creator?.firstname} {selectedCard.creator?.lastname}</p>
                                             <p>{selectedCard.description}</p>
                                             {selectedCard.interests && selectedCard.interests.map((interest)=><button className="interestEvent">{interest.name}</button>)}
                                             <div className="btnChoiseParticiped">
@@ -118,7 +105,7 @@ export default function CardEvent({ event }: CardEventProps) {
                                         </div>
                                         <div id="mdlSection2">
                                             <h3>Liste des participants</h3>
-                                            {users.map(user => (
+                                            {selectedCard.users?.map(user => (
                                                 <div key={user.id}>
                                                 <p>{user.firstname} {user.lastname}</p>
                                                 </div>

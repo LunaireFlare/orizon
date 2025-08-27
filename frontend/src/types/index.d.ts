@@ -17,5 +17,7 @@ export type Event = {
     zip_code: number,
     description: string,
     creator_id: number,
-    interests:Interest[]
+    interests: Interest[],
+    creator: User,
+    users: User[]
 }

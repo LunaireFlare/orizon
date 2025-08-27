@@ -82,7 +82,7 @@ export default function EventPage() {
             setLoading(true);
             setError(null);
 
-            try {
+            try {                
                 const res = await fetch('http://backend.localhost:81/events', {
                     headers: {
                     "Authorization": `Bearer ${token}`
