@@ -78,6 +78,31 @@ form {
     padding: 0rem 1rem;
 }
 
+table td .modoBtn {
+    display: flex;
+    flex-direction: column;
+}
+
+table td .modoBtn button {
+    margin-top: 5px;
+    padding: 5px 15px;
+    border-radius: 3rem;
+    border: none;
+}
+
+table td .modoBtn button.btnValid {
+    background-color: #2fb72f;
+    color: #fff;
+}
+
+table td .modoBtn button.btnBlock {
+    background-color: #fd1616;
+    color: #fff;
+}
+
+
+
+
 .rightContainer table {
     border-collapse: collapse;  /* pour éviter les espaces doubles */
     table-layout: auto;         /* largeur basée sur le contenu */

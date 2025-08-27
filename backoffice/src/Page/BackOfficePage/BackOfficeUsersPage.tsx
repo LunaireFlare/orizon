@@ -1,5 +1,5 @@
 import { Link } from 'react-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Logo from '../../Assets/images/Logo_OrizonBlanc.png';
 import './BackOfficePage.scss';
 
@@ -20,7 +20,7 @@ type UserBdd = {
     updated_at: string
 }
 
-const mockUser = [
+/* const mockUser = [
     {
         id: 1,
         lastname: "NOVI",
@@ -53,11 +53,43 @@ const mockUser = [
         created_at: "10/06/2025",
         updated_at: "23/08/2025"
     }
-]
+] */
 
 export default function BackOfficePage() {
 
-    const [ userBdd ] = useState<UserBdd[]>(mockUser)
+    const [ userBdd, setUserBdd ] = useState<UserBdd[]>([]);
+    const [ searchName, setSearchName ] = useState('');
+    const [ searchStatus, setSearchStatus ] = useState('')
+
+
+    useEffect(() => {
+        async function fetchUsers() {
+            try {
+                const response = await fetch("http://backend.localhost:81/users"); 
+                const data = await response.json();
+                setUserBdd(data);
+            } catch (error) {
+                console.error("Erreur de chargement utilisateurs :", error);
+            }
+        }
+        fetchUsers();
+    }, []);
+
+        // --- Filtrage ---
+        const filteredUsers = userBdd.filter(user => {
+            const fullName = (user.firstname + " " + user.lastname).toLowerCase();
+    
+            const matchName = searchName.length < 3 
+                ? true 
+                : fullName.includes(searchName.toLowerCase());
+    
+            const matchStatus = searchStatus === "" 
+                ? true 
+                : user.status.toLowerCase() === searchStatus.toLowerCase();
+    
+            return matchName && matchStatus;
+        });
+
 
     return (
         <div id="containerTableBoard">
@@ -75,11 +107,19 @@ export default function BackOfficePage() {
                         <form>
                             <div className="filterName">
                                 <label htmlFor="searchName">Recherche par nom/prenom</label>
-                                <input type="text" name="name" id="nom"/>
+                                <input type="text" 
+                                    name="name" 
+                                    id="nom"
+                                    value={searchName}
+                                    onChange={(e) => setSearchName(e.target.value)}
+                                    placeholder="Tapez au moins 3 lettres"/>
                             </div>
                             <div className="filterStatus">
                                 <label htmlFor="searchName">Recherche par status</label>
-                                <select  id="status">
+                                <select
+                                  id="status"
+                                  value={searchStatus}
+                                  onChange={(e) => setSearchStatus(e.target.value)}>
                                     <option value="">-- status --</option>
                                     <option value="en attente">En attente</option>
                                     <option value="valide">Valide</option>
@@ -109,11 +149,12 @@ export default function BackOfficePage() {
                                     <th scope="col">status</th>
                                     <th scope="col">created_at</th>
                                     <th scope="col">updated_at</th>
+                                    <th scope="col">Valider/Bloque</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 
-                                    {userBdd.map((user) => (
+                                    {filteredUsers.map((user) => (
                                             <tr key={user.id}>
                                             <td className="primaryKey">{user.id}</td>
                                             <td>{user.firstname}</td>
@@ -129,11 +170,18 @@ export default function BackOfficePage() {
                                             <td>{user.status}</td>
                                             <td>{user.created_at}</td>
                                             <td>{user.updated_at}</td>
+                                            <td>
+                                                <div className="modoBtn">
+                                                    <button className="validateStatus btnValid">Validate</button>
+                                                    <button className="blockedStatus btnBlock">Block</button>
+                                                </div>
+                                            </td>
                                         </tr>
                                     ))}
                                 
                             </tbody>
                     </table>
+                    {filteredUsers.length === 0 && <p>Aucun utilisateur trouvé.</p>}
                 </div>    
                 </div>
             </div>
