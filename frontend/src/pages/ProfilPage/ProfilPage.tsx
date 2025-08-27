@@ -11,6 +11,8 @@ import './ProfilPage.scss';
 import React from 'react';
 import { useParams } from 'react-router';
 
+import type { Event } from '../../types/index.d.ts'
+
 type User = {
     id: number,
     lastname: string,
@@ -25,20 +27,6 @@ type User = {
     status: "en-attente" | "valide" | "bloqué" | "désactivé",
     interests: Interest[],
     events: Event[]
-}
-
-type Event = {
-    id: number,
-    photo: string,
-    name: string,
-    start_date: string,
-    end_date: string,
-    address: string,
-    city: string,
-    zip_code: number,
-    description: string,
-    creator_id: number,
-    interests:Interest[]
 }
 
 type Interest = {
@@ -68,9 +56,7 @@ export default function ProfilPage() {
     const [currentUser, setCurrentUser] = React.useState<{ id: number } | null>(null);
     const token = localStorage.getItem("token");
 
-    const [selectedInterest, setSelectedInterest] = useState<string>("");
-
-        
+    const [selectedInterest, setSelectedInterest] = useState<string>(""); 
     
     React.useEffect(() => {
         if (token) {
