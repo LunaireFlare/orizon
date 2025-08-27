@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { User } from "../models/User"; // adapte selon ta structure
-import { Event } from "../models/Event";
+import { User } from "../models/User.js"; // adapte selon ta structure
+import { Event } from "../models/Event.js";
 
 export const adminController = {
   async updateUserStatus(req: Request, res: Response) {
@@ -57,7 +57,8 @@ export const adminController = {
       }
 
       event.status = status;
-      await event.save();
+      // Cela empêchera Sequelize de revalider les champs start_date et endDate lors d'une mise à jour de status uniquement -> sinon impossible de modifier
+      await event.save({ validate: false });
 
       return res.json({
         message: `Statut mis à jour en '${status}' pour l'événement ${event.name}.`,
