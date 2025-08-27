@@ -7,6 +7,7 @@ import CardEvent from '../../components/CardEvent/CardEvent.tsx';
 import './EventPage.scss';
 
 import type { Event } from '../../types/index.d.ts';
+import InterestSelect from '../../components/InterestFilter/InterestSelect.tsx';
 
 type Search = {
     code: number;
@@ -171,18 +172,7 @@ export default function EventPage() {
                                 )}
                             </div>
                             <div>
-                                <label htmlFor="interet">Centre d’intérêt</label>
-                                <select
-                                    id="interet"
-                                    value={interest}
-                                    onChange={(e) => setInterest(e.target.value)}
-                                >
-                                    <option value="">-- Choisissez un centre d'intérêt --</option>
-                                    <option value="sport">Sport</option>
-                                    <option value="musique">Musique</option>
-                                    <option value="voyage">Voyage</option>
-                                    <option value="cuisine">Cuisine</option>
-                                </select>
+                                <InterestSelect value={interest} onChange={setInterest} />
                             </div>
                         </div>
                     </form>
