@@ -190,6 +190,13 @@ const userController = {
 
     async addOneInterestToUser(req: Request, res: Response){
         const id = parseInt(req.params.id);
+
+        const requestor_id = req.user.id;
+
+        if (id != requestor_id){
+            return res.status(401).json({ error: "Vous n'êtes pas authorisé à supprimer cet utilisateur" });
+        }
+
         const user = await User.findByPk(id);
         const {interest_id} = req.body;
         if (!user || !interest_id) return res.status(400).json({ error: "Not found" });
@@ -202,17 +209,21 @@ const userController = {
     },
 
     async deleteOneInterestToUser(req: Request, res: Response){
-        const user_id = parseInt(req.params.id);
+        
+        const id = parseInt(req.params.id);
+
+        const requestor_id = req.user.id;
+
+        if (id != requestor_id){
+            return res.status(401).json({ error: "Vous n'êtes pas authorisé à supprimer cet utilisateur" });
+        }
+
         const interest_id = parseInt(req.params.interest_id);
-        if (!user_id || !interest_id) return res.status(400).json({ error: "Not found" });
+        if (!id || !interest_id) return res.status(400).json({ error: "Not found" });
 
         const association = await Interest_User.findOne({
-            where: { interest_id,  user_id }
+            where: { interest_id,  user_id:id }
         });
-
-        const interests = await Interest_User.findAll()
-        console.log(interests );
-        
 
         if (!association) {
             return res.status(404).json({ error: "Intérêt non trouvé pour cet utilisateur" });

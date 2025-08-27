@@ -18,10 +18,10 @@ userRouter
   
 userRouter  
   .route("/users/:id/interests")
-  .post(userController.addOneInterestToUser);
+  .post(authMiddleware,userController.addOneInterestToUser);
 
 userRouter  
   .route("/users/:id/interests/:interest_id")
-  .delete(userController.deleteOneInterestToUser);
+  .delete(authMiddleware,userController.deleteOneInterestToUser);
 
 export { userRouter };

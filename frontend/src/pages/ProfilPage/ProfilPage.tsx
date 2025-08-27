@@ -70,6 +70,52 @@ export default function ProfilPage() {
 
     const [selectedInterest, setSelectedInterest] = useState<string>("");
 
+        
+    
+    React.useEffect(() => {
+        if (token) {
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            setCurrentUser({ id: payload.id });
+        }
+    }, [token]);
+    
+    const openModifyModal = () => {
+        setFormData(user);
+        setActiveModal('modifyAccount');
+    };
+
+    const {id} = useParams();
+
+    React.useEffect(() => {
+        fetch(`http://backend.localhost:81/users/${id}`)
+            .then((res) => res.json())
+            .then((data: User) => {
+                const forbiddenStatus= ["bloqué" , "désactivé", undefined]
+                if (forbiddenStatus.includes(data.status)){
+                    navigate("/404", { replace: true });
+                } else {
+                    setUser(data);
+                }
+            })
+            .catch((err) => console.error("Erreur API:", err));
+
+        }, [id]);
+
+    React.useEffect(() => {
+        fetch('http://backend.localhost:81/interests')
+            .then((res) => res.json())
+            .then((data: Interest[]) => {  
+                setInterests(data);
+            })
+            .catch((err) => console.error("Erreur API:", err));
+        }, [id]);        
+
+    const [_success, setSuccess] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const [_loading, setLoading] = useState(false);
+    const [ activeModal, setActiveModal ] = useState<string | null>(null);
+
+
     const handleAddInterest = async () => {
         if (!selectedInterest) return; 
         if (!token) {
@@ -130,50 +176,6 @@ export default function ProfilPage() {
             console.error(err);
         }
     }
-        
-    
-    React.useEffect(() => {
-        if (token) {
-            const payload = JSON.parse(atob(token.split('.')[1]));
-            setCurrentUser({ id: payload.id });
-        }
-    }, [token]);
-    
-    const openModifyModal = () => {
-        setFormData(user);
-        setActiveModal('modifyAccount');
-    };
-
-    const {id} = useParams();
-
-    React.useEffect(() => {
-        fetch(`http://backend.localhost:81/users/${id}`)
-            .then((res) => res.json())
-            .then((data: User) => {
-                const forbiddenStatus= ["bloqué" , "désactivé", undefined]
-                if (forbiddenStatus.includes(data.status)){
-                    navigate("/404", { replace: true });
-                } else {
-                    setUser(data);
-                }
-            })
-            .catch((err) => console.error("Erreur API:", err));
-
-        }, [id]);
-
-    React.useEffect(() => {
-        fetch('http://backend.localhost:81/interests')
-            .then((res) => res.json())
-            .then((data: Interest[]) => {  
-                setInterests(data);
-            })
-            .catch((err) => console.error("Erreur API:", err));
-        }, [id]);        
-
-    const [_success, setSuccess] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-    const [_loading, setLoading] = useState(false);
-    const [ activeModal, setActiveModal ] = useState<string | null>(null);
     
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!formData) return;
@@ -303,7 +305,7 @@ export default function ProfilPage() {
                                 {user.interests && user.interests.map((interest) => (
                                 <div key={interest.id}>
                                     <button className="intButton">{interest.name}</button>
-                                    <span className="" onClick={()=>handleDeleteInterest(interest.id)}>X</span>                                
+                                    {currentUser?.id === user.id && (<span className="" onClick={()=>handleDeleteInterest(interest.id)}>X</span>  )}                              
                                 </div>
                             ))}
                         </div>
