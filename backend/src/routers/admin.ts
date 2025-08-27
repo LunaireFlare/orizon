@@ -1,12 +1,40 @@
 import express from "express";
 import { adminController } from "../controllers/admin.js";
+import { authorizeRoles } from "../middlewares/authorizeRoles.js";
+import { authMiddleware } from "../middlewares/auth.js";
+import { eventController } from "../controllers/event.js";
+import { userController } from "../controllers/user.js";
 
-const adminRouter = express.Router(); // <== ici
+const adminRouter = express.Router();
+
+adminRouter.get(
+  "/events",
+  authMiddleware,
+  authorizeRoles,
+  eventController.getAllEvents
+);
+
+adminRouter.get(
+  "/users",
+  authMiddleware,
+  authorizeRoles,
+  userController.getAllUsers
+);
 
 // Route pour mettre à jour le statut d'un utilisateur
-adminRouter.put("/users/:id/status", adminController.updateUserStatus);
+adminRouter.patch(
+  "/users/:id/status",
+  authMiddleware,
+  authorizeRoles,
+  adminController.updateUserStatus
+);
 
 // Route pour mettre à jour le statut d'un événement
-adminRouter.put("/events/:id/status", adminController.updateEventStatus);
+adminRouter.patch(
+  "/events/:id/status",
+  authMiddleware,
+  authorizeRoles,
+  adminController.updateEventStatus
+);
 
 export { adminRouter };
