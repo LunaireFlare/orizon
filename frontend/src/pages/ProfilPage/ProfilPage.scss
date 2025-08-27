@@ -228,7 +228,8 @@
     color: #000;
 }
 
-.eventForm input,select,
+.eventForm input,
+.eventForm select,
 .eventForm textarea {
     width: 100%;
     display: block;
@@ -256,6 +257,8 @@
 
 .eventForm input:focus,
 .eventForm input:active,
+.eventForm select:focus,
+.eventForm select:active,
 .eventForm textarea:focus,
 .eventForm textarea:active {
     border: solid 2px #F0B64A;

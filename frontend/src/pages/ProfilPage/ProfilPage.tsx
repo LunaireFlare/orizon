@@ -333,24 +333,22 @@ export default function ProfilPage() {
                     <p>Tous les champs doivent obligatoirement être remplis.</p>
 
                     <form className='eventForm'>
-                        <div className="eventDetails">
-                            <label htmlFor="eventName">Nom de l'évènement</label>
-                            <input
-                                type="text"
-                                name="eventName"
-                                placeholder="Cours de cuisine, exposition au musée..."
-                                // onChange={handleChange}
-                                required
-                            />
+                        <label htmlFor="eventName">Nom de l'évènement</label>
+                        <input
+                            type="text"
+                            name="eventName"
+                            placeholder="Cours de cuisine, exposition au musée..."
+                            // onChange={handleChange}
+                            required
+                        />
                             <label>Centre d’intérêt</label>
-                            <select
-                                id="interet"
-                                value={selectedInterest}
-                                onChange={(e) => setSelectedInterest(e.target.value)}>
-                                <option value="">-- Choisissez un centre d'intérêt --</option>
-                                {interests?.map((interest) => <option key={interest.id} value={interest.id}>{interest.name}</option>)}
-                            </select>
-                        </div>
+                        <select
+                            id="interet"
+                            value={selectedInterest}
+                            onChange={(e) => setSelectedInterest(e.target.value)}>
+                            <option value="">-- Choisissez un centre d'intérêt --</option>
+                            {interests?.map((interest) => <option key={interest.id} value={interest.id}>{interest.name}</option>)}
+                        </select>
 
                         <label htmlFor="eventStartDate">Date et heure de début de l'évènement</label>
                         <input
