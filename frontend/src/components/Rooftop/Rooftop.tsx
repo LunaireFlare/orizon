@@ -74,9 +74,12 @@ export default function Rooftop() {
                             <div className="mobileMenu">
                                 <NavLink to='/evenements' onClick={() => setBgrOpen(false)}>Événements</NavLink>
                                 <NavLink to='/communaute' onClick={() => setBgrOpen(false)}>Communauté</NavLink>
-                                <NavLink to='/profil' onClick={() => setBgrOpen(false)}>Profil</NavLink>
+                                <NavLink to={`/profil/${currentUser?.id}`} onClick={() => setBgrOpen(false)}>Profil</NavLink>
                                 <NavLink to='/conversations' onClick={() => setBgrOpen(false)}>Messagerie</NavLink>
-                                <NavLink to='/' onClick={() => setBgrOpen(false)}>Déconnexion</NavLink>
+                                <NavLink to='/' onClick={() => {
+                                    setBgrOpen(false);
+                                    handleLogout();
+                                }}>Déconnexion</NavLink>
                             </div>
                         )
                         }
@@ -97,7 +100,7 @@ export default function Rooftop() {
                     </div>
             
                 </>
-            )};
+            )}
         
         </div>
     );
