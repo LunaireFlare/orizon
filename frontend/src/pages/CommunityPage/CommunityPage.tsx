@@ -83,7 +83,7 @@ export default function CommunityPage() {
                 const res = await fetch('http://backend.localhost:81/users');
                 const data: User[] = await res.json();
 
-                const forbiddenStatus = ['bloqué', 'désactivé', undefined];
+                const forbiddenStatus = ['bloqué', 'désactivé', 'en_attente', undefined];
                 let filteredData = data.filter(
                     (user) => !forbiddenStatus.includes(user.status)
                 );
