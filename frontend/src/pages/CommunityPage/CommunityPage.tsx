@@ -3,14 +3,15 @@ import Rooftop from '../../components/Rooftop/Rooftop.tsx';
 import Banner from '../../components/Banner/Banner.tsx';
 import Footer from '../../components/Footer/Footer.tsx';
 import CardUser from '../../components/CardUser/CardUser.tsx';
+import InterestSelect from '../../components/InterestFilter/InterestSelect.tsx';
 
 import './CommunityPage.scss';
 
 type Search = {
-    code: number,
-    nom: string,
-    codesPostaux: string[]
-}
+    code: number;
+    nom: string;
+    codesPostaux: string[];
+};
 
 type User = {
     id: number;
@@ -23,13 +24,13 @@ type User = {
     photo: string;
     interests?: { id: number; name: string }[];
     status?: string;
-}
+};
 
 export default function CommunityPage() {
     const [options, setOptions] = useState<Search[]>([]);
     const [query, setQuery] = useState<string>('');
-    const [filtered, setFiltered] = useState<Search[]>([]);
-    const [selected, setSelected] = useState<string>('');
+    const [filteredCities, setFilteredCities] = useState<Search[]>([]);
+    const [selectedCity, setSelectedCity] = useState<Search | null>(null);
 
     const [name, setName] = useState('');
     const [interest, setInterest] = useState('');
@@ -37,37 +38,43 @@ export default function CommunityPage() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
+    // Requête API villes GeoGouv
     useEffect(() => {
         const fetchVilles = async () => {
-            if (query.length > 2) {
+            if (query.length > 2 && !selectedCity) {
                 try {
-                    const res = await fetch(`https://geo.api.gouv.fr/communes?nom=${query}&fields=nom,codesPostaux,code`);
+                    const res = await fetch(
+                        `https://geo.api.gouv.fr/communes?nom=${query}&fields=nom,codesPostaux,code`
+                    );
                     const data: Search[] = await res.json();
                     setOptions(data);
-                    setFiltered(data);
+                    setFilteredCities(data);
                 } catch (err) {
-                    console.error("Erreur API :", err);
+                    console.error('Erreur API :', err);
+                    setOptions([]);
+                    setFilteredCities([]);
                 }
             } else {
                 setOptions([]);
-                setFiltered([]);
+                setFilteredCities([]);
             }
         };
-
         fetchVilles();
-    }, [query]);
+    }, [query, selectedCity]);
 
+    // Filtrer suggestions selon saisie
     useEffect(() => {
-        if (query.length > 0) {
-            const results = options.filter(opt =>
+        if (query.length > 0 && !selectedCity) {
+            const results = options.filter((opt) =>
                 opt.nom.toLowerCase().includes(query.toLowerCase())
             );
-            setFiltered(results);
+            setFilteredCities(results);
         } else {
-            setFiltered([]);
+            setFilteredCities([]);
         }
-    }, [query, options]);
+    }, [query, options, selectedCity]);
 
+    // Chargement des utilisateurs avec filtres dynamiques
     useEffect(() => {
         const fetchUsers = async () => {
             setLoading(true);
@@ -76,24 +83,32 @@ export default function CommunityPage() {
                 const res = await fetch('http://backend.localhost:81/users');
                 const data: User[] = await res.json();
 
-                const forbiddenStatus = ["bloqué", "désactivé", undefined];
-                let filteredData = data.filter(user => !forbiddenStatus.includes(user.status));
+                const forbiddenStatus = ['bloqué', 'désactivé', undefined];
+                let filteredData = data.filter(
+                    (user) => !forbiddenStatus.includes(user.status)
+                );
 
                 if (name.length > 0) {
                     filteredData = filteredData.filter((user: User) =>
-                        `${user.firstname} ${user.lastname}`.toLowerCase().includes(name.toLowerCase())
+                        `${user.firstname} ${user.lastname}`
+                            .toLowerCase()
+                            .includes(name.toLowerCase())
                     );
                 }
 
-                if (selected.length > 0) {
-                    filteredData = filteredData.filter((user: User) =>
-                        user.city?.toLowerCase() === selected.toLowerCase()
+                if (selectedCity) {
+                    filteredData = filteredData.filter(
+                        (user: User) =>
+                            user.city.toLowerCase() === selectedCity.nom.toLowerCase() &&
+                            user.zip_code === selectedCity.codesPostaux[0]
                     );
                 }
 
                 if (interest.length > 0) {
                     filteredData = filteredData.filter((user: User) =>
-                        user.interests?.some(i => i.name.toLowerCase() === interest.toLowerCase())
+                        user.interests?.some(
+                            (i) => i.name.toLowerCase() === interest.toLowerCase()
+                        )
                     );
                 }
 
@@ -106,7 +121,7 @@ export default function CommunityPage() {
         };
 
         fetchUsers();
-    }, [name, selected, interest]);
+    }, [name, selectedCity, interest]);
 
     return (
         <div>
@@ -133,44 +148,42 @@ export default function CommunityPage() {
                                 <input
                                     type="text"
                                     id="ville"
-                                    value={query}
-                                    onChange={(e) => setQuery(e.target.value)}
+                                    value={
+                                        selectedCity
+                                            ? `${selectedCity.nom} (${selectedCity.codesPostaux[0]})`
+                                            : query
+                                    }
+                                    onChange={(e) => {
+                                        setQuery(e.target.value);
+                                        setSelectedCity(null);
+                                    }}
                                     placeholder="Tapez votre ville"
+                                    autoComplete="off"
                                 />
 
-                                {filtered.length > 0 && (
+                                {!selectedCity && filteredCities.length > 0 && (
                                     <ul className="suggestions">
-                                        {filtered.map((opt) => (
+                                        {filteredCities.map((opt) => (
                                             <li
                                                 key={opt.code}
                                                 onClick={() => {
-                                                    setSelected(opt.nom);
-                                                    setQuery(opt.nom);
-                                                    setFiltered([]);
+                                                    setSelectedCity(opt);
+                                                    setQuery(`${opt.nom} (${opt.codesPostaux[0]})`);
+                                                    setFilteredCities([]);
                                                 }}
+                                                style={{ cursor: 'pointer' }}
                                             >
-                                                {opt.nom} ({opt.codesPostaux.join(', ')})
+                                                {opt.nom} ({opt.codesPostaux[0]})
                                             </li>
                                         ))}
                                     </ul>
                                 )}
 
-                                {selected && <p>Ville sélectionnée : {selected}</p>}
+                                {/* Plus d'affichage de la ville sélectionnée en dessous */}
                             </div>
 
                             <div>
-                                <label htmlFor="interet">Centre d’intérêt</label>
-                                <select
-                                    id="interet"
-                                    value={interest}
-                                    onChange={(e) => setInterest(e.target.value)}
-                                >
-                                    <option value="">-- Choisissez un centre d'intérêt --</option>
-                                    <option value="sport">Sport</option>
-                                    <option value="musique">Musique</option>
-                                    <option value="voyage">Voyage</option>
-                                    <option value="cuisine">Cuisine</option>
-                                </select>
+                                <InterestSelect value={interest} onChange={setInterest} />
                             </div>
                         </div>
                     </form>
