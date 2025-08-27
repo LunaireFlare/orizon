@@ -18,9 +18,6 @@
 }
 
 
-#containerInterests{
-    display: flex;
-}
 
 #containerSearchInterest {
     margin-top: 2rem;
@@ -46,6 +43,21 @@
 #containerSearchInterest input:active {
     border: solid 2px #F0B64A;
     outline: none;
+}
+
+#containerInterests{
+    display: flex;
+    flex-wrap: wrap;    
+    gap: 1rem;
+    align-items: center;
+}
+
+#containerInterests span{
+    color: #000;
+    margin-left: 8px;
+}
+#containerInterests span:hover{
+    cursor: pointer;
 }
 
 #containerCards {
@@ -218,7 +230,7 @@
     color: #000;
 }
 
-.eventForm input,
+.eventForm input,select,
 .eventForm textarea {
     width: 100%;
     display: block;
@@ -258,13 +270,13 @@
     border-radius: 1.6rem;
 }
 
-.eventAddressDetails {
+.eventDetails {
     display: flex;
     flex-direction: row;
     gap: 1rem;
 }
 
-.eventAddressDetails label {
+.eventDetails label {
     display: block;
 }
 

@@ -3,31 +3,14 @@ import Modal from './Modal';
 import './CardEvent.scss';
 import { format  } from 'date-fns';
 import { fr } from "date-fns/locale";
+import type { Event } from "../../types/index.d.ts"
+
 
 const interestImages: Record<string, string> = {
     Sport: "https://cdn.pixabay.com/photo/2022/10/23/19/38/womens-football-7541990_1280.jpg",
     Cuisine: "https://cdn.pixabay.com/photo/2017/12/10/14/47/pizza-3010062_1280.jpg",
     Musique: "https://cdn.pixabay.com/photo/2016/11/23/15/48/audience-1853662_1280.jpg"
 };
-
-type Event = {
-    id: number,
-    photo: string,
-    name: string,
-    start_date: string,
-    end_date: string,
-    address: string,
-    city: string,
-    zip_code: number,
-    description: string,
-    creator_id: number,
-    interests:Interest[]
-}
-
-type Interest = {
-    id: number,
-    name: string
-}
 
 type User = {
     id: number,
