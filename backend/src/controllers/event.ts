@@ -248,14 +248,24 @@ const eventController = {
          * @param res
          */
         async associateEventToInterest(req: Request, res: Response) {
+            const requestor_id = req.user.id;
+            if (!requestor_id) {
+                return res.status(401).json({ error: 'Accès non autorisé. Veuillez vous connecter' });
+            };
+
             const event_id = parseInt(req.params.event_id);
             const interest_id = parseInt(req.params.interest_id);
-
+            
             const event = await Event.findByPk(event_id);
             if (!event) {
                 return res.status(400).json({ error: 'Event not found.' });
             };
-
+            
+            // [x] seulement si personne qui fait requête = creator_id
+            if (requestor_id !== event.creator_id) {
+                return res.status(401).json({ error: 'Accès non autorisé. Vous ne pouvez pas modifier les évènements d\'autres membres.' });
+            };
+            
             const interest = await Interest.findByPk(interest_id);
             if (!interest) {
                 return res.status(400).json({ error: 'Interest not found.' });
@@ -275,12 +285,22 @@ const eventController = {
          * @param res
          */
         async dissociateEventFromInterest(req: Request, res: Response) {
+            const requestor_id = req.user.id;
+            if (!requestor_id) {
+                return res.status(401).json({ error: 'Accès non autorisé. Veuillez vous connecter' });
+            };
+
             const event_id = parseInt(req.params.event_id);
             const interest_id = parseInt(req.params.interest_id);
 
             const event = await Event.findByPk(event_id);
             if (!event) {
                 return res.status(400).json({ error: 'Event not found.' });
+            };
+
+            // [x] seulement si personne qui fait requête = creator_id
+            if (requestor_id !== event.creator_id) {
+                return res.status(401).json({ error: 'Accès non autorisé. Vous ne pouvez pas modifier les évènements d\'autres membres.' });
             };
 
             const interest = await Interest.findByPk(interest_id);
