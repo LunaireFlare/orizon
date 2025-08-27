@@ -42,11 +42,16 @@ export default function CardUser({ user }: Props) {
             {user.interests && user.interests.length > 0 && (
                 <div className="interests">
                     <strong>Centres d'intérêt :</strong>
-                    <ul>
+                    <div className="interests-list">
                         {user.interests.map(interest => (
-                            <li key={interest.id}>{interest.name}</li>
+                            <button
+                                key={interest.id}
+                                className="interestEvent"
+                            >
+                                {interest.name}
+                            </button>
                         ))}
-                    </ul>
+                    </div>
                 </div>
             )}
         </div>
