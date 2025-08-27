@@ -6,6 +6,22 @@ export interface Conversation {
     avatarUrl: string;
 }
 
+export type User = {
+    id: number,
+    lastname: string,
+    firstname: string,
+    email: string,
+    password: string,
+    confirmPassword: string,
+    zip_code: string,
+    city: string,
+    date_of_birth: string,
+    description: string,
+    status: "en-attente" | "valide" | "bloqué" | "désactivé",
+    interests: Interest[],
+    events: Event[]
+}
+
 export type Event = {
     id: number,
     photo: string,
@@ -20,4 +36,9 @@ export type Event = {
     interests: Interest[],
     creator: User,
     users: User[]
+}
+
+export type Interest = {
+    id: number,
+    name: string
 }

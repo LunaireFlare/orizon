@@ -59,12 +59,15 @@ export default function BackOfficePage() {
                 <div className="leftContainer">
                     <img src={Logo} alt="Logo Orizon"/>
                     <div>
-                        <Link to="/">Utilisateurs</Link>
+                        <Link to="/users">Utilisateurs</Link>
                         <Link to="/evenements">Evènements</Link>
                     </div>
                 </div>
                 <div className="rightContainer">
-                    <h1>TABLEAU DE BORD - Evenements</h1>
+                    <div className="headRightContainer">                    
+                        <h1>TABLEAU DE BORD - Evenements</h1>
+                        <button>Deconnexion</button>
+                    </div>
                     <div id="elmFilter">
                         <form>
                             <div className="filterName">
@@ -122,8 +125,17 @@ export default function BackOfficePage() {
                                             <td>{user.updated_at}</td>
                                             <td>
                                                 <div className="modoBtn">
-                                                    <button className="validateStatus btnValid">Validate</button>
-                                                    <button className="blockedStatus btnBlock">Block</button>
+                                                    <button className={`validateStatus btnValid 
+                                                        ${selectedStatus[user.id]} === "validate" ? "active" : "" }`} 
+                                                        onClick={() => handleClick(user.id, "validate")}>
+                                                            Validate
+                                                        </button>
+
+                                                    <button className={ `blockedStatus btnBlock 
+                                                        ${selectedStatus[user.id] === "block" ? "active" : "" }`} 
+                                                        onClick={() => handleClick(user.id, "block")}>
+                                                            Block
+                                                        </button>
                                                 </div>
                                             </td>
                                         </tr>
