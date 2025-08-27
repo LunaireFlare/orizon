@@ -9,8 +9,18 @@ const eventController = {
          * @param req
          * @param res
         */
-        async getAllEvents(_req: Request, res: Response) {
-            const events = await Event.findAll();
+        async getAllEvents(req: Request, res: Response) {
+            const requestor_id = req.user.id;
+            if (!requestor_id) {
+                return res.status(401).json({ error: 'Accès non autorisé. Veuillez vous connecter' });
+            };
+            const events = await Event.findAll({
+                    include: [
+                        {
+                            association: 'interests',
+                        }
+                    ]}
+            );
             res.json(events);
         },
 
