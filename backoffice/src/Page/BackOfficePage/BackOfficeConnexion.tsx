@@ -58,7 +58,7 @@ export default function BackOfficePage() {
     useEffect(() => {
         if (success && user) {
             const timeout = setTimeout(() => {
-                navigate(`/profil/${user.id}`);
+                navigate(`/users`);
             }, 2000);
             return () => clearTimeout(timeout);
         }

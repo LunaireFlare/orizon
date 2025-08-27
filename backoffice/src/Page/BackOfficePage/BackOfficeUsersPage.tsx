@@ -20,40 +20,6 @@ type UserBdd = {
     updated_at: string
 }
 
-/* const mockUser = [
-    {
-        id: 1,
-        lastname: "NOVI",
-        firstname: "Victor",
-        email: "victornovi@hotmail.fr",
-        password: "25082025HUHUjksjjajhhjgsag",
-        zip_code: 75013,
-        city: "Paris",
-        date_of_birth: "11/09/1956",
-        role: "utilisateur",
-        photo: "string",
-        description: "Je suis fan de musique et de cuisine cubaine",
-        status: "en attente",
-        created_at: "20/08/2025",
-        updated_at: "23/08/2025"
-    },
-    {
-        id: 2,
-        lastname: "BEAUX",
-        firstname: "Thomas",
-        email: "toto59@hotmail.fr",
-        password: "25082025Hhsgidxgssgzg345",
-        zip_code: 59000,
-        city: "Lille",
-        date_of_birth: "11/09/1976",
-        role: "utilisateur",
-        photo: "string",
-        description: "Je suis fan de danse classique et de theatre",
-        status: "en attente",
-        created_at: "10/06/2025",
-        updated_at: "23/08/2025"
-    }
-] */
 
 export default function BackOfficePage() {
 
@@ -65,23 +31,72 @@ export default function BackOfficePage() {
     /* State de filtrage par status */
     const [ searchStatus, setSearchStatus ] = useState('')
 
+
+
     /* State systeme de interupteur bouton bloque / valider */
     const [ selectedStatus, setSelectedStatus ] = useState<{ [key: number]: string }>({});
 
+    /* Sauvegarder les status dans le localStorage 
+    useEffect(() => {
+        const savedStatus = localStorage.getItem("selectedStatus");
+        if (savedStatus) {
+            setSelectedStatus(JSON.parse(savedStatus));
+        }
+    }, []); */
 
-    /* Function de changement des boutons bloquer / valider */
-    const handleClick = (id: number, status: string) => {
-        setSelectedStatus((prev) => ({
-            ...prev,
-            [id]: status,
-        }));
+    /* Sauvegarder a chaque modification */
+    useEffect(() => {
+        const savedStatus = localStorage.getItem("selectedStatus");
+        if (savedStatus) {
+            setSelectedStatus(JSON.parse(savedStatus));
+        }
+    }, []);
+
+
+    /* Function de changement des boutons bloquer / valider + changement du status en BBD */
+    const handleClick = async (id: number, status: string) => {
+        const newStatus = status === "validate" ? "valide" : "bloqué";
+
+        setSelectedStatus(prev => {
+            const newSelected = { ...prev, [id]: status };
+            localStorage.setItem("selectedStatus", JSON.stringify(newSelected));
+            return newSelected;
+        });
+
+        setUserBdd(prev => prev.map(u => u.id === id ? { ...u, status: newStatus } : u));
+
+        try {
+            const token = localStorage.getItem("token")
+
+            await fetch(`http://backend.localhost:81/users/${id}`, {
+                method: "PATCH", // ou PUT selon ton API
+                headers: { 
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}` 
+                },
+                body: JSON.stringify({ status: newStatus })
+            });
+        } catch (error) {
+            console.error("Erreur lors de la mise à jour du status :", error);
+        };
     };
+    
+    /* Met à jour le status dans le tableau d'utilisateurs
+    setUserBdd((prevUsers) =>
+        prevUsers.map((user) =>
+                user.id === id ? { ...user, status: status === "validate" ? "valide" : "bloque" } : user
+        )
+    );
+    }; */
+
+
+
 
     /* Fetch de l'API users */
     useEffect(() => {
         async function fetchUsers() {
             try {
-                const response = await fetch("https://jsonplaceholder.typicode.com/users"); 
+                const response = await fetch("http://backend.localhost:81/users"); 
                 const data = await response.json();
                 setUserBdd(data);
             } catch (error) {
@@ -142,8 +157,8 @@ export default function BackOfficePage() {
                                     <option value="">-- status --</option>
                                     <option value="en attente">En attente</option>
                                     <option value="valide">Valide</option>
-                                    <option value="bloque">Bloque</option>
-                                    <option value="desactive">Desactive</option>
+                                    <option value="bloqué">Bloqué</option>
+                                    <option value="desactivé">Desactive</option>
                                 </select>
                             </div>
                         </form>
@@ -187,7 +202,9 @@ export default function BackOfficePage() {
                                             <td>{user.role}</td>
                                             <td>{user.photo}</td>
                                             <td>{user.description}</td>
-                                            <td>{user.status}</td>
+                                            <td>{selectedStatus[user.id]
+                                                    ? (selectedStatus[user.id] === "validate" ? "valide" : "bloqué")
+                                                    : user.status}</td>
                                             <td>{user.created_at}</td>
                                             <td>{user.updated_at}</td>
                                             <td>
