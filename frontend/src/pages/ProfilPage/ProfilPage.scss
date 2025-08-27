@@ -17,6 +17,37 @@
     margin-bottom: 1rem;
 }
 
+
+#containerInterests{
+    display: flex;
+}
+
+#containerSearchInterest {
+    margin-top: 2rem;
+}
+
+#containerSearchInterest select {
+    width: 100%;
+    display: block;
+    font-size: 1rem;
+    margin : 1rem 0;
+    padding: 0.8rem;
+    border-radius: 3rem;
+    border: none;
+    background-color: #0FA3B1;
+    color: #fff;
+}
+
+#containerSearchInterest input::placeholder {
+    font-style: italic;
+}
+
+#containerSearchInterest input:focus,
+#containerSearchInterest input:active {
+    border: solid 2px #F0B64A;
+    outline: none;
+}
+
 #containerCards {
     display: grid;
     grid-template-columns: repeat(1, 6fr);
