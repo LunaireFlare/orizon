@@ -254,38 +254,6 @@ const userController = {
 
     res.status(200).json({ message: "Intérêt supprimé avec succès" });
   },
-  async updateStatus(req: Request, res: Response) {
-    const userId = Number(req.params.id);
-    const { status } = req.body;
-
-    const validStatuses = ["en_attente", "valide", "bloqué", "désactivé"];
-
-    if (typeof status !== "string" || !validStatuses.includes(status)) {
-      return res.status(400).json({
-        error: `Statut invalide. Utilisez l'un des suivants : ${validStatuses.join(
-          ", "
-        )}.`,
-      });
-    }
-
-    try {
-      const user = await User.findByPk(userId);
-
-      if (!user) {
-        return res.status(404).json({ error: "Utilisateur non trouvé." });
-      }
-
-      user.status = status;
-      await user.save();
-
-      return res.json({
-        message: `Statut mis à jour en '${status}' pour l'utilisateur ${user.email}.`,
-      });
-    } catch (err) {
-      console.error(err);
-      return res.status(500).json({ error: "Erreur serveur." });
-    }
-  },
 };
 
 export { userController };
