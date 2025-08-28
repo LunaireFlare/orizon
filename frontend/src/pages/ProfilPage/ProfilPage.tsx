@@ -14,6 +14,7 @@ import type { User, Interest, Event } from "../../types/index.d.ts"
 
 import { getAge } from '../../utils/getAge.ts';
 import { fetchApi } from '../../utils/api';
+import { handleEventDelete, handleSubscribe, handleUnsubscribe } from '../../utils/eventHandler.ts';
 
 export default function ProfilPage() {
 
@@ -281,41 +282,7 @@ export default function ProfilPage() {
         }
     }
 
-    const handleEventDelete = (eventId: number) => {
-        if (!user) return;
-        setUser({
-            ...user,
-            events: user.events.filter(event => event.id !== eventId)
-        });
-    };
-
-    const handleSubscribe = (eventId: number) => {
-        if (!user) return;
-        setUser({
-            ...user,
-            events: user.events.map(event =>
-                event.id === eventId
-                    ? {
-                        ...event,
-                        users: [...event.users, { id: user.id, firstname: user.firstname, lastname: user.lastname } as User]
-                    }
-                    : event
-            )
-        });
-    };
-
-    const handleUnsubscribe = (eventId: number) => {
-        if (!user) return;
-        setUser({
-            ...user,
-            events: user.events.map(event =>
-                event.id === eventId
-                    ? { ...event, users: event.users.filter(u => u.id !== user.id) }
-                    : event
-            )
-        });
-    };
-
+    
     return (
         <div id="fullContainerProfil">
             <Rooftop />
@@ -391,7 +358,7 @@ export default function ProfilPage() {
                 <div id="containerCards">
                     {user.events
                         ?.filter(event => event.creator_id === user.id)
-                        .map(event => <CardEvent key={event.id} event={event} onDelete={handleEventDelete} onSubscribe={handleSubscribe} onUnsubscribe={handleUnsubscribe} />)
+                        .map(event => <CardEvent key={event.id} event={event} onDelete={(eventId) => handleEventDelete(user, setUser, eventId)} onSubscribe={(eventId) => handleSubscribe(user, setUser, eventId)} onUnsubscribe={(eventId) => handleUnsubscribe(user, setUser, eventId)} />)
                     }
                 </div>
             </div>
@@ -405,7 +372,7 @@ export default function ProfilPage() {
                     {user.events && user.events
                         .filter((event) => new Date(event.end_date) >= new Date())
                         .map((event) => (
-                            <CardEvent key={event.id} event={event} onDelete={handleEventDelete} onSubscribe={handleSubscribe} onUnsubscribe={handleUnsubscribe} />
+                            <CardEvent key={event.id} event={event} onDelete={(eventId) => handleEventDelete(user, setUser, eventId)} onSubscribe={(eventId) => handleSubscribe(user, setUser, eventId)} onUnsubscribe={(eventId) => handleUnsubscribe(user, setUser, eventId)} />
                         ))}
                 </div>
             </div>
@@ -415,7 +382,7 @@ export default function ProfilPage() {
                 <div id="containerCards">
                     {user.events
                         ?.filter(event => new Date(event.end_date) < new Date())
-                        .map(event => <CardEvent key={event.id} event={event} onDelete={handleEventDelete} onSubscribe={handleSubscribe} onUnsubscribe={handleUnsubscribe} />)
+                        .map(event => <CardEvent key={event.id} event={event} onDelete={(eventId) => handleEventDelete(user, setUser, eventId)} onSubscribe={(eventId) => handleSubscribe(user, setUser, eventId)} onUnsubscribe={(eventId) => handleUnsubscribe(user, setUser, eventId)} />)
                     }
                 </div>
             </div>
