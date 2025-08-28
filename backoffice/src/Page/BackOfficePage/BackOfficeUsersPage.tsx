@@ -23,22 +23,23 @@ type UserBdd = {
 
 export default function BackOfficePage() {
 
-    const [ userBdd, setUserBdd ] = useState<UserBdd[]>([]);
+    const [userBdd, setUserBdd] = useState<UserBdd[]>([]);
 
     /* State de filtrage par nom prenom */
-    const [ searchName, setSearchName ] = useState('');
+    const [searchName, setSearchName] = useState('');
 
     /* State de filtrage par status */
-    const [ searchStatus, setSearchStatus ] = useState('')
+    const [searchStatus, setSearchStatus] = useState('')
 
 
     /* State systeme de interupteur bouton bloque / valider */
-    const [ selectedStatus, setSelectedStatus ] = useState<{ [key: number]: string }>({});
+    const [selectedStatus, setSelectedStatus] = useState<{ [key: number]: string }>({});
 
 /*--------------------------------------------- */
 
     /* Constante de navigation */
     const navigate = useNavigate(); 
+
 
     /* Fonction de déconnexion */
     const handleLogout = () => {
@@ -59,40 +60,51 @@ export default function BackOfficePage() {
     }, []);
 
 
-    /* Function de changement des boutons bloquer / valider + changement du status en BBD */
+    /* Function de changement des boutons bloquer / valider */
     const handleClick = async (id: number, status: string) => {
-    const newStatus = status === "validate" ? "valide" : "bloqué";
-
-        setSelectedStatus(prev => {
-            const newSelected = { ...prev, [id]: status };
-            localStorage.setItem("selectedStatus", JSON.stringify(newSelected));
-            return newSelected;
-        });
-
-        setUserBdd(prev => prev.map(u => u.id === id ? { ...u, status: newStatus } : u));
-
         try {
-            const token = localStorage.getItem("token")
-
-            await fetch(`http://backend.localhost:81/users/${id}`, {
-                method: "PATCH", // ou PUT selon ton API
-                headers: { 
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}` 
+            const response = await fetch(`http://backend.localhost:81/users/${id}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}` // ou adapte selon ta gestion du token
                 },
-                body: JSON.stringify({ status: newStatus })
+                body: JSON.stringify({ status })
             });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                console.log(data.message);
+
+                // Mets à jour le statut localement après succès
+                setUserBdd(prev =>
+                    prev.map(user =>
+                        user.id === id ? { ...user, status } : user
+                    )
+                );
+
+                setSelectedStatus(prev => ({
+                    ...prev,
+                    [id]: status
+                }));
+            } else {
+                console.error("Erreur API :", data.error);
+            }
         } catch (error) {
-            console.error("Erreur lors de la mise à jour du status :", error);
-        };
+            console.error("Erreur réseau :", error);
+        }
     };
-    
+
+
 
     /* Fetch de l'API users */
     useEffect(() => {
         async function fetchUsers() {
             try {
-                const response = await fetch("http://backend.localhost:81/users"); 
+
+                const response = await fetch("http://backend.localhost:81/users");
+
                 const data = await response.json();
                 setUserBdd(data);
             } catch (error) {
@@ -102,69 +114,72 @@ export default function BackOfficePage() {
         fetchUsers();
     }, []);
 
-        /* Filtrage des utilisateurs par nom prenom */
-        const filteredUsers = userBdd.filter(user => {
-            const fullName = (user.firstname + " " + user.lastname).toLowerCase();
-    
-            const matchName = searchName.length < 3 
-                ? true 
-                : fullName.includes(searchName.toLowerCase());
-    
-            const matchStatus = searchStatus === "" 
-                ? true 
-                : user.status.toLowerCase() === searchStatus.toLowerCase();
-    
-            return matchName && matchStatus;
-        });
-        
+
+    /* Filtrage des utilisateurs par nom prénom */
+    const filteredUsers = userBdd.filter(user => {
+        const fullName = (user.firstname + " " + user.lastname).toLowerCase();
+
+        const matchName = searchName.length < 3
+            ? true
+            : fullName.includes(searchName.toLowerCase());
+
+        const matchStatus = searchStatus === ""
+            ? true
+            : user.status.toLowerCase() === searchStatus.toLowerCase();
+
+        return matchName && matchStatus;
+    });
+
 
 
     return (
         <div id="containerTableBoard">
             <div id="tableBoard">
                 <div className="leftContainer">
-                    <img src={Logo} alt="Logo Orizon"/>
+                    <img src={Logo} alt="Logo Orizon" />
                     <div>
                         <Link to="/users">Utilisateurs</Link>
                         <Link to="/evenements">Evènements</Link>
                     </div>
                 </div>
                 <div className="rightContainer">
-                    <div className="headRightContainer">                    
+                    <div className="headRightContainer">
                         <h1>TABLEAU DE BORD - Utilisateurs</h1>
                         <button onClick={handleLogout}>Deconnexion</button>
                     </div>
                     <div id="elmFilter">
                         <form>
                             <div className="filterName">
-                                <label htmlFor="searchName">Recherche par nom/prenom</label>
-                                <input type="text" 
-                                    name="name" 
+                                <label htmlFor="searchName">Recherche par nom/prénom</label>
+                                <input type="text"
+                                    name="name"
                                     id="nom"
                                     value={searchName}
                                     onChange={(e) => setSearchName(e.target.value)}
-                                    placeholder="Tapez au moins 3 lettres"/>
+                                    placeholder="Tapez au moins 3 lettres" />
                             </div>
                             <div className="filterStatus">
                                 <label htmlFor="searchName">Recherche par status</label>
                                 <select
-                                  id="status"
-                                  value={searchStatus}
-                                  onChange={(e) => setSearchStatus(e.target.value)}>
+                                    id="status"
+                                    value={searchStatus}
+                                    onChange={(e) => setSearchStatus(e.target.value)}>
                                     <option value="">-- status --</option>
-                                    <option value="en attente">En attente</option>
+                                    <option value="en_attente">En attente</option>
                                     <option value="valide">Valide</option>
                                     <option value="bloqué">Bloqué</option>
-                                    <option value="desactivé">Désactivé</option>
+
+                                    <option value="désactivé">Désactivé</option>
+
                                 </select>
                             </div>
                         </form>
                     </div>
-                <div className="tableBdd">
-                    <table>
-                        <caption>
-                            Retrouvez toutes les donnees de vos utilisateurs
-                        </caption>
+                    <div className="tableBdd">
+                        <table>
+                            <caption>
+                                Retrouvez toutes les donnees de vos utilisateurs
+                            </caption>
                             <thead>
                                 <tr>
                                     <th scope="row">id</th>
@@ -185,52 +200,48 @@ export default function BackOfficePage() {
                                 </tr>
                             </thead>
                             <tbody>
-                                
-                                    {filteredUsers.map((user) => (
-                                            <tr key={user.id}>
-                                            <td className="primaryKey">{user.id}</td>
-                                            <td>{user.firstname}</td>
-                                            <td>{user.lastname}</td>
-                                            <td>{user.email}</td>
-                                            <td>{user.password}</td>
-                                            <td>{user.zip_code}</td>
-                                            <td>{user.city}</td>
-                                            <td>{user.date_of_birth}</td>
-                                            <td>{user.role}</td>
-                                            <td>{user.photo}</td>
-                                            <td>{user.description}</td>
-                                            <td>{selectedStatus[user.id]
-                                                    ? {
-                                                        pending: "en attente",
-                                                        validate: "valide",
-                                                        block: "bloqué",
-                                                        disable: "désactivé",     
-                                                    } [selectedStatus[user.id]] || user.status
-                                                    : user.status}</td>
-                                            <td>{user.created_at}</td>
-                                            <td>{user.updated_at}</td>
-                                            <td>
-                                                <div className="modoBtn">
-                                                    <button className={ `validateStatus btnValid 
-                                                        ${selectedStatus[user.id] === "validate" ? "active" : "" }`} 
-                                                        onClick={() => handleClick(user.id, "validate")}>
-                                                            Valider
-                                                        </button>
 
-                                                    <button className={ `blockedStatus btnBlock 
-                                                        ${selectedStatus[user.id] === "block" ? "active" : "" }`} 
-                                                        onClick={() => handleClick(user.id, "block")}>
-                                                            Bloqué
-                                                        </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                
+
+                                {filteredUsers.map((user) => (
+                                    <tr key={user.id}>
+                                        <td className="primaryKey">{user.id}</td>
+                                        <td>{user.firstname}</td>
+                                        <td>{user.lastname}</td>
+                                        <td>{user.email}</td>
+                                        <td>{user.password}</td>
+                                        <td>{user.zip_code}</td>
+                                        <td>{user.city}</td>
+                                        <td>{user.date_of_birth}</td>
+                                        <td>{user.role}</td>
+                                        <td>{user.photo}</td>
+                                        <td>{user.description}</td>
+                                        <td>{user.status}</td>
+                                        <td>{user.created_at}</td>
+                                        <td>{user.updated_at}</td>
+                                        <td>
+                                            <div className="modoBtn">
+                                                <button
+                                                    className={`validateStatus btnValid ${selectedStatus[user.id] === "valide" ? "active" : ""}`}
+                                                    onClick={() => handleClick(user.id, "valide")}
+                                                >
+                                                    Validate
+                                                </button>
+
+                                                <button
+                                                    className={`blockedStatus btnBlock ${selectedStatus[user.id] === "bloqué" ? "active" : ""}`}
+                                                    onClick={() => handleClick(user.id, "bloqué")}
+                                                >
+                                                    Block
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}
+
                             </tbody>
-                    </table>
-                    {filteredUsers.length === 0 && <p>Aucun utilisateur trouvé.</p>}
-                </div>    
+                        </table>
+                        {filteredUsers.length === 0 && <p>Aucun utilisateur trouvé.</p>}
+                    </div>
                 </div>
             </div>
         </div>

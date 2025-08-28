@@ -40,6 +40,19 @@
   padding: 0 0.2rem;
 }
 
+.interestEvent {
+  background-color: var(--blue-green-sky);
+  color: #fff;
+  font-size: 1rem;
+  font-style: italic;
+  padding: 0.6rem 1.5rem;
+  border: none;
+  margin-top: 0.5rem;
+  margin-right: 0.5rem;
+  border-radius: 3rem;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
 /* *************** Version Desktop ************* */
 
 @media (min-width: 1291px) {

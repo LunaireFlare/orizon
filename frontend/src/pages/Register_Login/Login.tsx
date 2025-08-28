@@ -58,11 +58,9 @@ export default function Login() {
     useEffect(() => {
         if (success && user) {
             const timeout = setTimeout(() => {
-                if (user.role === 'admin') {
-                    navigate('/admin/dashboard'); // Redirection admin pour experience user à faire
-                } else {
-                    navigate(`/profil/${user.id}`); // Redirection user classique
-                }
+
+                navigate(`/profil/${user.id}`); // Redirection user classique
+
             }, 2000);
             return () => clearTimeout(timeout);
         }

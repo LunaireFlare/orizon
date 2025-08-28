@@ -1,9 +1,12 @@
+
 import { Link, useNavigate } from 'react-router';
+
 import { useEffect, useState } from 'react';
 import Logo from '../../Assets/images/Logo_OrizonBlanc.png';
 import './BackOfficePage.scss';
 
 type EventBdd = {
+
     id: number,
     name: string,
     start_date: string,
@@ -88,6 +91,7 @@ export default function BackOfficePage() {
 
 
     /* Fetch de l'API users */
+
     useEffect(() => {
         async function fetchEvents() {
             try {
@@ -96,15 +100,18 @@ export default function BackOfficePage() {
                         'Authorization': `Bearer ${localStorage.getItem('token')}`
                     }
                 });
+
                 const data = await response.json();
                 console.log("Data reçue de l'API :", data);
                 setEventsBdd(data);
             } catch (error) {
                 console.error("Erreur de chargement utilisateurs :", error);
+
             }
         }
         fetchEvents();
     }, []);
+
 
         /* Filtrage des utilisateurs par nom prenom */
         const filteredEvents = eventsBdd.filter(event => {
@@ -126,20 +133,21 @@ export default function BackOfficePage() {
         <div id="containerTableBoard">
             <div id="tableBoard">
                 <div className="leftContainer">
-                    <img src={Logo} alt="Logo Orizon"/>
+                    <img src={Logo} alt="Logo Orizon" />
                     <div>
                         <Link to="/users">Utilisateurs</Link>
                         <Link to="/evenements" onClick={handleLogout}>Evènements</Link>
                     </div>
                 </div>
                 <div className="rightContainer">
-                    <div className="headRightContainer">                    
-                        <h1>TABLEAU DE BORD - Evenements</h1>
+                    <div className="headRightContainer">
+                        <h1>TABLEAU DE BORD - Événements</h1>
                         <button>Deconnexion</button>
                     </div>
                     <div id="elmFilter">
                         <form>
                             <div className="filterName">
+
                                 <label htmlFor="searchName">Rechercher nom d'evènement</label>
                                 <input type="text"
                                     name="name" 
@@ -153,37 +161,36 @@ export default function BackOfficePage() {
                                 <select  id="status"
                                     value={searchEvents}
                                     onChange={(e) => setSearchStatusEvents(e.target.value)}>
+
                                     <option value="">-- status --</option>
-                                    <option value="en attente">En attente</option>
+                                    <option value="en_attente">En attente</option>
                                     <option value="valide">Valide</option>
-                                    <option value="bloque">Bloque</option>
+                                    <option value="bloqué">Bloqué</option>
+                                    <option value="désactivé">Désactivé</option>
                                 </select>
                             </div>
                         </form>
                     </div>
-                <div className="tableBdd">
-                    <table>
-                        <caption>
-                            Retrouvez toutes les donnees de vos utilisateurs
-                        </caption>
+                    <div className="tableBdd">
+                        <table>
+                            <caption>
+                                Retrouvez toutes les données de vos événements
+                            </caption>
                             <thead>
                                 <tr>
-                                    <th scope="row">id</th>
-                                    <th scope="col">name</th>
-                                    <th scope="col">start_date</th>
-                                    <th scope="col">end_date</th>
-                                    <th scope="col">description</th>
-                                    <th scope="col">address</th>
-                                    <th scope="col">zip_code</th>
-                                    <th scope="col">city</th>
-                                    <th scope="col">status</th>
-                                    <th scope="col">creator_id</th>
-                                    <th scope="col">created_at</th>
-                                    <th scope="col">updated_at</th>
-                                    <th scope="col">Valider/Bloque</th>
+                                    <th scope="col">id</th>
+                                    <th scope="col">Titre</th>
+                                    <th scope="col">Description</th>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Lieu</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Créé le</th>
+                                    <th scope="col">Mis à jour le</th>
+                                    <th scope="col">Valider/Bloquer</th>
                                 </tr>
                             </thead>
                             <tbody>
+
                                 
                                     {eventsBdd.map((event) => (
                                             <tr key={event.id}>
@@ -227,6 +234,7 @@ export default function BackOfficePage() {
                     </table>
                     {filteredEvents.length === 0 && <p>Aucun utilisateur trouvé.</p>}
                 </div>    
+
                 </div>
             </div>
         </div>

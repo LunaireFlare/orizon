@@ -21,7 +21,7 @@ interface CardEventProps {
 export default function CardEvent({ event }: CardEventProps) {
 
     const [isModalOpen, setModalOpen] = useState<boolean>(false);
-    const [selectedCard, setSelectedCard] = useState<Event | null>(null);
+    const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -50,12 +50,12 @@ export default function CardEvent({ event }: CardEventProps) {
                     },
                 });
                 if (!res.ok) {
-                    throw new Error('Erreur lors du chargement des données.')
+                    throw new Error('Erreur lors du chargement des données.');
                 };
 
                 const eventSelected = await res.json();
 
-                setSelectedCard(eventSelected);
+                setSelectedEvent(eventSelected);
             } catch (error) {
                 setError('Erreur lors du chargement des données.');
             } finally {
@@ -64,7 +64,110 @@ export default function CardEvent({ event }: CardEventProps) {
         };
 
         fetchEvent();
-    }, [token, event.id])
+    }, [token, event.id]);
+
+    async function handleDelete() {
+        if (!token) {
+            alert('Vous devez être connecté');
+            return;
+        };
+
+        const isConfirmed = confirm('Êtes-vous sûr(e) de vouloir supprimer cet évènement ?');
+
+        if (!isConfirmed) {
+            setModalOpen(false);
+            return;
+        }
+
+        try {
+            const res = await fetch(`http://backend.localhost:81/events/${event.id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+            });
+
+            if (!res.ok) {
+            throw new Error('Erreur lors de la suppression de l\'évènement');
+        } 
+                
+        setSelectedEvent(null);
+        setModalOpen(false);
+
+        // TODO: fonctionnel mais ne disparaît pas immédiatement, pour l'instant faut rafraîchir page manuellement
+        
+        } catch (error) {
+            setError('Erreur lors du chargement des données.');
+        }
+    };
+
+    async function subscribeToEvent() {
+        if (!token) {
+            alert('Vous devez être connecté');
+            return;
+        };
+
+        try {
+            if (selectedEvent?.users.some(user => user.id === currentUser?.id)) {
+                alert('Vous êtes déjà inscrit(e) à cet évènement.');
+            };
+            
+            const res = await fetch(`http://backend.localhost:81/events/${selectedEvent?.id}/users/${currentUser?.id}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+            });
+
+            if(!res.ok) {
+                throw new Error('Erreur lors du chargement des données.');
+            };
+
+            // TODO: afficher nom de l'inscrit immédiatement (pour l'instant faut rechargement manuel de page pour le voir)
+            alert('Vous êtes bien inscrit à l\'évènement.');
+
+        } catch (error) {
+                setError('Erreur lors du chargement des données.');
+        } finally {
+                setLoading(false);
+        };
+    }
+
+    async function unsubscribeFromEvent() {
+        if (!token) {
+            alert('Vous devez être connecté');
+            return;
+        };
+
+        try {
+            if (!selectedEvent?.users.some(user => user.id === currentUser?.id)) {
+                alert('Vous n\'êtes pas inscrit(e) à cet évènement.');
+                return;
+            };
+            
+            const res = await fetch(`http://backend.localhost:81/events/${selectedEvent?.id}/users/${currentUser?.id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+            });
+
+            if(!res.ok) {
+                throw new Error('Erreur lors de la désinscription. Veuillez réessayer.');
+            };
+
+            // TODO: afficher nom de l'inscrit immédiatement (pour l'instant faut rechargement manuel de page pour le voir)
+            alert('Vous êtes bien désinscrit de l\'évènement.');
+
+        } catch (error) {
+                setError('Erreur lors du chargement des données.');
+        } finally {
+                setLoading(false);
+        };
+    }
 
     return (
         <div id='containerCard'>
@@ -92,32 +195,32 @@ export default function CardEvent({ event }: CardEventProps) {
                 onClose={() => { setModalOpen(false) }}
                 >
                     <div>
-                        {selectedCard && (
+                        {selectedEvent && (
                             <div className='elmCardModal'>
-                                <div key={selectedCard.id} id='containerModal'>
+                                <div key={selectedEvent.id} id='containerModal'>
 
                                     <div id='mdlSection1'>
                                         
                                         <img src={interestImages[event.interests[0]?.name]} alt='photo evenement' />
-                                        <h3>{selectedCard.name}</h3>
-                                        <p>Début: {format(selectedCard.start_date,"d MMMM yyyy 'à' HH'h'mm", { locale: fr })}</p>
-                                        <p>Fin: {format(selectedCard.end_date,"d MMMM yyyy 'à' HH'h'mm", { locale: fr })}</p>
-                                        <p>{selectedCard.city} ({selectedCard.zip_code})</p>
-                                        <p>{selectedCard.address}</p>
-                                        <p>Organisateur: {selectedCard.creator?.firstname} {selectedCard.creator?.lastname}</p>
-                                        <p>{selectedCard.description}</p>
-                                        {selectedCard.interests && selectedCard.interests.map((interest)=><button className='interestEvent'>{interest.name}</button>)}
+                                        <h3>{selectedEvent.name}</h3>
+                                        <p>Début: {format(selectedEvent.start_date,"d MMMM yyyy 'à' HH'h'mm", { locale: fr })}</p>
+                                        <p>Fin: {format(selectedEvent.end_date,"d MMMM yyyy 'à' HH'h'mm", { locale: fr })}</p>
+                                        <p>{selectedEvent.city} ({selectedEvent.zip_code})</p>
+                                        <p>{selectedEvent.address}</p>
+                                        <p>Organisateur: {selectedEvent.creator?.firstname} {selectedEvent.creator?.lastname}</p>
+                                        <p>{selectedEvent.description}</p>
+                                        {selectedEvent.interests?.map((interest)=><button key={interest.id} className='interestEvent'>{interest.name}</button>)}
 
                                         <div className='btnEventOptions'>
-                                            { currentUser?.id === selectedCard.creator_id ? (
+                                            { currentUser?.id === selectedEvent.creator_id ? (
                                                 <>
                                                     <button className='btnUpdate'>Modifier</button>
-                                                    <button className='btnDelete'>Supprimer</button>
+                                                    <button className='btnDelete' onClick={handleDelete}>Supprimer</button>
                                                 </>
                                             ):(
                                                 <>
-                                                    <button className='btnSubscribe'> S'inscrire</button>
-                                                    <button className='btnUnsubscribe'>Se désinscrire</button>
+                                                    <button className='btnSubscribe' onClick={subscribeToEvent}> S'inscrire</button>
+                                                    <button className='btnUnsubscribe' onClick={unsubscribeFromEvent}>Se désinscrire</button>
                                                 </>
                                             )}
                                         </div>
@@ -126,7 +229,7 @@ export default function CardEvent({ event }: CardEventProps) {
 
                                     <div id='mdlSection2'>
                                         <h3>Liste des participants</h3>
-                                        {selectedCard.users?.map(user => (
+                                        {selectedEvent.users?.map(user => (
                                             <div key={user.id}>
                                             <p>{user.firstname} {user.lastname}</p>
                                             </div>

@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 
 import ConversationItem from '../../components/ConversationItem/ConversationItem';
@@ -14,7 +14,15 @@ import './ConversationsPage.scss';
 import avatarWoman from '../../assets/images/avatarWomen.webp';
 
 const ConversationsPage: React.FC = () => {
+
+    const token = localStorage.getItem("token");
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!token) {
+            navigate('/connexion');
+        };
+    }, [token, navigate])
 
     const conversations: Conversation[] = [
         {
