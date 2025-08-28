@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router';
+
+import type { Event } from '../../types/index.d.ts';
+
 import Rooftop from '../../components/Rooftop/Rooftop.tsx';
 import Banner from '../../components/Banner/Banner.tsx';
 import Footer from '../../components/Footer/Footer.tsx';
 import CardEvent from '../../components/CardEvent/CardEvent.tsx';
+import InterestSelect from '../../components/InterestFilter/InterestSelect.tsx';
 
 import './EventPage.scss';
-
-import type { Event } from '../../types/index.d.ts';
-import InterestSelect from '../../components/InterestFilter/InterestSelect.tsx';
 
 type Search = {
     code: number;
@@ -28,7 +30,16 @@ export default function EventPage() {
 
     const [events, setEvents] = useState<Event[]>([]);
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
+
+    const [error, setError] = useState<string | null>(null)
+    
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!token) {
+            navigate('/connexion');
+        };
+    }, [token, navigate]);
 
     // Fetch villes GeoGouv selon query texte et pas de ville sélectionnée
     useEffect(() => {

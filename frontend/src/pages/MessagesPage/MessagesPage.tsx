@@ -1,3 +1,6 @@
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router';
+
 import Rooftop from '../../components/Rooftop/Rooftop';
 import Banner from '../../components/Banner/Banner.tsx';
 import Footer from '../../components/Footer/Footer.tsx';
@@ -8,6 +11,16 @@ import avatarWoman from '../../assets/images/avatarWomen.webp';
 import avatarMan from '../../assets/images/avatarMen.webp';
 
 export default function MessagesPage() {
+
+    const token = localStorage.getItem("token");
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!token) {
+            navigate('/connexion');
+        };
+    }, [token, navigate]);
+
     return (
         <div id="fullContainerMessages">
             <Rooftop />

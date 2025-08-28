@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router';
 
@@ -45,8 +45,14 @@ export default function ProfilPage() {
     const token = localStorage.getItem("token");
 
     const [selectedInterest, setSelectedInterest] = useState<string>(""); 
-    const [selectedInterestEvent, setSelectedInterestEvent] = useState<number>(); 
+     const [selectedInterestEvent, setSelectedInterestEvent] = useState<number>(); 
 
+  useEffect(() => {
+        if (!token) {
+            navigate('/connexion');
+        };
+    }, [token, navigate]);
+    
     React.useEffect(() => {
         if (token) {
             const payload = JSON.parse(atob(token.split('.')[1]));
@@ -289,6 +295,7 @@ export default function ProfilPage() {
                 setSuccess(true);
                 setUser(null);
                 setActiveModal(null);
+                localStorage.removeItem('token');
                 navigate('/');
             }
 

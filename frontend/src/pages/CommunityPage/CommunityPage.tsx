@@ -6,6 +6,7 @@ import CardUser from '../../components/CardUser/CardUser.tsx';
 import InterestSelect from '../../components/InterestFilter/InterestSelect.tsx';
 
 import './CommunityPage.scss';
+import { useNavigate } from 'react-router';
 
 type Search = {
     code: number;
@@ -37,6 +38,15 @@ export default function CommunityPage() {
     const [users, setUsers] = useState<User[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+
+    const token = localStorage.getItem("token");
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!token) {
+            navigate('/connexion');
+        };
+    }, [token, navigate]);
 
     // Requête API villes GeoGouv
     useEffect(() => {
