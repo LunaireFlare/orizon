@@ -10,14 +10,14 @@ const adminRouter = express.Router();
 adminRouter.get(
   "/events",
   authMiddleware,
-  authorizeRoles,
+  authorizeRoles(["admin"]),
   eventController.getAllEvents
 );
 
 adminRouter.get(
   "/users",
   authMiddleware,
-  authorizeRoles,
+  authorizeRoles(["admin"]),
   userController.getAllUsers
 );
 
@@ -25,7 +25,7 @@ adminRouter.get(
 adminRouter.patch(
   "/users/:id/status",
   authMiddleware,
-  authorizeRoles,
+  authorizeRoles(["admin"]),
   adminController.updateUserStatus
 );
 
@@ -33,7 +33,7 @@ adminRouter.patch(
 adminRouter.patch(
   "/events/:id/status",
   authMiddleware,
-  authorizeRoles,
+  authorizeRoles(["admin"]),
   adminController.updateEventStatus
 );
 
