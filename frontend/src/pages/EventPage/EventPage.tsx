@@ -32,7 +32,7 @@ export default function EventPage() {
     const [loading, setLoading] = useState(false);
 
     const [error, setError] = useState<string | null>(null)
-    
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -82,25 +82,37 @@ export default function EventPage() {
         async function fetchEvents() {
             setLoading(true);
             setError(null);
+
             try {
                 const res = await fetch('http://backend.localhost:81/events', {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
                 });
+
                 if (!res.ok) {
-                    throw new Error('Erreur lors du chargement des données.');
+                    throw new Error('Erreur lors du chargement des évènements.');
                 }
-                const data = await res.json();
-                setEvents(data);
+
+                const data: Event[] = await res.json();
+
+                const forbiddenStatus = ['bloqué', 'en_attente', undefined];
+                const filteredData = data.filter(
+                    (event) => !forbiddenStatus.includes(event.status)
+                );
+
+                setEvents(filteredData);
+
             } catch (error) {
-                setError('Erreur lors du chargement des données.');
+                setError('Erreur lors du chargement des évènements.');
             } finally {
                 setLoading(false);
             }
         }
+
         fetchEvents();
     }, [token]);
+
 
     // Filtrer localement les événements selon ville sélectionnée, mots clés et centre d’intérêt
     const filteredEvents = events.filter((event) => {
