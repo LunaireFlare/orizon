@@ -87,6 +87,7 @@ export default function ProfilPage() {
         fetchData();
     }, [id]);
 
+
     const [_success, setSuccess] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [_loading, setLoading] = useState(false);
@@ -214,6 +215,7 @@ export default function ProfilPage() {
         setLoading(true);
         try {
             if (!token) throw new Error("Utilisateur non authentifié");
+
             const data = await fetchApi(`events`, {
                 method: 'POST',
                 headers: {
@@ -223,6 +225,7 @@ export default function ProfilPage() {
             });
 
             if (!data) {
+              
                 setError(data.error || "Erreur lors de la modification.");
             } else {
                 const addedInterest = interests.find(i => i.id === selectedInterestEvent);

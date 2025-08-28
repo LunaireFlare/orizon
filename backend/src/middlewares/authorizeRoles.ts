@@ -7,15 +7,13 @@ export function authorizeRoles(allowedRoles: string[]) {
     if (!userRole) {
       return res
         .status(401)
-        .json({ error: "Rôle utilisateur non défini dans le token." });
+        .json({ error: "Oh non vous n'êtes pas autorisé :( " });
     }
 
     if (!allowedRoles.includes(userRole)) {
-      return res
-        .status(403)
-        .json({
-          error: `Accès interdit : rôle requis (${allowedRoles.join(" ou ")})`,
-        });
+      return res.status(403).json({
+        error: "Oh non vous l'accès est interdit... ",
+      });
     }
 
     next();

@@ -19,7 +19,10 @@ export const createEventSchema = z.object({
 
         export const updateEventSchema = z.object({
             name: z.string().min(1).max(255).optional(),
-            start_date: z.coerce.date().optional().refine((date) => date > new Date(), {
+            start_date: z.coerce.date().optional().refine((date) => {
+                if (!date) return true;
+                return date > new Date();
+            }, {
                 message: 'La date de début doit être dans le futur',
             }),
             end_date: z.coerce.date().optional(),
@@ -29,7 +32,10 @@ export const createEventSchema = z.object({
             city: z.string().min(1).max(255).optional(),
             status: z.enum(['en_attente', 'valide', 'bloqué']).default('en_attente')
         })
-        .refine((data) => data.end_date > data.start_date, {
+        .refine((data) => {
+            if (!data.start_date || !data.end_date) return true;
+            return data.end_date > data.start_date;
+        } , {
             message: 'La date de fin doit se situer après la date de début',
             path: ['endDate'],
         });

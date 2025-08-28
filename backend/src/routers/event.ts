@@ -1,8 +1,6 @@
 import { Router } from 'express';
 import { eventController } from '../controllers/event.js';
 import { authMiddleware } from '../middlewares/auth.js';
-import { authorizeRoles } from '../middlewares/authorizeRoles.js';
-import { userController } from '../controllers/user.js';
 
 const eventRouter = Router();
 
@@ -13,7 +11,7 @@ eventRouter.route('/events')
 eventRouter.route('/events/:id')
     .get(authMiddleware, eventController.getOneEvent)
     .patch(authMiddleware, eventController.updateEvent)
-    .delete(authMiddleware, eventController.deleteEvent);
+    .delete(authMiddleware, eventController.deleteEvent)
 
 eventRouter.route('/events/:event_id/users/:user_id')
     .post(authMiddleware, eventController.associateEventToParticipant)

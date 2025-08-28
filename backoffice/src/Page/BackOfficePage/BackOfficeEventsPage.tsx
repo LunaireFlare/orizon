@@ -1,12 +1,12 @@
-
 import { Link, useNavigate } from 'react-router';
-
 import { useEffect, useState } from 'react';
 import Logo from '../../Assets/images/Logo_OrizonBlanc.png';
 import './BackOfficePage.scss';
+import { format } from 'date-fns';
+import { fr } from 'date-fns/locale';
+
 
 type EventBdd = {
-
     id: number,
     name: string,
     start_date: string,
@@ -21,35 +21,32 @@ type EventBdd = {
     updated_at: string,
 }
 
+export default function BackOfficeEventsPage() {
 
-export default function BackOfficePage() {
+    const [eventsBdd, setEventsBdd] = useState<EventBdd[]>([]);
 
-    const [ eventsBdd, setEventsBdd ] = useState<EventBdd[]>([]);
+    /* State de filtrage par titre */
+    const [searchTitle, setSearchTitle] = useState('');
 
-    /* State de filtrage par evenements */
-    const [ searchEvents, setSearchEvents] = useState('');
+    /* State de filtrage par status */
+    const [searchStatus, setSearchStatus] = useState('')
 
-    /* State de filtrage par status de l'evenement */
-    const [ searchStatusEvents, setSearchStatusEvents ] = useState('');
+    /* State systeme de interrupteur bouton bloqué / validé */
+    const [selectedStatusEvents, setSelectedStatusEvents] = useState<{ [key: number]: string }>({});
 
-    /* State systeme de interupteur bouton bloque / valider */
-    const [ selectedStatusEvents, setSelectedStatusEvents ] = useState<{ [key: number]: string }>({});
-
-
-/*--------------------------------------------- */
+    /*--------------------------------------------- */
 
     /* Constante de navigation */
-    const navigate = useNavigate(); 
+    const navigate = useNavigate();
 
     /* Fonction de déconnexion */
     const handleLogout = () => {
         localStorage.removeItem("token");
-        localStorage.removeItem("selectedStatus"); 
-        navigate("/"); 
+        localStorage.removeItem("selectedStatus");
+        navigate("/");
     };
 
-/*---------------------------------------------------- */
-
+    /*---------------------------------------------------- */
 
 
     /* Sauvegarder a chaque modification dans le localStorage */
@@ -61,37 +58,46 @@ export default function BackOfficePage() {
     }, []);
 
 
-    /* Function de changement des boutons bloquer / valider + changement du status en BBD */
+    /* Fonction de changement du status (valider / bloquer) */
     const handleClick = async (id: number, status: string) => {
-        const newStatus = status === "validate" ? "valide" : "bloqué";
-
-        setSelectedStatusEvents(prev => {
-            const newSelected = { ...prev, [id]: status };
-            localStorage.setItem("selectedStatusEvents", JSON.stringify(newSelected));
-            return newSelected;
-        });
-
-        setEventsBdd(prev => prev.map(u => u.id === id ? { ...u, status: newStatus } : u));
-
         try {
-            const token = localStorage.getItem("token")
-
-            await fetch(`http://backend.localhost:81/events/${id}`, {
-                method: "PATCH", // ou PUT selon ton API
-                headers: { 
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}` 
+            const response = await fetch(`http://backend.localhost:81/events/${id}/status`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
                 },
-                body: JSON.stringify({ status: newStatus })
+                body: JSON.stringify({ status })
             });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                console.log(data.message);
+
+                setEventsBdd(prev =>
+                    prev.map(event =>
+                        event.id === id ? { ...event, status } : event
+                    )
+                );
+
+                setSelectedStatusEvents(prev => {
+                    const updated = {
+                        ...prev,
+                        [id]: status
+                    };
+                    localStorage.setItem("selectedStatus", JSON.stringify(updated));
+                    return updated;
+                });
+            } else {
+                console.error("Erreur API :", data.error);
+            }
         } catch (error) {
-            console.error("Erreur lors de la mise à jour du status :", error);
-        };
+            console.error("Erreur réseau :", error);
+        }
     };
 
-
-    /* Fetch de l'API users */
-
+    /* Fetch API events */
     useEffect(() => {
         async function fetchEvents() {
             try {
@@ -101,32 +107,36 @@ export default function BackOfficePage() {
                     }
                 });
 
-                const data = await response.json();
-                console.log("Data reçue de l'API :", data);
-                setEventsBdd(data);
-            } catch (error) {
-                console.error("Erreur de chargement utilisateurs :", error);
+                if (!response.ok) {
+                    throw new Error(`Erreur HTTP : ${response.status}`);
+                }
 
+                const data = await response.json();
+
+                if (Array.isArray(data)) {
+                    setEventsBdd(data);
+                } else {
+                    console.error("Données reçues invalides", data);
+                }
+            } catch (error) {
+                console.error("Erreur de chargement événements :", error);
             }
         }
         fetchEvents();
     }, []);
 
+    /* Filtrage par titre et status */
+    const filteredEvents = eventsBdd.filter(event => {
+        const matchTitle = searchTitle.length < 3
+            ? true
+            : event.name.toLowerCase().includes(searchTitle.toLowerCase());
 
-        /* Filtrage des utilisateurs par nom prenom */
-        const filteredEvents = eventsBdd.filter(event => {
-            const eventName = (event.name).toLowerCase();
-    
-            const matchName = searchEvents.length < 3 
-                ? true 
-                : eventName.includes(searchEvents.toLowerCase());
-    
-            const matchStatus = searchStatusEvents === "" 
-                ? true 
-                : event.status.toLowerCase() === searchStatusEvents.toLowerCase();
-    
-            return matchName && matchStatus;
-        });
+        const matchStatus = searchStatus === ""
+            ? true
+            : event.status.toLowerCase() === searchStatus.toLowerCase();
+
+        return matchTitle && matchStatus;
+    });
 
 
     return (
@@ -136,37 +146,38 @@ export default function BackOfficePage() {
                     <img src={Logo} alt="Logo Orizon" />
                     <div>
                         <Link to="/users">Utilisateurs</Link>
-                        <Link to="/evenements" onClick={handleLogout}>Evènements</Link>
+                        <Link to="/evenements">Événements</Link>
                     </div>
                 </div>
                 <div className="rightContainer">
                     <div className="headRightContainer">
                         <h1>TABLEAU DE BORD - Événements</h1>
-                        <button>Deconnexion</button>
+                        <button onClick={handleLogout}>Deconnexion</button>
                     </div>
                     <div id="elmFilter">
                         <form>
                             <div className="filterName">
-
-                                <label htmlFor="searchName">Rechercher nom d'evènement</label>
-                                <input type="text"
-                                    name="name" 
-                                    id="nom"
-                                    value={searchEvents}
-                                    onChange={(e) => setSearchEvents(e.target.value)}
-                                    placeholder="Tapez au moins 3 lettres"/>
+                                <label htmlFor="searchTitle">Recherche par titre</label>
+                                <input
+                                    type="text"
+                                    name="title"
+                                    id="searchTitle"
+                                    value={searchTitle}
+                                    onChange={(e) => setSearchTitle(e.target.value)}
+                                    placeholder="Tapez au moins 3 lettres"
+                                />
                             </div>
                             <div className="filterStatus">
-                                <label htmlFor="searchName">Recherche par status</label>
-                                <select  id="status"
-                                    value={searchEvents}
-                                    onChange={(e) => setSearchStatusEvents(e.target.value)}>
-
-                                    <option value="">-- status --</option>
+                                <label htmlFor="status">Recherche par statut</label>
+                                <select
+                                    id="status"
+                                    value={searchStatus}
+                                    onChange={(e) => setSearchStatus(e.target.value)}
+                                >
+                                    <option value="">-- Tous --</option>
                                     <option value="en_attente">En attente</option>
                                     <option value="valide">Valide</option>
                                     <option value="bloqué">Bloqué</option>
-                                    <option value="désactivé">Désactivé</option>
                                 </select>
                             </div>
                         </form>
@@ -181,60 +192,53 @@ export default function BackOfficePage() {
                                     <th scope="col">id</th>
                                     <th scope="col">Titre</th>
                                     <th scope="col">Description</th>
-                                    <th scope="col">Date</th>
-                                    <th scope="col">Lieu</th>
-                                    <th scope="col">Status</th>
-                                    <th scope="col">Créé le</th>
-                                    <th scope="col">Mis à jour le</th>
-                                    <th scope="col">Valider/Bloquer</th>
+                                    <th scope="col">Début</th>
+                                    <th scope="col">Fin</th>
+                                    <th scope="col">Adresse</th>
+                                    <th scope="col">Code_postale</th>
+                                    <th scope="col">Ville</th>
+                                    <th scope="col">Statut</th>
+                                    <th scope="col">Crée_le</th>
+                                    <th scope="col">Modifié_le</th>
+                                    <th scope="col">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-
-                                
-                                    {eventsBdd.map((event) => (
-                                            <tr key={event.id}>
-                                            <td className="primaryKey">{event.id}</td>
-                                            <td>{event.name}</td>
-                                            <td>{event.start_date}</td>
-                                            <td>{event.end_date}</td>
-                                            <td>{event.description}</td>
-                                            <td>{event.address}</td>
-                                            <td>{event.zip_code}</td>
-                                            <td>{event.city}</td>
-                                            <td>{selectedStatusEvents[event.id]
-                                                    ? {
-                                                        pending: "en attente",
-                                                        validate: "valide",
-                                                        block: "bloqué",
-                                                    } [selectedStatusEvents[event.id]] || event.status
-                                                    : event.status}</td>
-                                            <td>{event.creator_id}</td>
-                                            <td>{event.created_at}</td>
-                                            <td>{event.updated_at}</td>
-                                            <td>
-                                                <div className="modoBtn">
-                                                    <button className={`validateStatus btnValid 
-                                                        ${selectedStatusEvents[event.id]} === "validate" ? "active" : "" }`} 
-                                                        onClick={() => handleClick(event.id, "validate")}>
-                                                            Validate
-                                                        </button>
-
-                                                    <button className={ `blockedStatus btnBlock 
-                                                        ${selectedStatusEvents[event.id] === "block" ? "active" : "" }`} 
-                                                        onClick={() => handleClick(event.id, "block")}>
-                                                            Block
-                                                        </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                
+                                {filteredEvents.map((event) => (
+                                    <tr key={event.id}>
+                                        <td className="primaryKey">{event.id}</td>
+                                        <td>{event.name}</td>
+                                        <td>{event.description}</td>
+                                        <td>{format(event.start_date, "d MMMM yyyy ", { locale: fr })}</td>
+                                        <td>{format(event.end_date, "d MMMM yyyy ", { locale: fr })}</td>
+                                        <td>{event.address}</td>
+                                        <td>{event.zip_code}</td>
+                                        <td>{event.city}</td>
+                                        <td>{selectedStatusEvents[event.id] || event.status}</td>
+                                        <td>{format(event.created_at, "d MMMM yyyy 'à' HH'h'mm", { locale: fr })}</td>
+                                        <td>{format(event.updated_at, "d MMMM yyyy 'à' HH'h'mm", { locale: fr })}</td>
+                                        <td>
+                                            <div className="modoBtn">
+                                                <button
+                                                    className={`validateStatus btnValid ${selectedStatusEvents[event.id] === "valide" ? "active" : ""}`}
+                                                    onClick={() => handleClick(event.id, "valide")}
+                                                >
+                                                    Valider
+                                                </button>
+                                                <button
+                                                    className={`blockedStatus btnBlock ${selectedStatusEvents[event.id] === "bloqué" ? "active" : ""}`}
+                                                    onClick={() => handleClick(event.id, "bloqué")}
+                                                >
+                                                    Bloquer
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}
                             </tbody>
-                    </table>
-                    {filteredEvents.length === 0 && <p>Aucun utilisateur trouvé.</p>}
-                </div>    
-
+                        </table>
+                        {filteredEvents.length === 0 && <p>Aucun événement trouvé.</p>}
+                    </div>
                 </div>
             </div>
         </div>

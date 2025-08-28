@@ -90,7 +90,12 @@ export default function CommunityPage() {
             setLoading(true);
             setError(null);
             try {
-                const res = await fetch('http://backend.localhost:81/users');
+                const res = await fetch('http://backend.localhost:81/users', {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
                 const data: User[] = await res.json();
 
                 const forbiddenStatus = ['bloqué', 'désactivé', 'en_attente', undefined];

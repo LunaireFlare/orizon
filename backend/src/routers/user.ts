@@ -6,14 +6,14 @@ const userRouter = Router();
 
 userRouter
   .route("/users")
-  .get(authMiddleware,userController.getAllUsers)
+  .get(authMiddleware, userController.getAllUsers)
   .post(userController.createUser);
 
 userRouter
   .route("/users/:id")
   .get(authMiddleware, userController.getOneUser)
   .put(authMiddleware, userController.updateUser)
-  .delete(authMiddleware, userController.deleteUser);
+  .delete(authMiddleware, userController.deleteUser)
 
 userRouter
   .route("/users/:id/interests")
