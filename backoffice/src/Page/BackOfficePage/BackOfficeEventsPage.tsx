@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import Logo from '../../Assets/images/Logo_OrizonBlanc.png';
 import './BackOfficePage.scss';
 
-type UserBdd = {
+type EventBdd = {
     id: number,
     name: string,
     start_date: string,
@@ -21,7 +21,7 @@ type UserBdd = {
 
 export default function BackOfficePage() {
 
-    const [ eventsBdd, setEventsBdd ] = useState<UserBdd[]>([]);
+    const [ eventsBdd, setEventsBdd ] = useState<EventBdd[]>([]);
 
     /* State de filtrage par evenements */
     const [ searchEvents, setSearchEvents] = useState('');
@@ -91,8 +91,13 @@ export default function BackOfficePage() {
     useEffect(() => {
         async function fetchEvents() {
             try {
-                const response = await fetch("http://backend.localhost:81/events"); 
+                const response = await fetch("http://backend.localhost:81/events", {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
                 const data = await response.json();
+                console.log("Data reçue de l'API :", data);
                 setEventsBdd(data);
             } catch (error) {
                 console.error("Erreur de chargement utilisateurs :", error);
@@ -103,11 +108,11 @@ export default function BackOfficePage() {
 
         /* Filtrage des utilisateurs par nom prenom */
         const filteredEvents = eventsBdd.filter(event => {
-            const fullName = (event.name).toLowerCase();
+            const eventName = (event.name).toLowerCase();
     
             const matchName = searchEvents.length < 3 
                 ? true 
-                : fullName.includes(searchEvents.toLowerCase());
+                : eventName.includes(searchEvents.toLowerCase());
     
             const matchStatus = searchStatusEvents === "" 
                 ? true 
@@ -191,7 +196,11 @@ export default function BackOfficePage() {
                                             <td>{event.zip_code}</td>
                                             <td>{event.city}</td>
                                             <td>{selectedStatusEvents[event.id]
-                                                    ? (selectedStatusEvents[event.id] === "validate" ? "valide" : "bloqué")
+                                                    ? {
+                                                        pending: "en attente",
+                                                        validate: "valide",
+                                                        block: "bloqué",
+                                                    } [selectedStatusEvents[event.id]] || event.status
                                                     : event.status}</td>
                                             <td>{event.creator_id}</td>
                                             <td>{event.created_at}</td>

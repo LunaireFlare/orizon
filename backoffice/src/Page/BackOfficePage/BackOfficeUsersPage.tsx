@@ -61,7 +61,7 @@ export default function BackOfficePage() {
 
     /* Function de changement des boutons bloquer / valider + changement du status en BBD */
     const handleClick = async (id: number, status: string) => {
-        const newStatus = status === "validate" ? "valide" : "bloqué";
+    const newStatus = status === "validate" ? "valide" : "bloqué";
 
         setSelectedStatus(prev => {
             const newSelected = { ...prev, [id]: status };
@@ -155,7 +155,7 @@ export default function BackOfficePage() {
                                     <option value="en attente">En attente</option>
                                     <option value="valide">Valide</option>
                                     <option value="bloqué">Bloqué</option>
-                                    <option value="desactivé">Desactive</option>
+                                    <option value="desactivé">Désactivé</option>
                                 </select>
                             </div>
                         </form>
@@ -200,7 +200,12 @@ export default function BackOfficePage() {
                                             <td>{user.photo}</td>
                                             <td>{user.description}</td>
                                             <td>{selectedStatus[user.id]
-                                                    ? (selectedStatus[user.id] === "validate" ? "valide" : "bloqué")
+                                                    ? {
+                                                        pending: "en attente",
+                                                        validate: "valide",
+                                                        block: "bloqué",
+                                                        disable: "désactivé",     
+                                                    } [selectedStatus[user.id]] || user.status
                                                     : user.status}</td>
                                             <td>{user.created_at}</td>
                                             <td>{user.updated_at}</td>
@@ -209,13 +214,13 @@ export default function BackOfficePage() {
                                                     <button className={ `validateStatus btnValid 
                                                         ${selectedStatus[user.id] === "validate" ? "active" : "" }`} 
                                                         onClick={() => handleClick(user.id, "validate")}>
-                                                            Validate
+                                                            Valider
                                                         </button>
 
                                                     <button className={ `blockedStatus btnBlock 
                                                         ${selectedStatus[user.id] === "block" ? "active" : "" }`} 
                                                         onClick={() => handleClick(user.id, "block")}>
-                                                            Block
+                                                            Bloqué
                                                         </button>
                                                 </div>
                                             </td>
