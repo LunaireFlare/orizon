@@ -178,15 +178,19 @@ export default function BackOfficePage() {
                             </caption>
                             <thead>
                                 <tr>
-                                    <th scope="col">id</th>
-                                    <th scope="col">Titre</th>
-                                    <th scope="col">Description</th>
-                                    <th scope="col">Date</th>
-                                    <th scope="col">Lieu</th>
-                                    <th scope="col">Status</th>
-                                    <th scope="col">Créé le</th>
-                                    <th scope="col">Mis à jour le</th>
-                                    <th scope="col">Valider/Bloquer</th>
+                                <th scope="row">id</th>
+                                    <th scope="col">name</th>
+                                    <th scope="col">start_date</th>
+                                    <th scope="col">end_date</th>
+                                    <th scope="col">description</th>
+                                    <th scope="col">address</th>
+                                    <th scope="col">zip_code</th>
+                                    <th scope="col">city</th>
+                                    <th scope="col">status</th>
+                                    <th scope="col">creator_id</th>
+                                    <th scope="col">created_at</th>
+                                    <th scope="col">updated_at</th>
+                                    <th scope="col">Valider/Bloque</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -215,7 +219,7 @@ export default function BackOfficePage() {
                                             <td>
                                                 <div className="modoBtn">
                                                     <button className={`validateStatus btnValid 
-                                                        ${selectedStatusEvents[event.id]} === "validate" ? "active" : "" }`} 
+                                                        ${selectedStatusEvents[event.id]} === "valide" ? "active" : "" }`} 
                                                         onClick={() => handleClick(event.id, "validate")}>
                                                             Validate
                                                         </button>

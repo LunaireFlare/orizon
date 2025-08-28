@@ -17,7 +17,7 @@ adminRouter.get(
 adminRouter.get(
   "/users",
   authMiddleware,
-  authorizeRoles,
+  authorizeRoles(["admin"]),
   userController.getAllUsers
 );
 
@@ -25,7 +25,7 @@ adminRouter.get(
 adminRouter.patch(
   "/users/:id/status",
   authMiddleware,
-  authorizeRoles,
+  authorizeRoles(["admin"]),
   adminController.updateUserStatus
 );
 

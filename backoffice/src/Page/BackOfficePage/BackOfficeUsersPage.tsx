@@ -63,7 +63,7 @@ export default function BackOfficePage() {
     /* Function de changement des boutons bloquer / valider */
     const handleClick = async (id: number, status: string) => {
         try {
-            const response = await fetch(`http://backend.localhost:81/users/${id}`, {
+            const response = await fetch(`http://backend.localhost:81//users/${id}/status`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -103,7 +103,12 @@ export default function BackOfficePage() {
         async function fetchUsers() {
             try {
 
-                const response = await fetch("http://backend.localhost:81/users");
+                const response = await fetch(`http://backend.localhost:81/users`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}` // ou adapte selon ta gestion du token
+                    }
+                });
 
                 const data = await response.json();
                 setUserBdd(data);
@@ -221,17 +226,17 @@ export default function BackOfficePage() {
                                         <td>
                                             <div className="modoBtn">
                                                 <button
-                                                    className={`validateStatus btnValid ${selectedStatus[user.id] === "valide" ? "active" : ""}`}
-                                                    onClick={() => handleClick(user.id, "valide")}
+                                                    className={`validateStatus btnValid ${selectedStatus[user.id] === "validate" ? "active" : ""}`}
+                                                    onClick={() => handleClick(user.id, "validate")}
                                                 >
-                                                    Validate
+                                                    Valider
                                                 </button>
 
                                                 <button
                                                     className={`blockedStatus btnBlock ${selectedStatus[user.id] === "bloqué" ? "active" : ""}`}
                                                     onClick={() => handleClick(user.id, "bloqué")}
                                                 >
-                                                    Block
+                                                    Bloqué
                                                 </button>
                                             </div>
                                         </td>
