@@ -1,4 +1,4 @@
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { useEffect, useState } from 'react';
 import Logo from '../../Assets/images/Logo_OrizonBlanc.png';
 import './BackOfficePage.scss';
@@ -20,40 +20,6 @@ type UserBdd = {
     updated_at: string
 }
 
-/* const mockUser = [
-    {
-        id: 1,
-        lastname: "NOVI",
-        firstname: "Victor",
-        email: "victornovi@hotmail.fr",
-        password: "25082025HUHUjksjjajhhjgsag",
-        zip_code: 75013,
-        city: "Paris",
-        date_of_birth: "11/09/1956",
-        role: "utilisateur",
-        photo: "string",
-        description: "Je suis fan de musique et de cuisine cubaine",
-        status: "en attente",
-        created_at: "20/08/2025",
-        updated_at: "23/08/2025"
-    },
-    {
-        id: 2,
-        lastname: "BEAUX",
-        firstname: "Thomas",
-        email: "toto59@hotmail.fr",
-        password: "25082025Hhsgidxgssgzg345",
-        zip_code: 59000,
-        city: "Lille",
-        date_of_birth: "11/09/1976",
-        role: "utilisateur",
-        photo: "string",
-        description: "Je suis fan de danse classique et de theatre",
-        status: "en attente",
-        created_at: "10/06/2025",
-        updated_at: "23/08/2025"
-    }
-] */
 
 export default function BackOfficePage() {
 
@@ -65,8 +31,33 @@ export default function BackOfficePage() {
     /* State de filtrage par status */
     const [searchStatus, setSearchStatus] = useState('')
 
+
     /* State systeme de interupteur bouton bloque / valider */
     const [selectedStatus, setSelectedStatus] = useState<{ [key: number]: string }>({});
+
+/*--------------------------------------------- */
+
+    /* Constante de navigation */
+    const navigate = useNavigate(); 
+
+
+    /* Fonction de déconnexion */
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("selectedStatus"); 
+        navigate("/"); 
+    };
+
+/*---------------------------------------------------- */
+
+
+    /* Sauvegarder a chaque modification dans le localStorage */
+    useEffect(() => {
+        const savedStatus = localStorage.getItem("selectedStatus");
+        if (savedStatus) {
+            setSelectedStatus(JSON.parse(savedStatus));
+        }
+    }, []);
 
 
     /* Function de changement des boutons bloquer / valider */
@@ -106,11 +97,14 @@ export default function BackOfficePage() {
     };
 
 
+
     /* Fetch de l'API users */
     useEffect(() => {
         async function fetchUsers() {
             try {
+
                 const response = await fetch("http://backend.localhost:81/users");
+
                 const data = await response.json();
                 setUserBdd(data);
             } catch (error) {
@@ -119,6 +113,7 @@ export default function BackOfficePage() {
         }
         fetchUsers();
     }, []);
+
 
     /* Filtrage des utilisateurs par nom prénom */
     const filteredUsers = userBdd.filter(user => {
@@ -136,6 +131,7 @@ export default function BackOfficePage() {
     });
 
 
+
     return (
         <div id="containerTableBoard">
             <div id="tableBoard">
@@ -149,7 +145,7 @@ export default function BackOfficePage() {
                 <div className="rightContainer">
                     <div className="headRightContainer">
                         <h1>TABLEAU DE BORD - Utilisateurs</h1>
-                        <button>Deconnexion</button>
+                        <button onClick={handleLogout}>Deconnexion</button>
                     </div>
                     <div id="elmFilter">
                         <form>
@@ -172,7 +168,9 @@ export default function BackOfficePage() {
                                     <option value="en_attente">En attente</option>
                                     <option value="valide">Valide</option>
                                     <option value="bloqué">Bloqué</option>
+
                                     <option value="désactivé">Désactivé</option>
+
                                 </select>
                             </div>
                         </form>
@@ -202,6 +200,7 @@ export default function BackOfficePage() {
                                 </tr>
                             </thead>
                             <tbody>
+
 
                                 {filteredUsers.map((user) => (
                                     <tr key={user.id}>
