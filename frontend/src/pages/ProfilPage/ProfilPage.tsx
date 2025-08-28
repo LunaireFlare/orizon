@@ -213,6 +213,7 @@ export default function ProfilPage() {
                 setSuccess(true);
                 setUser(null);
                 setActiveModal(null);
+                localStorage.removeItem('token');
                 navigate('/');
             }
 
