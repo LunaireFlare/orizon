@@ -47,7 +47,6 @@ export default function ProfilPage() {
     const [selectedInterest, setSelectedInterest] = useState<string>(""); 
     const [selectedInterestEvent, setSelectedInterestEvent] = useState<number>(); 
 
-    
     React.useEffect(() => {
         if (token) {
             const payload = JSON.parse(atob(token.split('.')[1]));
@@ -411,6 +410,7 @@ export default function ProfilPage() {
 
                     <form className='eventForm' onSubmit={handleSubmitNewEvent}>
                         <label htmlFor="name">Nom de l'évènement</label>
+
                         <input
                             type="text"
                             name="name"
@@ -418,15 +418,20 @@ export default function ProfilPage() {
                             onChange={handleChangeEvent}
                             required
                         />
-                            <label>Centre d’intérêt</label>
+
+                        <label>Centre d’intérêt</label>
                         <select
                             id="interet"
+
                             value={selectedInterestEvent}
                             onChange={(e) => {setSelectedInterestEvent(Number(e.target.value)); handleChangeEvent(e)}}
                             required
                             >
+
                             <option value="">-- Choisissez un centre d'intérêt --</option>
-                            {interests?.map((interest) => <option key={interest.id} value={interest.id}>{interest.name}</option>)}
+                            {interests?.map((interest) => (
+                                <option key={interest.id} value={interest.id}>{interest.name}</option>
+                            ))}
                         </select>
 
                         <label htmlFor="start_date">Date et heure de début de l'évènement</label>
@@ -434,6 +439,7 @@ export default function ProfilPage() {
                             type="datetime-local"
                             name="start_date"
                             onChange={handleChangeEvent}
+
                             required
                         />
 
@@ -482,10 +488,11 @@ export default function ProfilPage() {
                             />
                         </div>
 
-                        <input type="submit" value="Valider" className=""></input>
+                        <input type="submit" value="Valider" className="" />
                     </form>
                 </div>
             </Modal>
+
 
             <Modal isOpen={activeModal === 'deleteAccount'} onClose={() => setActiveModal(null)}>
                 <div id="containerDeleteAccount">
