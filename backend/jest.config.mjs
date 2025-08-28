@@ -78,10 +78,33 @@ export default {
   testMatch: ['**/*.test.js'],
 
   moduleNameMapper: {
-    '^(\\.{1,2}/.*)\\.ts$': '$1',
+    '^(\\.{1,2}/.*)\\.js$': '$1.ts',
   },
 
   transformIgnorePatterns: ['node_modules'],
 
   moduleFileExtensions: ['ts', 'js', 'json', 'node'],
 };
+
+// /** @type {import('ts-jest').JestConfigWithTsJest} */
+// module.exports = {
+//   preset: 'ts-jest/presets/default-esm',
+//   testEnvironment: 'node',
+
+//   roots: ['<rootDir>/tests'],
+//   testMatch: ['**/*.test.js'], // Tests en JS
+
+//   extensionsToTreatAsEsm: ['.ts'],
+
+//   transform: {
+//     '^.+\\.ts$': ['ts-jest', { useESM: true, tsconfig: './tsconfig.json' }],
+//   },
+
+//   moduleFileExtensions: ['ts', 'js', 'json', 'node'],
+
+//   moduleNameMapper: {
+//     '^(\\.{1,2}/.*)\\.js$': '$1.ts',
+//   },
+
+//   transformIgnorePatterns: ['/node_modules/'],
+// };
