@@ -1,17 +1,24 @@
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { useEffect, useState } from 'react';
 import Logo from '../../Assets/images/Logo_OrizonBlanc.png';
 import './BackOfficePage.scss';
+import { format } from 'date-fns';
+import { fr } from 'date-fns/locale';
+
 
 type EventBdd = {
-    id: number;
-    title: string;
-    description: string;
-    date: string;
-    location: string;
-    status: string;
-    created_at: string;
-    updated_at: string;
+    id: number,
+    name: string,
+    start_date: string,
+    end_date: string,
+    description: string,
+    address: string,
+    zip_code: string,
+    city: string,
+    status: string,
+    creator_id: string,
+    created_at: string,
+    updated_at: string,
 }
 
 export default function BackOfficeEventsPage() {
@@ -25,12 +32,36 @@ export default function BackOfficeEventsPage() {
     const [searchStatus, setSearchStatus] = useState('')
 
     /* State systeme de interrupteur bouton bloqué / validé */
-    const [selectedStatus, setSelectedStatus] = useState<{ [key: number]: string }>({});
+    const [selectedStatusEvents, setSelectedStatusEvents] = useState<{ [key: number]: string }>({});
+
+    /*--------------------------------------------- */
+
+    /* Constante de navigation */
+    const navigate = useNavigate();
+
+    /* Fonction de déconnexion */
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("selectedStatus");
+        navigate("/");
+    };
+
+    /*---------------------------------------------------- */
+
+
+    /* Sauvegarder a chaque modification dans le localStorage */
+    useEffect(() => {
+        const savedStatusEvt = localStorage.getItem("selectedStatus");
+        if (savedStatusEvt) {
+            setSelectedStatusEvents(JSON.parse(savedStatusEvt));
+        }
+    }, []);
+
 
     /* Fonction de changement du status (valider / bloquer) */
     const handleClick = async (id: number, status: string) => {
         try {
-            const response = await fetch(`http://backend.localhost:81/events/${id}`, {
+            const response = await fetch(`http://backend.localhost:81/events/${id}/status`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -50,10 +81,14 @@ export default function BackOfficeEventsPage() {
                     )
                 );
 
-                setSelectedStatus(prev => ({
-                    ...prev,
-                    [id]: status
-                }));
+                setSelectedStatusEvents(prev => {
+                    const updated = {
+                        ...prev,
+                        [id]: status
+                    };
+                    localStorage.setItem("selectedStatus", JSON.stringify(updated));
+                    return updated;
+                });
             } else {
                 console.error("Erreur API :", data.error);
             }
@@ -94,7 +129,7 @@ export default function BackOfficeEventsPage() {
     const filteredEvents = eventsBdd.filter(event => {
         const matchTitle = searchTitle.length < 3
             ? true
-            : event.title.toLowerCase().includes(searchTitle.toLowerCase());
+            : event.name.toLowerCase().includes(searchTitle.toLowerCase());
 
         const matchStatus = searchStatus === ""
             ? true
@@ -111,13 +146,13 @@ export default function BackOfficeEventsPage() {
                     <img src={Logo} alt="Logo Orizon" />
                     <div>
                         <Link to="/users">Utilisateurs</Link>
-                        <Link to="/evenements">Evènements</Link>
+                        <Link to="/evenements">Événements</Link>
                     </div>
                 </div>
                 <div className="rightContainer">
                     <div className="headRightContainer">
                         <h1>TABLEAU DE BORD - Événements</h1>
-                        <button>Deconnexion</button>
+                        <button onClick={handleLogout}>Deconnexion</button>
                     </div>
                     <div id="elmFilter">
                         <form>
@@ -133,17 +168,16 @@ export default function BackOfficeEventsPage() {
                                 />
                             </div>
                             <div className="filterStatus">
-                                <label htmlFor="status">Recherche par status</label>
+                                <label htmlFor="status">Recherche par statut</label>
                                 <select
                                     id="status"
                                     value={searchStatus}
                                     onChange={(e) => setSearchStatus(e.target.value)}
                                 >
-                                    <option value="">-- status --</option>
+                                    <option value="">-- Tous --</option>
                                     <option value="en_attente">En attente</option>
                                     <option value="valide">Valide</option>
                                     <option value="bloqué">Bloqué</option>
-                                    <option value="désactivé">Désactivé</option>
                                 </select>
                             </div>
                         </form>
@@ -158,35 +192,41 @@ export default function BackOfficeEventsPage() {
                                     <th scope="col">id</th>
                                     <th scope="col">Titre</th>
                                     <th scope="col">Description</th>
-                                    <th scope="col">Date</th>
-                                    <th scope="col">Lieu</th>
-                                    <th scope="col">Status</th>
-                                    <th scope="col">Créé le</th>
-                                    <th scope="col">Mis à jour le</th>
-                                    <th scope="col">Valider/Bloquer</th>
+                                    <th scope="col">Début</th>
+                                    <th scope="col">Fin</th>
+                                    <th scope="col">Adresse</th>
+                                    <th scope="col">Code_postale</th>
+                                    <th scope="col">Ville</th>
+                                    <th scope="col">Statut</th>
+                                    <th scope="col">Crée_le</th>
+                                    <th scope="col">Modifié_le</th>
+                                    <th scope="col">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {filteredEvents.map((event) => (
                                     <tr key={event.id}>
                                         <td className="primaryKey">{event.id}</td>
-                                        <td>{event.title}</td>
+                                        <td>{event.name}</td>
                                         <td>{event.description}</td>
-                                        <td>{event.date}</td>
-                                        <td>{event.location}</td>
-                                        <td>{event.status}</td>
-                                        <td>{event.created_at}</td>
-                                        <td>{event.updated_at}</td>
+                                        <td>{format(event.start_date, "d MMMM yyyy ", { locale: fr })}</td>
+                                        <td>{format(event.end_date, "d MMMM yyyy ", { locale: fr })}</td>
+                                        <td>{event.address}</td>
+                                        <td>{event.zip_code}</td>
+                                        <td>{event.city}</td>
+                                        <td>{selectedStatusEvents[event.id] || event.status}</td>
+                                        <td>{format(event.created_at, "d MMMM yyyy 'à' HH'h'mm", { locale: fr })}</td>
+                                        <td>{format(event.updated_at, "d MMMM yyyy 'à' HH'h'mm", { locale: fr })}</td>
                                         <td>
                                             <div className="modoBtn">
                                                 <button
-                                                    className={`validateStatus btnValid ${selectedStatus[event.id] === "valide" ? "active" : ""}`}
+                                                    className={`validateStatus btnValid ${selectedStatusEvents[event.id] === "valide" ? "active" : ""}`}
                                                     onClick={() => handleClick(event.id, "valide")}
                                                 >
                                                     Valider
                                                 </button>
                                                 <button
-                                                    className={`blockedStatus btnBlock ${selectedStatus[event.id] === "bloqué" ? "active" : ""}`}
+                                                    className={`blockedStatus btnBlock ${selectedStatusEvents[event.id] === "bloqué" ? "active" : ""}`}
                                                     onClick={() => handleClick(event.id, "bloqué")}
                                                 >
                                                     Bloquer
