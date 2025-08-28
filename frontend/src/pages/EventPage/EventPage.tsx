@@ -7,6 +7,7 @@ import CardEvent from '../../components/CardEvent/CardEvent.tsx';
 import './EventPage.scss';
 
 import type { Event } from '../../types/index.d.ts';
+import { useNavigate } from 'react-router';
 
 // type Event = {
 //     id: number,
@@ -41,6 +42,13 @@ export default function EventPage() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null)
     
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!token) {
+            navigate('/connexion');
+        };
+    }, [token, navigate]);
 
     // Appel de l'API avec async/await
     useEffect(() => {
