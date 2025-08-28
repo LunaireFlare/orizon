@@ -13,13 +13,7 @@ eventRouter.route('/events')
 eventRouter.route('/events/:id')
     .get(authMiddleware, eventController.getOneEvent)
     .patch(authMiddleware, eventController.updateEvent)
-    .delete(authMiddleware, eventController.deleteEvent)
-    .patch(
-        authMiddleware,
-        authorizeRoles(["modo", "admin"]),
-        eventController.updateStatus
-      );
-
+    .delete(authMiddleware, eventController.deleteEvent);
 
 eventRouter.route('/events/:event_id/users/:user_id')
     .post(authMiddleware, eventController.associateEventToParticipant)

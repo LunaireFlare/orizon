@@ -10,6 +10,13 @@ const userController = {
    * @param res
    */
   async getAllUsers(req: Request, res: Response) {
+
+    const requestor_id = req.user.id;
+
+    if (!requestor_id) {
+                return res.status(401).json({ error: 'Accès non autorisé. Veuillez vous connecter' });
+    };
+
     const users = await User.findAll({
       include: [
         {
@@ -34,6 +41,12 @@ const userController = {
    */
   async getOneUser(req: Request, res: Response) {
     const id = parseInt(req.params.id);
+
+    const requestor_id = req.user.id;
+
+    if (!requestor_id) {
+                return res.status(401).json({ error: 'Accès non autorisé. Veuillez vous connecter' });
+    };
 
     const user = await User.findByPk(id, {
       include: [
@@ -114,6 +127,12 @@ const userController = {
    * @param res
    */
   async updateUser(req: Request, res: Response) {
+    const requestor_id = req.user.id;
+
+    if (!requestor_id) {
+        return res.status(401).json({ error: 'Accès non autorisé. Veuillez vous connecter' });
+    };
+    
     const id = parseInt(req.params.id);
     const body = req.body;
     const user = await User.findByPk(id);
@@ -254,38 +273,39 @@ const userController = {
 
     res.status(200).json({ message: "Intérêt supprimé avec succès" });
   },
-  async updateStatus(req: Request, res: Response) {
-    const userId = Number(req.params.id);
-    const { status } = req.body;
 
-    const validStatuses = ["en_attente", "valide", "bloqué", "désactivé"];
+  // async updateStatus(req: Request, res: Response) {
+  //   const userId = Number(req.params.id);
+  //   const { status } = req.body;
 
-    if (typeof status !== "string" || !validStatuses.includes(status)) {
-      return res.status(400).json({
-        error: `Statut invalide. Utilisez l'un des suivants : ${validStatuses.join(
-          ", "
-        )}.`,
-      });
-    }
+  //   const validStatuses = ["en_attente", "valide", "bloqué", "désactivé"];
 
-    try {
-      const user = await User.findByPk(userId);
+  //   if (typeof status !== "string" || !validStatuses.includes(status)) {
+  //     return res.status(400).json({
+  //       error: `Statut invalide. Utilisez l'un des suivants : ${validStatuses.join(
+  //         ", "
+  //       )}.`,
+  //     });
+  //   }
 
-      if (!user) {
-        return res.status(404).json({ error: "Utilisateur non trouvé." });
-      }
+  //   try {
+  //     const user = await User.findByPk(userId);
 
-      user.status = status;
-      await user.save();
+  //     if (!user) {
+  //       return res.status(404).json({ error: "Utilisateur non trouvé." });
+  //     }
 
-      return res.json({
-        message: `Statut mis à jour en '${status}' pour l'utilisateur ${user.email}.`,
-      });
-    } catch (err) {
-      console.error(err);
-      return res.status(500).json({ error: "Erreur serveur." });
-    }
-  },
+  //     user.status = status;
+  //     await user.save();
+
+  //     return res.json({
+  //       message: `Statut mis à jour en '${status}' pour l'utilisateur ${user.email}.`,
+  //     });
+  //   } catch (err) {
+  //     console.error(err);
+  //     return res.status(500).json({ error: "Erreur serveur." });
+  //   }
+  // },
 };
 
 export { userController };
