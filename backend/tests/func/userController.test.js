@@ -2,8 +2,8 @@ import { describe, it, expect, jest } from '@jest/globals';
 
 // import { Request, Response } from 'express';
 
-import { userController } from '../../src/controllers/user.js';
-import { User } from '../../src/models/User.js';
+// import { userController } from '../../src/controllers/user.js';
+// import { User } from '../../src/models/User.js';
 
 // describe('getAllUsers', () => {
 //     it('should return 200 and list of users', () => {
@@ -26,113 +26,80 @@ import { User } from '../../src/models/User.js';
 //         ]);
 //     });
 // });
+// import { jest } from '@jest/globals';
 
+// 🧨 Mock le module AVANT import des modules utilisant User
+const mockFindAll = jest.fn();
 
-    jest.mock('../../src/models/User.js', () => {
-    return {
-        User: {
-        findAll: jest.fn()
+await jest.unstable_mockModule('../../src/models/User.js', () => ({
+  User: {
+    findAll: mockFindAll,
+  }
+}));
+
+// ✅ Ensuite tu peux importer
+const { User } = await import('../../src/models/User.js');
+const { userController } = await import('../../src/controllers/userController.js');
+
+describe('getAllUsers controller', () => {
+  it('should return users without passwords', async () => {
+    const fakeUsers = [
+      {
+        toJSON: () => ({
+          id: 1,
+          lastname: 'Dupont',
+          firstname: 'Jean',
+          email: 'jean.dupont@example.com',
+          password: 'password',
+          zip_code: '75001',
+          city: 'Paris',
+          date_of_birth: '1920-05-15',
+          role: 'user',
+          photo: '',
+          description: null,
+          status: 'en_attente',
+          created_at: '2025-08-27T01:03:44.248Z',
+          updated_at: '2025-08-27T01:03:44.248Z',
+          interests: [],
+          events: [],
+        }),
+      }
+    ];
+
+    mockFindAll.mockResolvedValue(fakeUsers); // 👈 ici c'est bien la fonction mockée
+
+    const req = {};
+    const res = { json: jest.fn() };
+
+    await userController.getAllUsers(req, res);
+
+    expect(User.findAll).toHaveBeenCalledWith({
+      include: [
+        {
+          association: 'interests',
+          attributes: ['id', 'name'],
         }
-    };
+      ]
     });
 
-    describe('getAllUsers controller', () => {
-    it('should return users without passwords', async () => {
-        const fakeUsers = [
-        {
-            toJSON: () => ({
-            id: 1,
-            lastname: 'Dupont',
-            firstname: 'Jean',
-            email: 'jean.dupont@example.com',
-            password: 'password',
-            zip_code: '75001',
-            city: 'Paris',
-            date_of_birth: '1920-05-15',
-            role: 'user',
-            photo: '',
-            description: null,
-            status: 'en_attente',
-            created_at: '2025-08-27T01:03:44.248Z',
-            updated_at: '2025-08-27T01:03:44.248Z',
-            interests: [],
-            events: [],
-            }),
-        },
-        {
-            toJSON: () => ({
-            id: 2,
-            lastname: 'Martin',
-            firstname: 'Claire',
-            email: 'claire.martin@example.com',
-            password: 'hidden',
-            zip_code: '69000',
-            city: 'Lyon',
-            date_of_birth: '1985-11-30',
-            role: 'user',
-            photo: 'claire.jpg',
-            description: 'Passionnée de musique',
-            status: 'validé',
-            created_at: '2025-08-26T12:00:00.000Z',
-            updated_at: '2025-08-26T12:00:00.000Z',
-            interests: [{ id: 1, name: 'Musique' }],
-            events: [],
-            }),
-        },
-        ];
-
-        User.findAll.mockResolvedValue(fakeUsers);
-
-        const req = {};
-        const json = jest.fn();
-        const res = { json };
-
-        await userController.getAllUsers(req, res);
-
-        expect(User.findAll).toHaveBeenCalledWith({
-        include: [
-            {
-            association: 'interests',
-            attributes: ['id', 'name'],
-            },
-        ],
-        });
-
-        expect(json).toHaveBeenCalledWith([
-        {
-            id: 1,
-            lastname: 'Dupont',
-            firstname: 'Jean',
-            email: 'jean.dupont@example.com',
-            zip_code: '75001',
-            city: 'Paris',
-            date_of_birth: '1920-05-15',
-            role: 'user',
-            photo: '',
-            description: null,
-            status: 'en_attente',
-            created_at: '2025-08-27T01:03:44.248Z',
-            updated_at: '2025-08-27T01:03:44.248Z',
-            interests: [],
-            events: [],
-        },
-        {
-            id: 2,
-            lastname: 'Martin',
-            firstname: 'Claire',
-            email: 'claire.martin@example.com',
-            zip_code: '69000',
-            city: 'Lyon',
-            date_of_birth: '1985-11-30',
-            role: 'user',
-            photo: 'claire.jpg',
-            description: 'Passionnée de musique',
-            status: 'validé',
-            created_at: '2025-08-26T12:00:00.000Z',
-            updated_at: '2025-08-26T12:00:00.000Z',
-            interests: [{ id: 1, name: 'Musique' }],
-            events: [],
-        },
-        ]);
-    });
+    expect(res.json).toHaveBeenCalledWith([
+      {
+        id: 1,
+        lastname: 'Dupont',
+        firstname: 'Jean',
+        email: 'jean.dupont@example.com',
+        zip_code: '75001',
+        city: 'Paris',
+        date_of_birth: '1920-05-15',
+        role: 'user',
+        photo: '',
+        description: null,
+        status: 'en_attente',
+        created_at: '2025-08-27T01:03:44.248Z',
+        updated_at: '2025-08-27T01:03:44.248Z',
+        interests: [],
+        events: [],
+      }
+    ]);
+  });
 });

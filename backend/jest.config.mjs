@@ -78,7 +78,7 @@ export default {
   testMatch: ['**/*.test.js'],
 
   moduleNameMapper: {
-    '^(\\.{1,2}/.*)\\.js$': '$1',
+    '^(\\.{1,2}/.*)\\.ts$': '$1',
   },
 
   transformIgnorePatterns: ['node_modules'],
