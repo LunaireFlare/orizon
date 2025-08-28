@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router';
 
@@ -35,6 +35,12 @@ export default function ProfilPage() {
     const token = localStorage.getItem("token");
 
     const [selectedInterest, setSelectedInterest] = useState<string>(""); 
+
+    useEffect(() => {
+        if (!token) {
+            navigate('/connexion');
+        };
+    }, [token, navigate]);
     
     React.useEffect(() => {
         if (token) {
