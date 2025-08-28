@@ -3,13 +3,14 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import Logo from '../../Assets/images/Logo_OrizonBlanc.png';
 import './BackOfficePage.scss';
+import { format } from 'date-fns';
+import { fr } from 'date-fns/locale';
 
 type UserBdd = {
     id: number;
     lastname: string;
     firstname: string;
     email: string;
-    password: string;
     zip_code: number;
     city: string;
     date_of_birth: string;
@@ -150,21 +151,20 @@ export default function BackOfficePage() {
                             </caption>
                             <thead>
                                 <tr>
-                                    <th>id</th>
-                                    <th>lastname</th>
-                                    <th>firstname</th>
-                                    <th>email</th>
-                                    <th>password</th>
-                                    <th>zip_code</th>
-                                    <th>city</th>
-                                    <th>date_of_birth</th>
-                                    <th>role</th>
-                                    <th>photo</th>
-                                    <th>description</th>
-                                    <th>status</th>
-                                    <th>created_at</th>
-                                    <th>updated_at</th>
-                                    <th>Valider / Bloquer</th>
+                                    <th scope="col">id</th>
+                                    <th scope="col">Nom</th>
+                                    <th scope="col">Prénom</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Code_postale</th>
+                                    <th scope="col">Ville</th>
+                                    <th scope="col">Date_naissance</th>
+                                    <th scope="col">Rôle</th>
+                                    <th scope="col">Photo</th>
+                                    <th scope="col">Description</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Créé le</th>
+                                    <th scope="col">Modifié_le</th>
+                                    <th scope="col">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -174,7 +174,6 @@ export default function BackOfficePage() {
                                         <td>{user.lastname}</td>
                                         <td>{user.firstname}</td>
                                         <td>{user.email}</td>
-                                        <td>{user.password}</td>
                                         <td>{user.zip_code}</td>
                                         <td>{user.city}</td>
                                         <td>{user.date_of_birth}</td>
@@ -182,8 +181,8 @@ export default function BackOfficePage() {
                                         <td>{user.photo}</td>
                                         <td>{user.description}</td>
                                         <td>{user.status}</td>
-                                        <td>{user.created_at}</td>
-                                        <td>{user.updated_at}</td>
+                                        <td>{format(user.created_at, "d MMMM yyyy 'à' HH'h'mm", { locale: fr })}</td>
+                                        <td>{format(user.updated_at, "d MMMM yyyy 'à' HH'h'mm", { locale: fr })}</td>
                                         <td>
                                             <div className="modoBtn">
                                                 <button
