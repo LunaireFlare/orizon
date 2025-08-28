@@ -226,10 +226,12 @@ export default function ProfilPage() {
             } else {
                 const addedInterest = interests.find(i => i.id === selectedInterestEvent);
                 const eventWithInterest = addedInterest ? { ...data, interests: [addedInterest] } : data;
-                setUser(prevUser => prevUser ? {
-                    ...prevUser,
-                    events: [...prevUser.events, eventWithInterest]
-                } : prevUser);
+                if (data.creator_id === user?.id) {
+                    setUser(prevUser => prevUser ? {
+                        ...prevUser,
+                        events: [...prevUser.events, eventWithInterest]
+                    } : prevUser);
+                }
                 setSuccess(true);
                 setActiveModal(null);
                 setFormDataEvent({
@@ -278,6 +280,41 @@ export default function ProfilPage() {
             setError('Erreur réseau ou serveur.');
         }
     }
+
+    const handleEventDelete = (eventId: number) => {
+        if (!user) return;
+        setUser({
+            ...user,
+            events: user.events.filter(event => event.id !== eventId)
+        });
+    };
+
+    const handleSubscribe = (eventId: number) => {
+        if (!user) return;
+        setUser({
+            ...user,
+            events: user.events.map(event =>
+                event.id === eventId
+                    ? {
+                        ...event,
+                        users: [...event.users, { id: user.id, firstname: user.firstname, lastname: user.lastname } as User]
+                    }
+                    : event
+            )
+        });
+    };
+
+    const handleUnsubscribe = (eventId: number) => {
+        if (!user) return;
+        setUser({
+            ...user,
+            events: user.events.map(event =>
+                event.id === eventId
+                    ? { ...event, users: event.users.filter(u => u.id !== user.id) }
+                    : event
+            )
+        });
+    };
 
     return (
         <div id="fullContainerProfil">
@@ -354,7 +391,7 @@ export default function ProfilPage() {
                 <div id="containerCards">
                     {user.events
                         ?.filter(event => event.creator_id === user.id)
-                        .map(event => <CardEvent key={event.id} event={event} />)
+                        .map(event => <CardEvent key={event.id} event={event} onDelete={handleEventDelete} onSubscribe={handleSubscribe} onUnsubscribe={handleUnsubscribe} />)
                     }
                 </div>
             </div>
@@ -368,7 +405,7 @@ export default function ProfilPage() {
                     {user.events && user.events
                         .filter((event) => new Date(event.end_date) >= new Date())
                         .map((event) => (
-                            <CardEvent key={event.id} event={event} />
+                            <CardEvent key={event.id} event={event} onDelete={handleEventDelete} onSubscribe={handleSubscribe} onUnsubscribe={handleUnsubscribe} />
                         ))}
                 </div>
             </div>
@@ -378,7 +415,7 @@ export default function ProfilPage() {
                 <div id="containerCards">
                     {user.events
                         ?.filter(event => new Date(event.end_date) < new Date())
-                        .map(event => <CardEvent key={event.id} event={event} />)
+                        .map(event => <CardEvent key={event.id} event={event} onDelete={handleEventDelete} onSubscribe={handleSubscribe} onUnsubscribe={handleUnsubscribe} />)
                     }
                 </div>
             </div>
@@ -486,7 +523,6 @@ export default function ProfilPage() {
             </Modal>
 
             <Modal isOpen={activeModal === 'modifyAccount'} onClose={() => setActiveModal(null)}>
-
                 <form onSubmit={handleSubmit} className="eventForm">
                     <label htmlFor="lastname">Nom</label>
                     <input
