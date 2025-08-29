@@ -56,7 +56,7 @@ export default function Rooftop() {
                         </div>
                     </div>
                 </>
-            )};
+            )}
 
             {token && (
                 <>

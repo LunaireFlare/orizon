@@ -149,7 +149,7 @@ export default function CardEvent({ event, onDelete, onSubscribe, onUnsubscribe 
 
             onSubscribe?.(event.id);
 
-            alert('Vous êtes bien inscrit à l\'évènement.');
+            setInfo('Vous êtes bien inscrit à l\'évènement.');
 
         } catch (error) {
             setError('Erreur lors du chargement des données.');
@@ -193,7 +193,7 @@ export default function CardEvent({ event, onDelete, onSubscribe, onUnsubscribe 
             );
 
             onUnsubscribe?.(event.id);
-            alert('Vous êtes bien désinscrit de l\'évènement.');
+            setInfo('Vous êtes bien désinscrit de l\'évènement.');
 
         } catch (error) {
             setError('Erreur lors du chargement des données.');
