@@ -37,22 +37,22 @@ export default function ProfilPage() {
         address: "",
         zip_code: "",
         city: "",
-        interests:[]
+        interests: []
     });
     const navigate = useNavigate();
 
     const [currentUser, setCurrentUser] = React.useState<{ id: number } | null>(null);
     const token = localStorage.getItem("token");
 
-    const [selectedInterest, setSelectedInterest] = useState<string>(""); 
-     const [selectedInterestEvent, setSelectedInterestEvent] = useState<number>(); 
+    const [selectedInterest, setSelectedInterest] = useState<string>("");
+    const [selectedInterestEvent, setSelectedInterestEvent] = useState<number>();
 
-  useEffect(() => {
+    useEffect(() => {
         if (!token) {
             navigate('/connexion');
         };
     }, [token, navigate]);
-    
+
     React.useEffect(() => {
         if (token) {
             const payload = JSON.parse(atob(token.split('.')[1]));
@@ -68,28 +68,59 @@ export default function ProfilPage() {
     const { id } = useParams();
 
     React.useEffect(() => {
-        fetch(`http://backend.localhost:81/users/${id}`)
-            .then((res) => res.json())
-            .then((data: User) => {
-                const forbiddenStatus = ["bloqué", "désactivé", undefined]
+        const fetchUser = async () => {
+            try {
+                const response = await fetch(`http://backend.localhost:81/users/${id}`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${localStorage.getItem('token')}`,
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Erreur API: ${response.status} ${response.statusText}`);
+                }
+
+                const data: User = await response.json();
+
+                const forbiddenStatus = ["bloqué", "désactivé", undefined];
                 if (forbiddenStatus.includes(data.status)) {
                     navigate("/404", { replace: true });
                 } else {
                     setUser(data);
                 }
-            })
-            .catch((err) => console.error("Erreur API:", err));
+            } catch (err) {
+                console.error("Erreur API:", err);
+            }
+        };
 
-    }, [id]);
+        fetchUser();
+    }, [id, navigate]);
 
     React.useEffect(() => {
-        fetch('http://backend.localhost:81/interests')
-            .then((res) => res.json())
-            .then((data: Interest[]) => {
+        const fetchInterests = async () => {
+            try {
+                const response = await fetch(`http://backend.localhost:81/interests`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${localStorage.getItem('token')}`,
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Erreur API: ${response.status} ${response.statusText}`);
+                }
+
+                const data: Interest[] = await response.json();
                 setInterests(data);
-            })
-            .catch((err) => console.error("Erreur API:", err));
+            } catch (err) {
+                console.error("Erreur API:", err);
+            }
+        };
+
+        fetchInterests();
     }, [id]);
+
 
     const [_success, setSuccess] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -166,7 +197,7 @@ export default function ProfilPage() {
         return <p>Chargement en cours…</p>;
     }
 
-    const handleChangeEvent = (e: React.ChangeEvent<HTMLInputElement  | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const handleChangeEvent = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         console.log(formDataEvent);
 
         if (!formDataEvent) return;
@@ -218,9 +249,9 @@ export default function ProfilPage() {
         }
     };
 
-    const handleSubmitNewEvent =  async (e: React.FormEvent) => {
+    const handleSubmitNewEvent = async (e: React.FormEvent) => {
         e.preventDefault();
-        
+
         if (!formDataEvent) return;
         setError(null);
         setLoading(true);
@@ -232,7 +263,7 @@ export default function ProfilPage() {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify({ ...formDataEvent, creator_id: user.id, photo: undefined , interests: undefined, creator:undefined }),
+                body: JSON.stringify({ ...formDataEvent, creator_id: user.id, photo: undefined, interests: undefined, creator: undefined }),
             });
             const data = await response.json();
             const response2 = await fetch(`http://backend.localhost:81/events/${data.id}/interests/${selectedInterestEvent}`, {
@@ -241,32 +272,32 @@ export default function ProfilPage() {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify({event_id:data.id, interest_id:selectedInterestEvent }),
+                body: JSON.stringify({ event_id: data.id, interest_id: selectedInterestEvent }),
             });
-            
+
             await response2.json();
-            
+
             if (!response.ok && !response2.ok) {
                 setError(data.error || "Erreur lors de la modification.");
             } else {
                 const addedInterest = interests.find(i => i.id === selectedInterestEvent);
                 const eventWithInterest = addedInterest ? { ...data, interests: [addedInterest] } : data;
-                setUser(prevUser => prevUser ? { 
-                ...prevUser, 
-                events: [...prevUser.events,  eventWithInterest] 
-            } : prevUser);
+                setUser(prevUser => prevUser ? {
+                    ...prevUser,
+                    events: [...prevUser.events, eventWithInterest]
+                } : prevUser);
                 setSuccess(true);
                 setActiveModal(null);
                 setFormDataEvent({
-                name: "",
-                start_date: "",
-                end_date: "",
-                description: "",
-                address: "",
-                zip_code: "",
-                city: "",
-                interests: []
-            });
+                    name: "",
+                    start_date: "",
+                    end_date: "",
+                    description: "",
+                    address: "",
+                    zip_code: "",
+                    city: "",
+                    interests: []
+                });
             }
         } catch (err) {
             console.error("Erreur lors de la création de l'évènement :", err);
@@ -431,9 +462,9 @@ export default function ProfilPage() {
                             id="interet"
 
                             value={selectedInterestEvent}
-                            onChange={(e) => {setSelectedInterestEvent(Number(e.target.value)); handleChangeEvent(e)}}
+                            onChange={(e) => { setSelectedInterestEvent(Number(e.target.value)); handleChangeEvent(e) }}
                             required
-                            >
+                        >
 
                             <option value="">-- Choisissez un centre d'intérêt --</option>
                             {interests?.map((interest) => (
