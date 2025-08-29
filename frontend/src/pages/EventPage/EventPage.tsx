@@ -32,7 +32,7 @@ export default function EventPage() {
     const [loading, setLoading] = useState(false);
 
     const [error, setError] = useState<string | null>(null)
-    
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -197,7 +197,7 @@ export default function EventPage() {
                     <p>Aucun évènement trouvé.</p>
                 )}
                 {filteredEvents.map((event) => (
-                    <CardEvent key={event.id} event={event}  />
+                    <CardEvent key={event.id} event={event} />
                 ))}
             </div>
 
