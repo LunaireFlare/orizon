@@ -1,16 +1,35 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
+
+import type { Interest } from '../../types/index.d.ts';
 
 type InterestSelectProps = {
   value: string;
   onChange: (value: string) => void;
-  interests?: string[];
 };
 
-export default function InterestSelect({ value, onChange, interests }: InterestSelectProps) {
+export default function InterestSelect({ value, onChange }: InterestSelectProps) {
 
-  const defaultInterests = ['Sport', 'Musique', 'Voyage', 'Cuisine'];
+  const token = localStorage.getItem('token');
+  const [ interests, setInterests ] = useState<Interest[]>([]);
 
-  const list = interests && interests.length > 0 ? interests : defaultInterests;
+  useEffect(() => {
+    async function fetchInterests() {
+      try {
+        const res = await fetch('http://backend.localhost:81/interests', {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        if (!res.ok) {
+            throw new Error('Erreur lors du chargement des données.');
+        }
+        const data = await res.json();
+        setInterests(data);
+      } catch (error) {
+          console.log('Erreur lors du chargement des données.');
+      }            }
+            fetchInterests();
+  }, [token]);
 
   return (
     <div>
@@ -21,9 +40,9 @@ export default function InterestSelect({ value, onChange, interests }: InterestS
         onChange={(e) => onChange(e.target.value)}
       >
         <option value="">-- Choisissez un centre d'intérêt --</option>
-        {list.map((interest) => (
-          <option key={interest.toLowerCase()} value={interest.toLowerCase()}>
-            {interest}
+        {interests.map((interest) => (
+          <option key={interest.id} value={interest.name}>
+            {interest.name}
           </option>
         ))}
       </select>
