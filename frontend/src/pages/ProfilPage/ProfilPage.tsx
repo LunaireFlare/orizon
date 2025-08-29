@@ -40,8 +40,10 @@ export default function ProfilPage() {
         };
     }, [token, navigate]);
 
+
     React.useEffect(() => {
         if (token) {
+            //Décode le token
             const payload = JSON.parse(atob(token.split('.')[1]));
             setCurrentUser({ id: payload.id });
         }
@@ -80,7 +82,6 @@ export default function ProfilPage() {
         };
         fetchData();
     }, [id]);
-
 
     const handleAddInterest = async () => {
         if (!selectedInterest) return;

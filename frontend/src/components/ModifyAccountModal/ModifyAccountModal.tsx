@@ -5,6 +5,8 @@ import { fetchApi } from '../../utils/api.js';
 import React from 'react';
 import { useParams } from 'react-router';
 
+import './ModifyAccountModal.scss';
+
 interface ModifyAccountModalProps {
     isOpen: boolean;
     onClose: () => void;
@@ -29,7 +31,7 @@ export default function ModifyAccountModal({
 
     const token = localStorage.getItem("token");
     const { id } = useParams();
-    
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!formData) return;
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -77,7 +79,7 @@ export default function ModifyAccountModal({
         }
     };
     return (<Modal isOpen={isOpen} onClose={onClose}>
-        <form onSubmit={handleSubmit} className="eventForm">
+        <form onSubmit={handleSubmit} className="modifyAccountForm">
             <label htmlFor="lastname">Nom</label>
             <input
                 type="text"
