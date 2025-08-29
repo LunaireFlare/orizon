@@ -356,7 +356,7 @@ export default function ProfilPage() {
             <div id="eventsCreated">
                 <div className="eventOptions">
                     <h2>Les évènements créés par moi</h2>
-                    <button className="pathButton" onClick={() => setActiveModal('createEvent')}>Créer un évènement</button>
+                    {currentUser?.id === user.id && (<button className="pathButton" onClick={() => setActiveModal('createEvent')}>Créer un évènement</button>)}
                 </div>
                 <div id="containerCards">
                     {user.events
