@@ -16,10 +16,9 @@ const interestImages: Record<string, string> = {
 
 interface CardEventProps {
     event: Event;
-    onEventUpdated?: (event: Event) => void;
 };
 
-export default function CardEvent({ event, onEventUpdated }: CardEventProps) {
+export default function CardEvent({ event }: CardEventProps) {
 
     const [isModalOpen, setModalOpen] = useState<boolean>(false);
     const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
@@ -49,10 +48,11 @@ export default function CardEvent({ event, onEventUpdated }: CardEventProps) {
         interestId: ""
     });
 
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
+    const [_loading, setLoading] = useState(false);
+    const [_error, setError] = useState<string | null>(null);
 
     const [currentUser, setCurrentUser] = useState<{ id: number } | null>(null);
+    const [info, setInfo] = useState<string | null>(null);
 
     const token = localStorage.getItem('token');
 
@@ -91,7 +91,8 @@ export default function CardEvent({ event, onEventUpdated }: CardEventProps) {
         fetchEvent();
     }, [token, event.id]);
 
-    async function handleDelete() {
+    async function handleDelete(e: React.FormEvent) {
+        e.preventDefault();
         if (!token) {
             alert('Vous devez être connecté');
             return;
@@ -119,8 +120,8 @@ export default function CardEvent({ event, onEventUpdated }: CardEventProps) {
 
             setSelectedEvent(null);
             setModalOpen(false);
-            if (onEventUpdated) onEventUpdated(updatedEvent);
 
+            // TODO: fonctionnel mais ne disparaît pas immédiatement, pour l'instant faut rafraîchir page manuellement
 
         } catch (error) {
             setError('Erreur lors du chargement des données.');
@@ -136,7 +137,6 @@ export default function CardEvent({ event, onEventUpdated }: CardEventProps) {
         try {
             if (selectedEvent?.users.some(user => user.id === currentUser?.id)) {
                 alert('Vous êtes déjà inscrit(e) à cet évènement.');
-                return;
             };
 
             const res = await fetch(`http://backend.localhost:81/events/${selectedEvent?.id}/users/${currentUser?.id}`, {
@@ -151,6 +151,7 @@ export default function CardEvent({ event, onEventUpdated }: CardEventProps) {
                 throw new Error('Erreur lors du chargement des données.');
             };
 
+            // TODO: afficher nom de l'inscrit immédiatement (pour l'instant faut rechargement manuel de page pour le voir)
             alert('Vous êtes bien inscrit à l\'évènement.');
             if (onEventUpdated) onEventUpdated(updatedEvent);
             // Mettre à jour localement la liste users si besoin (pas fait ici)
@@ -170,7 +171,8 @@ export default function CardEvent({ event, onEventUpdated }: CardEventProps) {
 
         try {
             if (!selectedEvent?.users.some(user => user.id === currentUser?.id)) {
-                alert('Vous n\'êtes pas inscrit(e) à cet évènement.');
+                setInfo('Vous n\'êtes pas inscrit(e) à cet évènement.');
+                setTimeout(() => setInfo(null), 3000);
                 return;
             };
 
@@ -186,6 +188,7 @@ export default function CardEvent({ event, onEventUpdated }: CardEventProps) {
                 throw new Error('Erreur lors de la désinscription. Veuillez réessayer.');
             };
 
+            // TODO: afficher nom de l'inscrit immédiatement (pour l'instant faut rechargement manuel de page pour le voir)
             alert('Vous êtes bien désinscrit de l\'évènement.');
             if (onEventUpdated) onEventUpdated(updatedEvent);
 
@@ -318,7 +321,6 @@ export default function CardEvent({ event, onEventUpdated }: CardEventProps) {
                 </div>
             </div>
 
-            {/* Modale détails event */}
             <Modal
                 isOpen={isModalOpen}
                 onClose={() => { setModalOpen(false) }}
@@ -330,7 +332,7 @@ export default function CardEvent({ event, onEventUpdated }: CardEventProps) {
 
                                 <div id='mdlSection1'>
 
-                                    <img src={interestImages[selectedEvent.interests[0]?.name]} alt='photo evenement' />
+                                    <img src={interestImages[event.interests[0]?.name]} alt='photo evenement' />
                                     <h3>{selectedEvent.name}</h3>
                                     <p>Début: {format(selectedEvent.start_date, "d MMMM yyyy 'à' HH'h'mm", { locale: fr })}</p>
                                     <p>Fin: {format(selectedEvent.end_date, "d MMMM yyyy 'à' HH'h'mm", { locale: fr })}</p>
@@ -343,7 +345,7 @@ export default function CardEvent({ event, onEventUpdated }: CardEventProps) {
                                     <div className='btnEventOptions'>
                                         {currentUser?.id === selectedEvent.creator_id ? (
                                             <>
-                                                <button onClick={() => openEditModal(event.id)} className='btnUpdate'>Modifier</button>
+                                                <button className='btnUpdate'>Modifier</button>
                                                 <button className='btnDelete' onClick={handleDelete}>Supprimer</button>
                                             </>
                                         ) : (
@@ -372,96 +374,6 @@ export default function CardEvent({ event, onEventUpdated }: CardEventProps) {
 
                 </div>
             </Modal>
-
-            {/* Modale édition d'évènement */}
-            <Modal
-                isOpen={isEditModalOpen}
-                onClose={() => setEditModalOpen(false)}
-            >
-                <div id="editEventModal">
-                    <h2>Modifier l'évènement</h2>
-
-                    <form onSubmit={handleSubmitEditEvent} className="editEventForm">
-                        <label htmlFor="name">Nom de l'évènement</label>
-                        <input
-                            type="text"
-                            name="name"
-                            value={formDataEditEvent.name}
-                            onChange={handleChangeEditEvent}
-                            required
-                        />
-
-                        <label htmlFor="start_date">Date de début</label>
-                        <input
-                            type="datetime-local"
-                            name="start_date"
-                            value={formDataEditEvent.start_date.slice(0, 16)}
-                            onChange={handleChangeEditEvent}
-                            required
-                        />
-
-                        <label htmlFor="end_date">Date de fin</label>
-                        <input
-                            type="datetime-local"
-                            name="end_date"
-                            value={formDataEditEvent.end_date.slice(0, 16)}
-                            onChange={handleChangeEditEvent}
-                            required
-                        />
-
-                        <label htmlFor="description">Description</label>
-                        <textarea
-                            name="description"
-                            value={formDataEditEvent.description}
-                            onChange={handleChangeEditEvent}
-                            required
-                        />
-
-                        <label htmlFor="address">Adresse</label>
-                        <input
-                            type="text"
-                            name="address"
-                            value={formDataEditEvent.address}
-                            onChange={handleChangeEditEvent}
-                            required
-                        />
-
-                        <div className="eventDetails">
-                            <div>
-                                <label htmlFor="zip_code">Code postal</label>
-                                <input
-                                    type="text"
-                                    name="zip_code"
-                                    value={formDataEditEvent.zip_code}
-                                    onChange={handleChangeEditEvent}
-                                    required
-                                />
-                            </div>
-
-                            <div>
-                                <label htmlFor="city">Ville</label>
-                                <input
-                                    type="text"
-                                    name="city"
-                                    value={formDataEditEvent.city}
-                                    onChange={handleChangeEditEvent}
-                                    required
-                                />
-                            </div>
-                        </div>
-
-                        {/* Tu peux ajouter ici un <select> pour modifier l’intérêt si besoin */}
-
-                        {error && <p className="error">{error}</p>}
-
-                        <button type="submit" disabled={loading}>
-                            {loading ? 'Modification...' : 'Modifier'}
-                        </button>
-                    </form>
-                </div>
-            </Modal>
-
-
         </div>
     )
 };
