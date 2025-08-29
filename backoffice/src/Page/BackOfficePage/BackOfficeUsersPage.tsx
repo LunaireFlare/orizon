@@ -34,6 +34,15 @@ export default function BackOfficePage() {
         navigate('/');
     };
 
+    /* Sauvegarder a chaque modification dans le localStorage */
+    useEffect(() => {
+        const savedStatus = localStorage.getItem("selectedStatus");
+        if (savedStatus) {
+            setSearchStatus(JSON.parse(savedStatus));
+        }
+    }, []);
+
+
     // Récupère les utilisateurs depuis l'API
     const fetchUsers = async () => {
         try {
