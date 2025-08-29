@@ -10,6 +10,13 @@ const userController = {
    * @param res
    */
   async getAllUsers(req: Request, res: Response) {
+
+    const requestor_id = req.user.id;
+
+    if (!requestor_id) {
+                return res.status(401).json({ error: 'Accès non autorisé. Veuillez vous connecter' });
+    };
+
     const users = await User.findAll({
       include: [
         {
@@ -34,6 +41,12 @@ const userController = {
    */
   async getOneUser(req: Request, res: Response) {
     const id = parseInt(req.params.id);
+
+    const requestor_id = req.user.id;
+
+    if (!requestor_id) {
+                return res.status(401).json({ error: 'Accès non autorisé. Veuillez vous connecter' });
+    };
 
     const user = await User.findByPk(id, {
       include: [
@@ -114,6 +127,12 @@ const userController = {
    * @param res
    */
   async updateUser(req: Request, res: Response) {
+    const requestor_id = req.user.id;
+
+    if (!requestor_id) {
+        return res.status(401).json({ error: 'Accès non autorisé. Veuillez vous connecter' });
+    };
+    
     const id = parseInt(req.params.id);
     const body = req.body;
     const user = await User.findByPk(id);

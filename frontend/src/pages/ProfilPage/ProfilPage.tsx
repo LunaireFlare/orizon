@@ -12,16 +12,9 @@ import './ProfilPage.scss';
 
 import type { User, Interest, Event } from "../../types/index.d.ts"
 
-function getAge(dateOfBirth: Date | string): number {
-    const dob = new Date(dateOfBirth);
-    const today = new Date();
-    let age = today.getFullYear() - dob.getFullYear();
-    const m = today.getMonth() - dob.getMonth();
-    if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
-        age--;
-    }
-    return age;
-}
+import { getAge } from '../../utils/getAge.ts';
+import { fetchApi } from '../../utils/api';
+import { handleEventDelete, handleSubscribe, handleUnsubscribe } from '../../utils/eventHandler.ts';
 
 export default function ProfilPage() {
 
@@ -68,57 +61,30 @@ export default function ProfilPage() {
     const { id } = useParams();
 
     React.useEffect(() => {
-        const fetchUser = async () => {
+        async function fetchData() {
+            setLoading(true);
+            setError(null);
             try {
-                const response = await fetch(`http://backend.localhost:81/users/${id}`, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${localStorage.getItem('token')}`,
-                    },
-                });
+                const [userData, interestsData] = await Promise.all([
+                    fetchApi(`users/${id}`),
+                    fetchApi('interests')
+                ]);
 
-                if (!response.ok) {
-                    throw new Error(`Erreur API: ${response.status} ${response.statusText}`);
-                }
-
-                const data: User = await response.json();
-
-                const forbiddenStatus = ["bloqué", "désactivé", undefined];
-                if (forbiddenStatus.includes(data.status)) {
+                const forbiddenStatus = ["bloqué", "désactivé", undefined]
+                if (forbiddenStatus.includes(userData.status)) {
                     navigate("/404", { replace: true });
                 } else {
-                    setUser(data);
-                }
-            } catch (err) {
-                console.error("Erreur API:", err);
-            }
-        };
-
-        fetchUser();
-    }, [id, navigate]);
-
-    React.useEffect(() => {
-        const fetchInterests = async () => {
-            try {
-                const response = await fetch(`http://backend.localhost:81/interests`, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${localStorage.getItem('token')}`,
-                    },
-                });
-
-                if (!response.ok) {
-                    throw new Error(`Erreur API: ${response.status} ${response.statusText}`);
+                    setUser(userData);
                 }
 
-                const data: Interest[] = await response.json();
-                setInterests(data);
-            } catch (err) {
-                console.error("Erreur API:", err);
+                setInterests(interestsData);
+            } catch (error) {
+                setError('Erreur lors du chargement des données.');
+            } finally {
+                setLoading(false);
             }
         };
-
-        fetchInterests();
+        fetchData();
     }, [id]);
 
 
@@ -135,16 +101,15 @@ export default function ProfilPage() {
         }
 
         try {
-            const response = await fetch(`http://backend.localhost:81/users/${id}/interests`, {
+            const response = await fetchApi(`users/${id}/interests`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
                 },
                 body: JSON.stringify({ interest_id: selectedInterest }),
             });
 
-            if (!response.ok) throw new Error("Erreur lors de l'ajout de l'intérêt");
+            if (!response) throw new Error("Erreur lors de l'ajout de l'intérêt");
 
             const addedInterest = interests.find((i) => i.id === parseInt(selectedInterest));
             if (addedInterest && user) {
@@ -164,15 +129,14 @@ export default function ProfilPage() {
         }
 
         try {
-            const response = await fetch(`http://backend.localhost:81/users/${id}/interests/${interest_id}`, {
+            const response = await fetchApi(`users/${id}/interests/${interest_id}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
                 },
             });
 
-            if (!response.ok) {
+            if (!response) {
                 throw new Error(`Erreur lors de la suppression : ${response.statusText}`);
             }
 
@@ -182,7 +146,6 @@ export default function ProfilPage() {
                     interests: user.interests.filter(i => i.id !== interest_id)
                 });
             }
-
         } catch (err) {
             console.error(err);
         }
@@ -198,8 +161,6 @@ export default function ProfilPage() {
     }
 
     const handleChangeEvent = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-        console.log(formDataEvent);
-
         if (!formDataEvent) return;
         setFormDataEvent({ ...formDataEvent, [e.target.name]: e.target.value });
     };
@@ -223,19 +184,16 @@ export default function ProfilPage() {
 
         try {
             if (!token) throw new Error("Utilisateur non authentifié");
-            const response = await fetch(`http://backend.localhost:81/users/${id}`, {
+            const response = await fetchApi(`users/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify({ ...formData, confirmPassword: undefined }),
             });
 
-            const data = await response.json();
-
-            if (!response.ok) {
-                setError(data.error || "Erreur lors de la modification.");
+            if (!response) {
+                setError(response.error || "Erreur lors de la modification.");
             } else {
                 setSuccess(true);
                 setUser({ ...formData });
@@ -257,35 +215,27 @@ export default function ProfilPage() {
         setLoading(true);
         try {
             if (!token) throw new Error("Utilisateur non authentifié");
-            const response = await fetch(`http://backend.localhost:81/events`, {
+
+            const data = await fetchApi(`events`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify({ ...formDataEvent, creator_id: user.id, photo: undefined, interests: undefined, creator: undefined }),
-            });
-            const data = await response.json();
-            const response2 = await fetch(`http://backend.localhost:81/events/${data.id}/interests/${selectedInterestEvent}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({ event_id: data.id, interest_id: selectedInterestEvent }),
+                body: JSON.stringify({ ...formDataEvent, creator_id: user.id, interest_id: selectedInterestEvent, photo: undefined, interests: undefined, creator: undefined }),
             });
 
-            await response2.json();
-
-            if (!response.ok && !response2.ok) {
+            if (!data) {
+              
                 setError(data.error || "Erreur lors de la modification.");
             } else {
                 const addedInterest = interests.find(i => i.id === selectedInterestEvent);
                 const eventWithInterest = addedInterest ? { ...data, interests: [addedInterest] } : data;
-                setUser(prevUser => prevUser ? {
-                    ...prevUser,
-                    events: [...prevUser.events, eventWithInterest]
-                } : prevUser);
+                if (data.creator_id === user?.id) {
+                    setUser(prevUser => prevUser ? {
+                        ...prevUser,
+                        events: [...prevUser.events, eventWithInterest]
+                    } : prevUser);
+                }
                 setSuccess(true);
                 setActiveModal(null);
                 setFormDataEvent({
@@ -319,7 +269,6 @@ export default function ProfilPage() {
                     'Authorization': `Bearer ${token}`
                 },
             });
-
             if (!response.ok) {
                 throw new Error(`Erreur lors de la suppression : ${response.statusText}`);
             } else {
@@ -336,6 +285,7 @@ export default function ProfilPage() {
         }
     }
 
+    
     return (
         <div id="fullContainerProfil">
             <Rooftop />
@@ -411,7 +361,7 @@ export default function ProfilPage() {
                 <div id="containerCards">
                     {user.events
                         ?.filter(event => event.creator_id === user.id)
-                        .map(event => <CardEvent key={event.id} event={event} />)
+                        .map(event => <CardEvent key={event.id} event={event} onDelete={(eventId) => handleEventDelete(user, setUser, eventId)} onSubscribe={(eventId) => handleSubscribe(user, setUser, eventId)} onUnsubscribe={(eventId) => handleUnsubscribe(user, setUser, eventId)} />)
                     }
                 </div>
             </div>
@@ -425,7 +375,7 @@ export default function ProfilPage() {
                     {user.events && user.events
                         .filter((event) => new Date(event.end_date) >= new Date())
                         .map((event) => (
-                            <CardEvent key={event.id} event={event} />
+                            <CardEvent key={event.id} event={event} onDelete={(eventId) => handleEventDelete(user, setUser, eventId)} onSubscribe={(eventId) => handleSubscribe(user, setUser, eventId)} onUnsubscribe={(eventId) => handleUnsubscribe(user, setUser, eventId)} />
                         ))}
                 </div>
             </div>
@@ -435,7 +385,7 @@ export default function ProfilPage() {
                 <div id="containerCards">
                     {user.events
                         ?.filter(event => new Date(event.end_date) < new Date())
-                        .map(event => <CardEvent key={event.id} event={event} />)
+                        .map(event => <CardEvent key={event.id} event={event} onDelete={(eventId) => handleEventDelete(user, setUser, eventId)} onSubscribe={(eventId) => handleSubscribe(user, setUser, eventId)} onUnsubscribe={(eventId) => handleUnsubscribe(user, setUser, eventId)} />)
                     }
                 </div>
             </div>
@@ -543,7 +493,6 @@ export default function ProfilPage() {
             </Modal>
 
             <Modal isOpen={activeModal === 'modifyAccount'} onClose={() => setActiveModal(null)}>
-
                 <form onSubmit={handleSubmit} className="eventForm">
                     <label htmlFor="lastname">Nom</label>
                     <input

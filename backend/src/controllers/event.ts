@@ -1,5 +1,5 @@
 import { Response, Request } from 'express';
-import { Event, User, Interest } from '../models/associations.js';
+import { sequelize, Event, User, Interest } from '../models/associations.js';
 import { Event_Participant, Event_Interest } from '../models/associations.js';
 import { createEventSchema, updateEventSchema } from '../schemas/event.js';
 
@@ -66,15 +66,15 @@ const eventController = {
                 return res.status(401).json({ error: 'Accès non autorisé. Veuillez vous connecter' });
             }
 
-            const body = req.body;
+            const {name, start_date, end_date, description, address, zip_code, city} = req.body;
 
-            const { error, data } = createEventSchema.safeParse(body);
+            const { error, data } = createEventSchema.safeParse({name, start_date, end_date, description, address, zip_code, city});
 
             if (error) {
                 return res.status(400).json({ error: error.message });
             };
 
-            const { name, start_date, end_date, description, address, zip_code, city } = data;
+            const { interest_id } = req.body;
 
             const eventExists = await Event.findOne({ where: { creator_id, start_date }});
 
@@ -82,12 +82,20 @@ const eventController = {
                 return res.status(400).json({ error: 'Vous avez déjà un évènement qui commence à la même heure ce jour-là.' });
             };
     
-            const createdEvent = await Event.create({ name, start_date, end_date, description, address, zip_code, city, creator_id });
+            const t = await sequelize.transaction();
+            const createdEvent = await Event.create({ name, start_date, end_date, description, address, zip_code, city, creator_id }, {transaction: t});
 
             await Event_Participant.create({ 
                 event_id: createdEvent.id,
                 participant_id: createdEvent.creator_id 
-            });
+            }, {transaction: t});
+
+            await Event_Interest.create({
+                event_id: createdEvent.id,
+                interest_id
+            }, {transaction: t});
+
+            await t.commit();
     
             res.status(201).json(createdEvent);
         },

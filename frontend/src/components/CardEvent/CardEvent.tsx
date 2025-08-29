@@ -1,8 +1,8 @@
-import {useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Modal from './Modal.tsx';
 import type { Event } from '../../types/index.d.ts';
 
-import { format  } from 'date-fns';
+import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 
 import './CardEvent.scss';
@@ -11,22 +11,26 @@ const interestImages: Record<string, string> = {
     Sport: 'https://cdn.pixabay.com/photo/2022/10/23/19/38/womens-football-7541990_1280.jpg',
     Cuisine: 'https://cdn.pixabay.com/photo/2017/12/10/14/47/pizza-3010062_1280.jpg',
     Musique: 'https://cdn.pixabay.com/photo/2016/11/23/15/48/audience-1853662_1280.jpg',
-    Voyage:'https://cdn.pixabay.com/photo/2016/11/23/15/48/audience-1853662_1280.jpg'
+    Voyage: 'https://cdn.pixabay.com/photo/2016/11/23/15/48/audience-1853662_1280.jpg'
 };
 
 interface CardEventProps {
     event: Event;
+    onDelete?: (id: number) => void;
+    onSubscribe?: (id: number) => void;
+    onUnsubscribe?: (id: number) => void;
 };
 
-export default function CardEvent({ event }: CardEventProps) {
+export default function CardEvent({ event, onDelete, onSubscribe, onUnsubscribe }: CardEventProps) {
 
     const [isModalOpen, setModalOpen] = useState<boolean>(false);
     const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
 
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
+    const [_loading, setLoading] = useState(false);
+    const [_error, setError] = useState<string | null>(null);
 
     const [currentUser, setCurrentUser] = useState<{ id: number } | null>(null);
+    const [info, setInfo] = useState<string | null>(null);
 
     const token = localStorage.getItem('token');
 
@@ -43,10 +47,10 @@ export default function CardEvent({ event }: CardEventProps) {
             setLoading(true);
             setError(null);
 
-            try {                
+            try {
                 const res = await fetch(`http://backend.localhost:81/events/${event.id}`, {
                     headers: {
-                    'Authorization': `Bearer ${token}`
+                        'Authorization': `Bearer ${token}`
                     },
                 });
                 if (!res.ok) {
@@ -66,7 +70,8 @@ export default function CardEvent({ event }: CardEventProps) {
         fetchEvent();
     }, [token, event.id]);
 
-    async function handleDelete() {
+    async function handleDelete(e: React.FormEvent) {
+        e.preventDefault();
         if (!token) {
             alert('Vous devez être connecté');
             return;
@@ -89,14 +94,14 @@ export default function CardEvent({ event }: CardEventProps) {
             });
 
             if (!res.ok) {
-            throw new Error('Erreur lors de la suppression de l\'évènement');
-        } 
-                
-        setSelectedEvent(null);
-        setModalOpen(false);
+                throw new Error('Erreur lors de la suppression de l\'évènement');
+            }
 
-        // TODO: fonctionnel mais ne disparaît pas immédiatement, pour l'instant faut rafraîchir page manuellement
-        
+            onDelete?.(event.id);
+
+            setSelectedEvent(null);
+            setModalOpen(false);
+
         } catch (error) {
             setError('Erreur lors du chargement des données.');
         }
@@ -108,11 +113,16 @@ export default function CardEvent({ event }: CardEventProps) {
             return;
         };
 
+        if (selectedEvent?.users.some(user => user.id === currentUser?.id)) {
+            setInfo("Vous êtes déjà inscrit(e) à cet évènement.");
+            setTimeout(() => setInfo(null), 3000);
+            return;
+        };
+
+        setLoading(true);
+        setError(null);
+
         try {
-            if (selectedEvent?.users.some(user => user.id === currentUser?.id)) {
-                alert('Vous êtes déjà inscrit(e) à cet évènement.');
-            };
-            
             const res = await fetch(`http://backend.localhost:81/events/${selectedEvent?.id}/users/${currentUser?.id}`, {
                 method: 'POST',
                 headers: {
@@ -121,17 +131,26 @@ export default function CardEvent({ event }: CardEventProps) {
                 },
             });
 
-            if(!res.ok) {
+            if (!res.ok) {
                 throw new Error('Erreur lors du chargement des données.');
             };
 
-            // TODO: afficher nom de l'inscrit immédiatement (pour l'instant faut rechargement manuel de page pour le voir)
+            if (!selectedEvent) return;
+            const resWithNewParticipant = await fetch(`http://backend.localhost:81/events/${selectedEvent.id}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const updatedEvent = await resWithNewParticipant.json();
+
+            setSelectedEvent(updatedEvent);
+
+            onSubscribe?.(event.id);
+
             alert('Vous êtes bien inscrit à l\'évènement.');
 
         } catch (error) {
-                setError('Erreur lors du chargement des données.');
+            setError('Erreur lors du chargement des données.');
         } finally {
-                setLoading(false);
+            setLoading(false);
         };
     }
 
@@ -143,10 +162,11 @@ export default function CardEvent({ event }: CardEventProps) {
 
         try {
             if (!selectedEvent?.users.some(user => user.id === currentUser?.id)) {
-                alert('Vous n\'êtes pas inscrit(e) à cet évènement.');
+                setInfo('Vous n\'êtes pas inscrit(e) à cet évènement.');
+                setTimeout(() => setInfo(null), 3000);
                 return;
             };
-            
+
             const res = await fetch(`http://backend.localhost:81/events/${selectedEvent?.id}/users/${currentUser?.id}`, {
                 method: 'DELETE',
                 headers: {
@@ -155,23 +175,32 @@ export default function CardEvent({ event }: CardEventProps) {
                 },
             });
 
-            if(!res.ok) {
+            if (!res.ok) {
                 throw new Error('Erreur lors de la désinscription. Veuillez réessayer.');
             };
 
-            // TODO: afficher nom de l'inscrit immédiatement (pour l'instant faut rechargement manuel de page pour le voir)
+            setSelectedEvent(prev =>
+                prev
+                    ? {
+                        ...prev,
+                        users: prev.users.filter(u => u.id !== currentUser?.id)
+                    }
+                    : prev
+            );
+
+            onUnsubscribe?.(event.id);
             alert('Vous êtes bien désinscrit de l\'évènement.');
 
         } catch (error) {
-                setError('Erreur lors du chargement des données.');
+            setError('Erreur lors du chargement des données.');
         } finally {
-                setLoading(false);
+            setLoading(false);
         };
     }
 
     return (
         <div id='containerCard'>
-            
+
             <div className='elmCard'>
                 <div key={event.id}>
                     <a onClick={() => { setModalOpen(true) }}>
@@ -180,69 +209,70 @@ export default function CardEvent({ event }: CardEventProps) {
                     <a onClick={() => { setModalOpen(true) }}>
                         <h3>{event.name}</h3>
                     </a>
-                    <p>Début: {format(event.start_date,"d MMMM yyyy 'à' HH'h'mm", { locale: fr })} </p>
-                    <p>Fin: {format(event.end_date,"d MMMM yyyy 'à' HH'h'mm", { locale: fr })}</p>
+                    <p>Début: {format(event.start_date, "d MMMM yyyy 'à' HH'h'mm", { locale: fr })} </p>
+                    <p>Fin: {format(event.end_date, "d MMMM yyyy 'à' HH'h'mm", { locale: fr })}</p>
                     <p><span>{event.city} ({event.zip_code})</span></p>
                     <p className='eventDescription'>{event.description}</p>
-                    {event.interests.map((interest) => 
+                    {event.interests.map((interest) =>
                         <button key={interest.id} className='interestEvent'>{interest.name}</button>
                     )}
                 </div>
             </div>
-                    
-            <Modal                     
+
+            <Modal
                 isOpen={isModalOpen}
                 onClose={() => { setModalOpen(false) }}
-                >
-                    <div>
-                        {selectedEvent && (
-                            <div className='elmCardModal'>
-                                <div key={selectedEvent.id} id='containerModal'>
+            >
+                <div>
+                    {selectedEvent && (
+                        <div className='elmCardModal'>
+                            <div key={selectedEvent.id} id='containerModal'>
 
-                                    <div id='mdlSection1'>
-                                        
-                                        <img src={interestImages[event.interests[0]?.name]} alt='photo evenement' />
-                                        <h3>{selectedEvent.name}</h3>
-                                        <p>Début: {format(selectedEvent.start_date,"d MMMM yyyy 'à' HH'h'mm", { locale: fr })}</p>
-                                        <p>Fin: {format(selectedEvent.end_date,"d MMMM yyyy 'à' HH'h'mm", { locale: fr })}</p>
-                                        <p>{selectedEvent.city} ({selectedEvent.zip_code})</p>
-                                        <p>{selectedEvent.address}</p>
-                                        <p>Organisateur: {selectedEvent.creator?.firstname} {selectedEvent.creator?.lastname}</p>
-                                        <p>{selectedEvent.description}</p>
-                                        {selectedEvent.interests?.map((interest)=><button key={interest.id} className='interestEvent'>{interest.name}</button>)}
+                                <div id='mdlSection1'>
 
-                                        <div className='btnEventOptions'>
-                                            { currentUser?.id === selectedEvent.creator_id ? (
-                                                <>
-                                                    <button className='btnUpdate'>Modifier</button>
-                                                    <button className='btnDelete' onClick={handleDelete}>Supprimer</button>
-                                                </>
-                                            ):(
-                                                <>
-                                                    <button className='btnSubscribe' onClick={subscribeToEvent}> S'inscrire</button>
-                                                    <button className='btnUnsubscribe' onClick={unsubscribeFromEvent}>Se désinscrire</button>
-                                                </>
-                                            )}
-                                        </div>
+                                    <img src={interestImages[event.interests[0]?.name]} alt='photo evenement' />
+                                    <h3>{selectedEvent.name}</h3>
+                                    <p>Début: {format(selectedEvent.start_date, "d MMMM yyyy 'à' HH'h'mm", { locale: fr })}</p>
+                                    <p>Fin: {format(selectedEvent.end_date, "d MMMM yyyy 'à' HH'h'mm", { locale: fr })}</p>
+                                    <p>{selectedEvent.city} ({selectedEvent.zip_code})</p>
+                                    <p>{selectedEvent.address}</p>
+                                    <p>Organisateur: {selectedEvent.creator?.firstname} {selectedEvent.creator?.lastname}</p>
+                                    <p>{selectedEvent.description}</p>
+                                    {selectedEvent.interests?.map((interest) => <button key={interest.id} className='interestEvent'>{interest.name}</button>)}
+                                    {info && <p className="infoMessage">{info}</p>}
 
-                                    </div>
-
-                                    <div id='mdlSection2'>
-                                        <h3>Liste des participants</h3>
-                                        {selectedEvent.users?.map(user => (
-                                            <div key={user.id}>
-                                            <p>{user.firstname} {user.lastname}</p>
-                                            </div>
-                                        ))}
-
+                                    <div className='btnEventOptions'>
+                                        {currentUser?.id === selectedEvent.creator_id ? (
+                                            <>
+                                                <button className='btnUpdate'>Modifier</button>
+                                                <button className='btnDelete' onClick={handleDelete}>Supprimer</button>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <button className='btnSubscribe' onClick={subscribeToEvent}> S'inscrire</button>
+                                                <button className='btnUnsubscribe' onClick={unsubscribeFromEvent}>Se désinscrire</button>
+                                            </>
+                                        )}
                                     </div>
 
                                 </div>
-                            </div>
-                        )}
 
-                    </div>   
-            </Modal>  
+                                <div id='mdlSection2'>
+                                    <h3>Liste des participants</h3>
+                                    {selectedEvent.users?.map(user => (
+                                        <div key={user.id}>
+                                            <p>{user.firstname} {user.lastname}</p>
+                                        </div>
+                                    ))}
+
+                                </div>
+
+                            </div>
+                        </div>
+                    )}
+
+                </div>
+            </Modal>
         </div>
     )
 };
