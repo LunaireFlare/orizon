@@ -15,7 +15,7 @@ const interestImages: Record<string, string> = {
     'Photographie': 'https://images.pexels.com/photos/212372/pexels-photo-212372.jpeg',
     'Jeux de société': 'https://images.pexels.com/photos/277124/pexels-photo-277124.jpeg',
     'Randonnée': 'https://images.pexels.com/photos/1365425/pexels-photo-1365425.jpeg',
-    'Lecture': 'https://images.pexels.com/photos/346735/pexels-photo-346735.jpeg'
+    'Lecture': 'https://images.pexels.com/photos/3747468/pexels-photo-3747468.jpeg'
 };
 
 interface CardEventProps {
