@@ -55,6 +55,7 @@
 
 .elmCard img {
     cursor: pointer;
+    width: 100%;
 }
 
 #containerModal {
@@ -98,6 +99,12 @@
     margin-top: 0.5rem;
     margin-right: 1rem;
     transition: all 0.3s;
+}
+
+.infoMessage {
+    color:var(--blue-green-sky);
+    font-weight: 600;
+    margin-top: 1rem;
 }
 
 #containerModal .btnDelete,

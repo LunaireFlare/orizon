@@ -74,6 +74,11 @@
     margin-left: 0.5rem;
 }
 
+.headProfil button:hover {
+    transition: .2s ease;
+    background-color: var(--hover-or);
+}
+
 .pathButton {
     padding: 0.6rem 0.8rem;
     font-size: 0.8rem;
@@ -85,6 +90,11 @@
     text-decoration: none;
 }
 
+.pathButton:hover {
+    transition: .2s ease;
+    background-color: var(--hover-or);
+}
+
 .headProfil .delButton {
     padding: 0.6rem 0.8rem;
     font-size: 0.8rem;
@@ -94,6 +104,11 @@
     border: none;
     border-radius: 3rem;
     margin-top: 0.5rem;
+}
+
+.headProfil .delButton:hover {
+    transition: .2s ease;
+    background-color: var(--hover-red);
 }
 
 .bodyProfil {
@@ -157,7 +172,7 @@
 }
 
 .eventOptions {
-    display: flex;
+    display: block;
     flex-direction: row;
     justify-content: space-between;
 }
@@ -165,9 +180,10 @@
 .pathButton {
     font-size: 1rem;
     cursor: pointer;
+    margin-top: 1rem;
 }
 
-.link {
+.eventOptions .link {
     color: #505050; 
 }
 
@@ -355,6 +371,11 @@
 
 #fullContainerProfil #eventsPassed {
     width: 1280px;
+}
+
+
+.eventOptions {
+    display: flex;
 }
 
 }
