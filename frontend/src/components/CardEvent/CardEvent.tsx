@@ -204,7 +204,7 @@ export default function CardEvent({ event, onDelete, onSubscribe, onUnsubscribe 
             <div className='elmCard'>
                 <div key={event.id}>
                     <a onClick={() => { setModalOpen(true) }}>
-                        <img src={interestImages[event.interests[0]?.name]} />
+                        <img src={interestImages[event.interests[0]?.name]} alt="photo de l'évènement"/>
                     </a>
                     <a onClick={() => { setModalOpen(true) }}>
                         <h3>{event.name}</h3>
