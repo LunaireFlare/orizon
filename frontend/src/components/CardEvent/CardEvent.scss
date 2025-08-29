@@ -55,6 +55,7 @@
 
 .elmCard img {
   cursor: pointer;
+  width: 100%;
 }
 
 #containerModal {
@@ -150,83 +151,4 @@
     display: flex;
     justify-content: end;
   }
-}
-
-/* ------------- Edit Event Modal ---------------- */
-
-#editEventModal {
-  width: 100%;
-}
-
-#editEventModal h2 {
-  font-size: 1.8rem;
-  margin-bottom: 0.5rem;
-  color: #0fa3b1;
-  text-align: center;
-}
-
-#editEventModal .editEventForm {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  text-align: left;
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-#editEventModal .editEventForm label {
-  font-size: 1.1rem;
-  color: #000;
-}
-
-#editEventModal .editEventForm input,
-#editEventModal .editEventForm select,
-#editEventModal .editEventForm textarea {
-  width: 100%;
-  font-size: 1rem;
-  padding: 0.8rem;
-  border-radius: 3rem;
-  border: solid 2px #0fa3b1;
-  margin-bottom: 1rem;
-  background-color: #fff;
-}
-
-#editEventModal .editEventForm textarea {
-  min-height: 7rem;
-  resize: vertical;
-  border-radius: 1.6rem;
-}
-
-#editEventModal .editEventForm input::placeholder,
-#editEventModal .editEventForm textarea::placeholder {
-  font-style: italic;
-  color: #999;
-}
-
-#editEventModal .editEventForm input:focus,
-#editEventModal .editEventForm select:focus,
-#editEventModal .editEventForm textarea:focus {
-  border-color: #f0b64a;
-  outline: none;
-}
-
-#editEventModal .editEventForm .eventDetails {
-  display: flex;
-  flex-direction: row;
-  gap: 1rem;
-}
-
-#editEventModal .editEventForm button[type="submit"] {
-  background-color: var(--blue-green-sky);
-  color: #fff;
-  font-size: 1rem;
-  padding: 0.8rem;
-  border-radius: 3rem;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-#editEventModal .editEventForm button[type="submit"]:hover {
-  background-color: #0c8790;
 }

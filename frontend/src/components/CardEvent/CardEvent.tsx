@@ -8,45 +8,27 @@ import { fr } from 'date-fns/locale';
 import './CardEvent.scss';
 
 const interestImages: Record<string, string> = {
-    Sport: 'https://cdn.pixabay.com/photo/2022/10/23/19/38/womens-football-7541990_1280.jpg',
-    Cuisine: 'https://cdn.pixabay.com/photo/2017/12/10/14/47/pizza-3010062_1280.jpg',
-    Musique: 'https://cdn.pixabay.com/photo/2016/11/23/15/48/audience-1853662_1280.jpg',
-    Voyage: 'https://cdn.pixabay.com/photo/2016/11/23/15/48/audience-1853662_1280.jpg'
+    'Sport': 'https://cdn.pixabay.com/photo/2022/10/23/19/38/womens-football-7541990_1280.jpg',
+    'Musique': 'https://cdn.pixabay.com/photo/2016/11/23/15/48/audience-1853662_1280.jpg',
+    'Voyage': 'https://cdn.pixabay.com/photo/2016/11/23/15/48/audience-1853662_1280.jpg',
+    'Cuisine': 'https://cdn.pixabay.com/photo/2017/12/10/14/47/pizza-3010062_1280.jpg',
+    'Photographie': 'https://images.pexels.com/photos/212372/pexels-photo-212372.jpeg',
+    'Jeux de société': 'https://images.pexels.com/photos/277124/pexels-photo-277124.jpeg',
+    'Randonnée': 'https://images.pexels.com/photos/1365425/pexels-photo-1365425.jpeg',
+    'Lecture': 'https://images.pexels.com/photos/3747468/pexels-photo-3747468.jpeg'
 };
 
 interface CardEventProps {
     event: Event;
+    onDelete?: (id: number) => void;
+    onSubscribe?: (id: number) => void;
+    onUnsubscribe?: (id: number) => void;
 };
 
-export default function CardEvent({ event }: CardEventProps) {
+export default function CardEvent({ event, onDelete, onSubscribe, onUnsubscribe }: CardEventProps) {
 
     const [isModalOpen, setModalOpen] = useState<boolean>(false);
     const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
-
-    // Nouvel état pour modale édition
-    const [isEditModalOpen, setEditModalOpen] = useState<boolean>(false);
-
-    // Formulaire modifiable
-    const [formDataEditEvent, setFormDataEditEvent] = useState<{
-        id?: number;
-        name: string;
-        start_date: string;
-        end_date: string;
-        description: string;
-        address: string;
-        zip_code: string;
-        city: string;
-        interestId: number | "";
-    }>({
-        name: "",
-        start_date: "",
-        end_date: "",
-        description: "",
-        address: "",
-        zip_code: "",
-        city: "",
-        interestId: ""
-    });
 
     const [_loading, setLoading] = useState(false);
     const [_error, setError] = useState<string | null>(null);
@@ -65,6 +47,7 @@ export default function CardEvent({ event }: CardEventProps) {
 
     useEffect(() => {
         async function fetchEvent() {
+
             setLoading(true);
             setError(null);
 
@@ -118,10 +101,10 @@ export default function CardEvent({ event }: CardEventProps) {
                 throw new Error('Erreur lors de la suppression de l\'évènement');
             }
 
+            onDelete?.(event.id);
+
             setSelectedEvent(null);
             setModalOpen(false);
-
-            // TODO: fonctionnel mais ne disparaît pas immédiatement, pour l'instant faut rafraîchir page manuellement
 
         } catch (error) {
             setError('Erreur lors du chargement des données.');
@@ -134,11 +117,16 @@ export default function CardEvent({ event }: CardEventProps) {
             return;
         };
 
-        try {
-            if (selectedEvent?.users.some(user => user.id === currentUser?.id)) {
-                alert('Vous êtes déjà inscrit(e) à cet évènement.');
-            };
+        if (selectedEvent?.users.some(user => user.id === currentUser?.id)) {
+            setInfo("Vous êtes déjà inscrit(e) à cet évènement.");
+            setTimeout(() => setInfo(null), 3000);
+            return;
+        };
 
+        setLoading(true);
+        setError(null);
+
+        try {
             const res = await fetch(`http://backend.localhost:81/events/${selectedEvent?.id}/users/${currentUser?.id}`, {
                 method: 'POST',
                 headers: {
@@ -151,10 +139,17 @@ export default function CardEvent({ event }: CardEventProps) {
                 throw new Error('Erreur lors du chargement des données.');
             };
 
-            // TODO: afficher nom de l'inscrit immédiatement (pour l'instant faut rechargement manuel de page pour le voir)
+            if (!selectedEvent) return;
+            const resWithNewParticipant = await fetch(`http://backend.localhost:81/events/${selectedEvent.id}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const updatedEvent = await resWithNewParticipant.json();
+
+            setSelectedEvent(updatedEvent);
+
+            onSubscribe?.(event.id);
+
             alert('Vous êtes bien inscrit à l\'évènement.');
-            if (onEventUpdated) onEventUpdated(updatedEvent);
-            // Mettre à jour localement la liste users si besoin (pas fait ici)
 
         } catch (error) {
             setError('Erreur lors du chargement des données.');
@@ -188,12 +183,17 @@ export default function CardEvent({ event }: CardEventProps) {
                 throw new Error('Erreur lors de la désinscription. Veuillez réessayer.');
             };
 
-            // TODO: afficher nom de l'inscrit immédiatement (pour l'instant faut rechargement manuel de page pour le voir)
+            setSelectedEvent(prev =>
+                prev
+                    ? {
+                        ...prev,
+                        users: prev.users.filter(u => u.id !== currentUser?.id)
+                    }
+                    : prev
+            );
+
+            onUnsubscribe?.(event.id);
             alert('Vous êtes bien désinscrit de l\'évènement.');
-            if (onEventUpdated) onEventUpdated(updatedEvent);
-
-
-            // Mettre à jour localement la liste users si besoin (pas fait ici)
 
         } catch (error) {
             setError('Erreur lors du chargement des données.');
@@ -201,104 +201,6 @@ export default function CardEvent({ event }: CardEventProps) {
             setLoading(false);
         };
     }
-
-    // --- Nouvelle fonction pour ouvrir modale édition avec données préremplies ---
-    async function openEditModal(eventId: number) {
-        if (!token) {
-            alert('Vous devez être connecté');
-            return;
-        }
-        setError(null);
-        setLoading(true);
-        try {
-            const res = await fetch(`http://backend.localhost:81/events/${eventId}`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                },
-            });
-            if (!res.ok) throw new Error('Erreur chargement événement');
-
-            const eventData = await res.json();
-
-            setFormDataEditEvent({
-                id: eventData.id,
-                name: eventData.name || "",
-                start_date: eventData.start_date || "",
-                end_date: eventData.end_date || "",
-                description: eventData.description || "",
-                address: eventData.address || "",
-                zip_code: eventData.zip_code || "",
-                city: eventData.city || "",
-                interestId: eventData.interests && eventData.interests.length > 0 ? eventData.interests[0].id : ""
-            });
-
-            setEditModalOpen(true);
-        } catch (err) {
-            console.error(err);
-            setError('Erreur lors du chargement de l\'évènement.');
-        } finally {
-            setLoading(false);
-        }
-    }
-
-    // Gestion changement formulaire édition
-    function handleChangeEditEvent(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
-        const { name, value } = e.target;
-
-        setFormDataEditEvent(prev => ({
-            ...prev,
-            [name]: name === "interestId" ? Number(value) : value
-        }));
-    }
-
-    // Soumission formulaire édition
-    async function handleSubmitEditEvent(e: React.FormEvent) {
-        e.preventDefault();
-
-        if (!formDataEditEvent.id) return;
-
-        setLoading(true);
-        setError(null);
-
-        try {
-            const res = await fetch(`http://backend.localhost:81/events/${formDataEditEvent.id}`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    name: formDataEditEvent.name,
-                    start_date: formDataEditEvent.start_date,
-                    end_date: formDataEditEvent.end_date,
-                    description: formDataEditEvent.description,
-                    address: formDataEditEvent.address,
-                    zip_code: formDataEditEvent.zip_code,
-                    city: formDataEditEvent.city,
-                }),
-            });
-
-            if (!res.ok) {
-                const errData = await res.json();
-                throw new Error(errData.error || 'Erreur lors de la modification.');
-            }
-
-            const updatedEvent = await res.json();
-
-            // ✅ Met à jour l'event côté parent via callback
-            if (onEventUpdated) onEventUpdated(updatedEvent);
-
-            setSelectedEvent(updatedEvent);
-            setEditModalOpen(false);
-            alert('Évènement modifié avec succès.');
-
-        } catch (err: any) {
-            setError(err.message || 'Erreur lors de la modification.');
-        } finally {
-            setLoading(false);
-        }
-    }
-
 
     return (
         <div id='containerCard'>
@@ -341,6 +243,7 @@ export default function CardEvent({ event }: CardEventProps) {
                                     <p>Organisateur: {selectedEvent.creator?.firstname} {selectedEvent.creator?.lastname}</p>
                                     <p>{selectedEvent.description}</p>
                                     {selectedEvent.interests?.map((interest) => <button key={interest.id} className='interestEvent'>{interest.name}</button>)}
+                                    {info && <p className="infoMessage">{info}</p>}
 
                                     <div className='btnEventOptions'>
                                         {currentUser?.id === selectedEvent.creator_id ? (

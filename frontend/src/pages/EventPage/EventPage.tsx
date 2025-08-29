@@ -82,37 +82,25 @@ export default function EventPage() {
         async function fetchEvents() {
             setLoading(true);
             setError(null);
-
             try {
                 const res = await fetch('http://backend.localhost:81/events', {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
                 });
-
                 if (!res.ok) {
-                    throw new Error('Erreur lors du chargement des évènements.');
+                    throw new Error('Erreur lors du chargement des données.');
                 }
-
-                const data: Event[] = await res.json();
-
-                const forbiddenStatus = ['bloqué', 'en_attente', undefined];
-                const filteredData = data.filter(
-                    (event) => !forbiddenStatus.includes(event.status)
-                );
-
-                setEvents(filteredData);
-
+                const data = await res.json();
+                setEvents(data);
             } catch (error) {
-                setError('Erreur lors du chargement des évènements.');
+                setError('Erreur lors du chargement des données.');
             } finally {
                 setLoading(false);
             }
         }
-
         fetchEvents();
     }, [token]);
-
 
     // Filtrer localement les événements selon ville sélectionnée, mots clés et centre d’intérêt
     const filteredEvents = events.filter((event) => {
@@ -209,7 +197,7 @@ export default function EventPage() {
                     <p>Aucun évènement trouvé.</p>
                 )}
                 {filteredEvents.map((event) => (
-                    <CardEvent key={event.id} event={event}  />
+                    <CardEvent key={event.id} event={event} />
                 ))}
             </div>
 
