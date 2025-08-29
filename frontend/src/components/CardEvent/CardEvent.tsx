@@ -23,9 +23,10 @@ interface CardEventProps {
     onDelete?: (id: number) => void;
     onSubscribe?: (id: number) => void;
     onUnsubscribe?: (id: number) => void;
+    onEventUpdated?: (event: Event) => void;
 };
 
-export default function CardEvent({ event, onDelete, onSubscribe, onUnsubscribe }: CardEventProps) {
+export default function CardEvent({ event, onDelete, onEventUpdated, onSubscribe, onUnsubscribe }: CardEventProps) {
 
     const [isModalOpen, setModalOpen] = useState<boolean>(false);
     const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
@@ -37,6 +38,20 @@ export default function CardEvent({ event, onDelete, onSubscribe, onUnsubscribe 
     const [info, setInfo] = useState<string | null>(null);
 
     const token = localStorage.getItem('token');
+
+    const [formDataEditEvent, setFormDataEditEvent] = useState({
+        id: 0,
+        name: '',
+        start_date: '',
+        end_date: '',
+        description: '',
+        address: '',
+        zip_code: '',
+        city: '',
+        interestId: 0
+    });
+
+    const [isEditModalOpen, setEditModalOpen] = useState(false);
 
     useEffect(() => {
         if (token) {
@@ -202,6 +217,104 @@ export default function CardEvent({ event, onDelete, onSubscribe, onUnsubscribe 
         };
     }
 
+    // --- Nouvelle fonction pour ouvrir modale édition avec données préremplies ---
+    async function openEditModal(eventId: number) {
+        if (!token) {
+            alert('Vous devez être connecté');
+            return;
+        }
+        setError(null);
+        setLoading(true);
+        try {
+            const res = await fetch(`http://backend.localhost:81/events/${eventId}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
+            });
+            if (!res.ok) throw new Error('Erreur chargement événement');
+
+            const eventData = await res.json();
+
+            setFormDataEditEvent({
+                id: eventData.id,
+                name: eventData.name || "",
+                start_date: eventData.start_date || "",
+                end_date: eventData.end_date || "",
+                description: eventData.description || "",
+                address: eventData.address || "",
+                zip_code: eventData.zip_code || "",
+                city: eventData.city || "",
+                interestId: eventData.interests && eventData.interests.length > 0 ? eventData.interests[0].id : ""
+            });
+
+            setEditModalOpen(true);
+        } catch (err) {
+            console.error(err);
+            setError('Erreur lors du chargement de l\'évènement.');
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    // Gestion changement formulaire édition
+    function handleChangeEditEvent(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
+        const { name, value } = e.target;
+
+        setFormDataEditEvent(prev => ({
+            ...prev,
+            [name]: name === "interestId" ? Number(value) : value
+        }));
+    }
+
+    // Soumission formulaire édition
+    async function handleSubmitEditEvent(e: React.FormEvent) {
+        e.preventDefault();
+
+        if (!formDataEditEvent.id) return;
+
+        setLoading(true);
+        setError(null);
+
+        try {
+            const res = await fetch(`http://backend.localhost:81/events/${formDataEditEvent.id}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    name: formDataEditEvent.name,
+                    start_date: formDataEditEvent.start_date,
+                    end_date: formDataEditEvent.end_date,
+                    description: formDataEditEvent.description,
+                    address: formDataEditEvent.address,
+                    zip_code: formDataEditEvent.zip_code,
+                    city: formDataEditEvent.city,
+                }),
+            });
+
+            if (!res.ok) {
+                const errData = await res.json();
+                throw new Error(errData.error || 'Erreur lors de la modification.');
+            }
+
+            const updatedEvent = await res.json();
+
+            // ✅ Met à jour l'event côté parent via callback
+            if (onEventUpdated) onEventUpdated(updatedEvent);
+
+            setSelectedEvent(updatedEvent);
+            setEditModalOpen(false);
+            alert('Évènement modifié avec succès.');
+
+        } catch (err: any) {
+            setError(err.message || 'Erreur lors de la modification.');
+        } finally {
+            setLoading(false);
+        }
+    }
+
+
     return (
         <div id='containerCard'>
 
@@ -248,7 +361,7 @@ export default function CardEvent({ event, onDelete, onSubscribe, onUnsubscribe 
                                     <div className='btnEventOptions'>
                                         {currentUser?.id === selectedEvent.creator_id ? (
                                             <>
-                                                <button className='btnUpdate'>Modifier</button>
+                                                <button className='btnUpdate' onClick={() => openEditModal(event.id)}>Modifier</button>
                                                 <button className='btnDelete' onClick={handleDelete}>Supprimer</button>
                                             </>
                                         ) : (
@@ -277,6 +390,93 @@ export default function CardEvent({ event, onDelete, onSubscribe, onUnsubscribe 
 
                 </div>
             </Modal>
+            <Modal
+                isOpen={isEditModalOpen}
+                onClose={() => setEditModalOpen(false)}
+            >
+                <div id="editEventModal">
+                    <h2>Modifier l'évènement</h2>
+
+                    <form onSubmit={handleSubmitEditEvent} className="editEventForm">
+                        <label htmlFor="name">Nom de l'évènement</label>
+                        <input
+                            type="text"
+                            name="name"
+                            value={formDataEditEvent.name}
+                            onChange={handleChangeEditEvent}
+                            required
+                        />
+
+                        <label htmlFor="start_date">Date de début</label>
+                        <input
+                            type="datetime-local"
+                            name="start_date"
+                            value={formDataEditEvent.start_date.slice(0, 16)}
+                            onChange={handleChangeEditEvent}
+                            required
+                        />
+
+                        <label htmlFor="end_date">Date de fin</label>
+                        <input
+                            type="datetime-local"
+                            name="end_date"
+                            value={formDataEditEvent.end_date.slice(0, 16)}
+                            onChange={handleChangeEditEvent}
+                            required
+                        />
+
+                        <label htmlFor="description">Description</label>
+                        <textarea
+                            name="description"
+                            value={formDataEditEvent.description}
+                            onChange={handleChangeEditEvent}
+                            required
+                        />
+
+                        <label htmlFor="address">Adresse</label>
+                        <input
+                            type="text"
+                            name="address"
+                            value={formDataEditEvent.address}
+                            onChange={handleChangeEditEvent}
+                            required
+                        />
+
+                        <div className="eventDetails">
+                            <div>
+                                <label htmlFor="zip_code">Code postal</label>
+                                <input
+                                    type="text"
+                                    name="zip_code"
+                                    value={formDataEditEvent.zip_code}
+                                    onChange={handleChangeEditEvent}
+                                    required
+                                />
+                            </div>
+
+
+                            <div>
+                                <label htmlFor="city">Ville</label>
+                                <input
+                                    type="text"
+                                    name="city"
+                                    value={formDataEditEvent.city}
+                                    onChange={handleChangeEditEvent}
+                                    required
+                                />
+                            </div>
+                        </div>
+
+                        {/* Tu peux ajouter ici un <select> pour modifier l’intérêt si besoin */}
+
+                        {_error && <p className="error">{_error}</p>}
+                        <button type="submit" disabled={_loading}>
+                            {_loading ? 'Modification...' : 'Modifier'}
+                        </button>
+                    </form>
+                </div>
+            </Modal>
+
         </div>
     )
 };
