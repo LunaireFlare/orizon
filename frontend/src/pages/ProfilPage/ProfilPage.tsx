@@ -7,10 +7,12 @@ import Banner from '../../components/Banner/Banner.tsx'
 import Footer from '../../components/Footer/Footer.tsx';
 import CardEvent from '../../components/CardEvent/CardEvent.tsx';
 import Modal from '../../components/Modal/Modal.tsx';
+import ModifyAccountModal from '../../components/ModifyAccountModal/ModifyAccountModal.tsx';
+import CreateEventModal from '../../components/CreateEventModal/CreateEventModal.tsx';
 
 import './ProfilPage.scss';
 
-import type { User, Interest, Event } from "../../types/index.d.ts"
+import type { User, Interest} from "../../types/index.d.ts"
 
 import { getAge } from '../../utils/getAge.ts';
 import { fetchApi } from '../../utils/api';
@@ -20,25 +22,17 @@ export default function ProfilPage() {
 
     const [user, setUser] = useState<User | null>(null);
     const [interests, setInterests] = useState<Interest[]>([]);
-
     const [formData, setFormData] = useState<User | null>(null);
-    const [formDataEvent, setFormDataEvent] = useState<Partial<Event>>({
-        name: "",
-        start_date: "",
-        end_date: "",
-        description: "",
-        address: "",
-        zip_code: "",
-        city: "",
-        interests: []
-    });
+    const [currentUser, setCurrentUser] = React.useState<{ id: number } | null>(null);
+    const [selectedInterest, setSelectedInterest] = useState<string>("");
+    const [_success, setSuccess] = useState(false);
+    const [_error, setError] = useState<string | null>(null);
+    const [_loading, setLoading] = useState(false);
+    const [activeModal, setActiveModal] = useState<string | null>(null);
+    
     const navigate = useNavigate();
 
-    const [currentUser, setCurrentUser] = React.useState<{ id: number } | null>(null);
     const token = localStorage.getItem("token");
-
-    const [selectedInterest, setSelectedInterest] = useState<string>("");
-    const [selectedInterestEvent, setSelectedInterestEvent] = useState<number>();
 
     useEffect(() => {
         if (!token) {
@@ -46,8 +40,10 @@ export default function ProfilPage() {
         };
     }, [token, navigate]);
 
+
     React.useEffect(() => {
         if (token) {
+            //Décode le token
             const payload = JSON.parse(atob(token.split('.')[1]));
             setCurrentUser({ id: payload.id });
         }
@@ -87,12 +83,6 @@ export default function ProfilPage() {
         fetchData();
     }, [id]);
 
-
-    const [_success, setSuccess] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-    const [_loading, setLoading] = useState(false);
-    const [activeModal, setActiveModal] = useState<string | null>(null);
-
     const handleAddInterest = async () => {
         if (!selectedInterest) return;
         if (!token) {
@@ -115,7 +105,6 @@ export default function ProfilPage() {
             if (addedInterest && user) {
                 setUser({ ...user, interests: [...user.interests, addedInterest] });
             }
-
             setSelectedInterest("");
         } catch (err) {
             console.error(err);
@@ -151,110 +140,8 @@ export default function ProfilPage() {
         }
     }
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (!formData) return;
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
-
     if (!user) {
         return <p>Chargement en cours…</p>;
-    }
-
-    const handleChangeEvent = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-        if (!formDataEvent) return;
-        setFormDataEvent({ ...formDataEvent, [e.target.name]: e.target.value });
-    };
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!formData) return;
-        setError(null);
-
-        if (formData.password !== formData.confirmPassword) {
-            setError("Les mots de passe ne correspondent pas.");
-            return;
-        }
-
-        if (formData.password.length < 8) {
-            setError("Le mot de passe doit contenir au moins 8 caractères.");
-            return;
-        }
-
-        setLoading(true);
-
-        try {
-            if (!token) throw new Error("Utilisateur non authentifié");
-            const response = await fetchApi(`users/${id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ ...formData, confirmPassword: undefined }),
-            });
-
-            if (!response) {
-                setError(response.error || "Erreur lors de la modification.");
-            } else {
-                setSuccess(true);
-                setUser({ ...formData });
-                setActiveModal(null);
-            }
-        } catch (err) {
-            console.error("Erreur lors de la modification :", err);
-            setError('Erreur réseau ou serveur.');
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const handleSubmitNewEvent = async (e: React.FormEvent) => {
-        e.preventDefault();
-
-        if (!formDataEvent) return;
-        setError(null);
-        setLoading(true);
-        try {
-            if (!token) throw new Error("Utilisateur non authentifié");
-
-            const data = await fetchApi(`events`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ ...formDataEvent, creator_id: user.id, interest_id: selectedInterestEvent, photo: undefined, interests: undefined, creator: undefined }),
-            });
-
-            if (!data) {
-              
-                setError(data.error || "Erreur lors de la modification.");
-            } else {
-                const addedInterest = interests.find(i => i.id === selectedInterestEvent);
-                const eventWithInterest = addedInterest ? { ...data, interests: [addedInterest] } : data;
-                if (data.creator_id === user?.id) {
-                    setUser(prevUser => prevUser ? {
-                        ...prevUser,
-                        events: [...prevUser.events, eventWithInterest]
-                    } : prevUser);
-                }
-                setSuccess(true);
-                setActiveModal(null);
-                setFormDataEvent({
-                    name: "",
-                    start_date: "",
-                    end_date: "",
-                    description: "",
-                    address: "",
-                    zip_code: "",
-                    city: "",
-                    interests: []
-                });
-            }
-        } catch (err) {
-            console.error("Erreur lors de la création de l'évènement :", err);
-            setError('Erreur réseau ou serveur.');
-        } finally {
-            setLoading(false);
-        }
     }
 
     const handleDelete = async (e: React.FormEvent) => {
@@ -285,7 +172,6 @@ export default function ProfilPage() {
         }
     }
 
-    
     return (
         <div id="fullContainerProfil">
             <Rooftop />
@@ -356,7 +242,7 @@ export default function ProfilPage() {
             <div id="eventsCreated">
                 <div className="eventOptions">
                     <h2>Les évènements créés par moi</h2>
-                    <button className="pathButton" onClick={() => setActiveModal('createEvent')}>Créer un évènement</button>
+                    {currentUser?.id === user.id && (<button className="pathButton" onClick={() => setActiveModal('createEvent')}>Créer un évènement</button>)}
                 </div>
                 <div id="containerCards">
                     {user.events
@@ -390,193 +276,31 @@ export default function ProfilPage() {
                 </div>
             </div>
 
-            <Modal isOpen={activeModal === 'createEvent'} onClose={() => setActiveModal(null)}>
-                <div id="containerCreateEvent">
-                    <h2>Créer un évènement</h2>
-
-                    <p>Tous les champs doivent obligatoirement être remplis.</p>
-
-                    <form className='eventForm' onSubmit={handleSubmitNewEvent}>
-                        <label htmlFor="name">Nom de l'évènement</label>
-
-                        <input
-                            type="text"
-                            name="name"
-                            placeholder="Cours de cuisine, exposition au musée..."
-                            onChange={handleChangeEvent}
-                            required
-                        />
-
-                        <label>Centre d’intérêt</label>
-                        <select
-                            id="interet"
-
-                            value={selectedInterestEvent}
-                            onChange={(e) => { setSelectedInterestEvent(Number(e.target.value)); handleChangeEvent(e) }}
-                            required
-                        >
-
-                            <option value="">-- Choisissez un centre d'intérêt --</option>
-                            {interests?.map((interest) => (
-                                <option key={interest.id} value={interest.id}>{interest.name}</option>
-                            ))}
-                        </select>
-
-                        <label htmlFor="start_date">Date et heure de début de l'évènement</label>
-                        <input
-                            type="datetime-local"
-                            name="start_date"
-                            onChange={handleChangeEvent}
-
-                            required
-                        />
-
-                        <label htmlFor="end_date">Date et heure de fin de l'évènement</label>
-                        <input
-                            type="datetime-local"
-                            name="end_date"
-                            onChange={handleChangeEvent}
-                            required
-                        />
-
-                        <label htmlFor="description">Description</label>
-                        <textarea
-                            name="description"
-                            placeholder="Décrivez votre évènement en quelques lignes !"
-                            onChange={handleChangeEvent}
-                            required
-                        />
-
-                        <label htmlFor="address">Adresse</label>
-                        <input
-                            type="text"
-                            name="address"
-                            placeholder="75 rue Honoré de Balzac"
-                            onChange={handleChangeEvent}
-                            required
-                        />
-
-                        <div className="eventDetails">
-                            <label htmlFor="city">Ville</label>
-                            <input
-                                type="text"
-                                name="city"
-                                placeholder="Paris"
-                                onChange={handleChangeEvent}
-                                required
-                            />
-
-                            <label htmlFor="zip_code">Code postal</label>
-                            <input
-                                type="text"
-                                name="zip_code"
-                                placeholder="75000"
-                                onChange={handleChangeEvent}
-                                required
-                            />
-                        </div>
-
-                        <input type="submit" value="Valider" className="" />
-                    </form>
-                </div>
-            </Modal>
-
+            <CreateEventModal 
+            isOpen={activeModal === 'createEvent'}
+            onClose={() => setActiveModal(null)}
+            interests={interests}
+            user={user}
+            setUser={setUser}
+            setActiveModal={setActiveModal} />
 
             <Modal isOpen={activeModal === 'deleteAccount'} onClose={() => setActiveModal(null)}>
                 <div id="containerDeleteAccount">
                     <h2>Supprimer mon compte</h2>
                     <p>Attention ! Vous êtes sur le point de supprimer votre compte. Si vous cliquez sur le bouton "Je confirme", vous n'aurez plus accès au site et vos données personnelles seront effacées. Si vous ne souhaitez pas supprimer votre compte, cliquez sur la croix rouge en haut à droite ou n'importe où en dehors de cet encadré.</p>
                     <p>Êtes-vous sûr(e) de vouloir supprimer votre compte ?</p>
-
                     <button className="delButton" type='submit' onClick={handleDelete}>Je confirme</button>
                 </div>
             </Modal>
 
-            <Modal isOpen={activeModal === 'modifyAccount'} onClose={() => setActiveModal(null)}>
-                <form onSubmit={handleSubmit} className="eventForm">
-                    <label htmlFor="lastname">Nom</label>
-                    <input
-                        type="text"
-                        name="lastname"
-                        placeholder="Nom*"
-                        value={formData?.lastname}
-                        onChange={handleChange}
-                        required
-                    />
-                    <label htmlFor="firstname">Prénom</label>
-                    <input
-                        type="text"
-                        name="firstname"
-                        placeholder="Prénom*"
-                        value={formData?.firstname}
-                        onChange={handleChange}
-                        required
-                    />
-                    <label htmlFor="date_of_birth">Date de naissance</label>
-                    <input
-                        type="text"
-                        name="date_of_birth"
-                        value={formData?.date_of_birth}
-                        placeholder="Date de naissance (JJ/MM/AAAA)*"
-                        onChange={handleChange}
-                        required
-                    />
-                    <label htmlFor="email">Email</label>
-                    <input
-                        type="email"
-                        name="email"
-                        value={formData?.email}
-                        placeholder="Email*"
-                        onChange={handleChange}
-                        required
-                    />
-                    <label htmlFor="zip_code">Code Postal</label>
-                    <input
-                        type="text"
-                        name="zip_code"
-                        value={formData?.zip_code}
-                        placeholder="Code postal*"
-                        onChange={handleChange}
-                        required
-                    />
-                    <label htmlFor="city">Ville</label>
-                    <input
-                        type="text"
-                        name="city"
-                        value={formData?.city}
-                        placeholder="Ville*"
-                        onChange={handleChange}
-                        required
-                    />
-                    <label htmlFor="description">Description</label>
-                    <input
-                        type="text"
-                        name="description"
-                        value={formData?.description}
-                        placeholder="Description"
-                        onChange={handleChange}
-                        required
-                    />
-                    <label htmlFor="password">Mot de passe</label>
-                    <input
-                        type="password"
-                        name="password"
-                        placeholder="Mot de passe (min 8 caractères)*"
-                        onChange={handleChange}
-                        required
-                    />
-                    <label htmlFor="confirmPassword">Confirmez votre mot de passe</label>
-                    <input
-                        type="password"
-                        name="confirmPassword"
-                        placeholder="Confirmer le mot de passe*"
-                        onChange={handleChange}
-                        required
-                    />
-                    <input type="submit" value="Valider" className=""></input>
-                    {error && <p className="error-msg">{error}</p>}
-                </form>
-            </Modal>
+            <ModifyAccountModal 
+                isOpen={activeModal === "modifyAccount"} 
+                onClose={() => setActiveModal(null)}
+                formData={formData}
+                setFormData={setFormData}
+                setUser={setUser}
+                setActiveModal={setActiveModal} />
+
             <Footer />
         </div>
     )
