@@ -61,30 +61,30 @@
 
 // export default config;
 
-export default {
-  preset: 'ts-jest/presets/default-esm',
-  testEnvironment: 'node',
+// export default {
+//   preset: 'ts-jest/presets/default-esm',
+//   testEnvironment: 'node',
 
-  extensionsToTreatAsEsm: ['.ts'],
+//   extensionsToTreatAsEsm: ['.ts'],
 
-  transform: {
-    '^.+\\.ts$': ['ts-jest', {
-      useESM: true,
-      tsconfig: './tsconfig.json',
-    }],
-  },
+//   transform: {
+//     '^.+\\.ts$': ['ts-jest', {
+//       useESM: true,
+//       tsconfig: './tsconfig.json',
+//     }],
+//   },
 
-  roots: ['<rootDir>/tests'],
-  testMatch: ['**/*.test.js'],
+//   roots: ['<rootDir>/tests'],
+//   testMatch: ['**/*.test.js'],
 
-  moduleNameMapper: {
-    '^(\\.{1,2}/.*)\\.js$': '$1.ts',
-  },
+//   moduleNameMapper: {
+//     '^(\\.{1,2}/.*)\\.js$': '$1.ts',
+//   },
 
-  transformIgnorePatterns: ['node_modules'],
+//   transformIgnorePatterns: ['node_modules'],
 
-  moduleFileExtensions: ['ts', 'js', 'json', 'node'],
-};
+//   moduleFileExtensions: ['ts', 'js', 'json', 'node'],
+// };
 
 // /** @type {import('ts-jest').JestConfigWithTsJest} */
 // module.exports = {
@@ -108,3 +108,22 @@ export default {
 
 //   transformIgnorePatterns: ['/node_modules/'],
 // };
+
+const config = {
+  preset: 'ts-jest/presets/default-esm',
+  testEnvironment: 'node',
+  extensionsToTreatAsEsm: ['.ts'],
+  transform: {
+    '^.+\\.ts$': ['ts-jest', { useESM: true }]
+  },
+  roots: ['<rootDir>/tests'],
+  testMatch: ['**/*.test.ts'],
+  moduleNameMapper: {
+    '^(\\.{1,2}/.*)\\.js$': '$1',
+  },
+  verbose: true,
+  transformIgnorePatterns: ['node_modules'],
+  moduleFileExtensions: ['ts', 'js', 'json', 'node'],
+};
+
+export default config;

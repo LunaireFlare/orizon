@@ -1,5 +1,5 @@
 import { describe, it, expect } from "@jest/globals"
-import { sum } from './sum.ts';
+import { sum } from './sum.js';
 
 describe('Sum function', () =>{
     it('Returns correct value', () =>{
