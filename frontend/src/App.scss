@@ -1,3 +1,9 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wdth,wght@75..100,100..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
 
@@ -9,6 +15,9 @@
   --green-military: #A3B18A;
   --yelow-or: #F0B64A;
   --white-body: #F6F4EF;
+  --hover-or: #FDD78F;
+  --hover-red: #e66a6a;
+  --hover-blue: #38C7D5;
 }
 
 /* Gradiant color blue + yellow */

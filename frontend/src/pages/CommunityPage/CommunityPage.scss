@@ -1,100 +1,134 @@
-/* ----------------------------------- CONTENT --------------------------------- */
-
 /* *************** Version Mobile ************* */
 
-/* ------------- Pofil ---------------- */
+#containerCardUser {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 1rem;
+  padding: 1rem;
+}
+
+/* *************** Version Desktop ************* */
+
+@media (min-width: 1024px) {
+  #containerCardUser {
+    grid-template-columns: repeat(3, 1fr);
+    width: 1280px;
+    margin: 2rem auto 0;
+  }
+}
+
+/* Style pour chaque carte utilisateur */
+.elmCardUser {
+  background-color: #ececec;
+  border-radius: 1rem;
+  padding: 1rem;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 4px 12px;
+}
+
+/* *************** Recherche Utilisateur ************* */
 
 #containerSearchUser {
-    margin: 0 auto;
-    background-color: #fff;
-    padding: 1.5rem 1rem 3rem 1rem;
-    margin-top: 2rem;
+  margin: 0 auto;
+  background-color: #fff;
+  padding: 1.5rem 1rem 3rem 1rem;
+  margin-top: 2rem;
 }
 
 #containerSearchUser label {
-    display: block;
-    margin-top: 0.8rem;
-    margin-bottom: 0.2rem;
+  display: block;
+  margin-top: 0.8rem;
+  margin-bottom: 0.2rem;
 }
 
 #containerSearchUser input {
-    width: 100%;
-    display: block;
-    font-size: 1rem;
-    padding: 0.5rem;
-    border-radius: 3rem;
+  width: 100%;
+  display: block;
+  font-size: 1rem;
+  padding: 0.8rem;
+  border-radius: 3rem;
+  border: solid 2px #0fa3b1;
+}
+
+#containerSearchUser input::placeholder {
+  font-style: italic;
+}
+
+#containerSearchUser input:focus,
+#containerSearchUser input:active {
+  border: solid 2px #f0b64a;
+  outline: none;
 }
 
 #containerSearchUser form {
-    width: 100%;
+  width: 100%;
 }
 
 #containerSearchUser select {
-    width: 100%;
-    display: block;
-    font-size: 1rem;
-    padding: 0.5rem;
-    border-radius: 3rem;
+  width: 100%;
+  display: block;
+  font-size: 1rem;
+  padding: 0.8rem;
+  border-radius: 3rem;
+  border: none;
+  background-color: #0fa3b1;
+  color: #fff;
 }
 
 #searchUser {
-    width: 100%;
+  width: 100%;
 }
 
 .suggestions {
-    width: 20rem;
-    background-color: #fff;
-    padding: 1rem;
-    font-size: 1.2rem;
-    margin-top: 0rem;
-    cursor: pointer;
-    position: absolute;
+  width: 20rem;
+  background-color: #fff;
+  padding: 1rem;
+  font-size: 1.2rem;
+  margin-top: 0rem;
+  cursor: pointer;
+  position: absolute;
 }
 
 #containerSearchUser #contentFilter li {
-    list-style: none;
-    padding: 0.2rem;
-    cursor: pointer;
+  list-style: none;
+  padding: 0.2rem;
+  cursor: pointer;
 }
 
 #containerSearchUser #contentFilter li:hover {
-    background-color: #f3f3f3;
-
+  background-color: #f3f3f3;
 }
 
 #containerSearchUser .suggestions {
-    background-color: #fff;
+  background-color: #fff;
 }
 
-/* ------------- Card user ---------------- */
-
-#userCommunity {
-    padding-top: 3rem;
+.elmCardUser h3 {
+  margin-top: 1rem;
 }
 
-
+.interestUser {
+  margin-top: 1rem;
+}
 
 /* *************** Version Desktop ************* */
 
 @media (min-width: 1291px) {
+  #containerSearchUser {
+    padding: 5rem 1rem 5rem 1rem;
+  }
 
-    #containerSearchUser {
-        width: 1280px;
-        padding: 5rem 1rem 5rem 1rem;
-    }
+  #containerSearchUser .twoForm {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 1rem;
+  }
 
-    #containerSearchUser .twoForm {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        grid-gap: 1rem;
-    }
+  .searchUser {
+    width: 1280px;
+    margin: 0 auto;
+  }
 
-    .searchUser {
-        width: 1291px;
-        margin: 0 auto;
-    }
-
-    #containerSearchUser form {
-        width: 100%;
-    }
+  #containerSearchUser form {
+    width: 100%;
+  }
 }

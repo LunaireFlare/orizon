@@ -1,0 +1,211 @@
+#containerTableBoard {
+    width: 100%;
+}
+
+#tableBoard {
+    display: flex;
+    gap: 1rem;
+}
+
+/* ------------------------- bloc de gauche ------------------------ */
+
+.leftContainer {
+    width: 20%;
+    min-height: 100vh;
+    text-align: center;
+    padding-top: 10vh;
+    background: url(../../Assets/images/backgrounImage.jpg);
+    background-size: cover;
+}
+
+.leftContainer img {
+    width: 80%;
+}
+
+.leftContainer a {
+    display: block;
+    text-decoration: none;
+    color: #fff;
+    font-size: 1.5rem;
+    padding-top: 1rem;
+    font-weight: 600;
+}
+
+/* ------------------------- bloc de droite ------------------------ */
+
+
+.rightContainer {
+    width: 80%;
+    margin-left: 1rem;
+    padding-top: 10vh;
+}
+
+.rightContainer caption {
+    text-align: left;
+    margin-bottom: 5px;
+}
+
+form {
+    display: flex;
+    padding: 1rem 0rem;
+}
+
+#elmFilter form .filterName {
+    display: flex;
+    flex-direction: column;
+    margin-right: 1rem;
+}
+
+#elmFilter form  .filterStatus {
+    display: flex;
+    flex-direction: column;
+}
+
+/* ------------------------- Tableau de donnees ------------------------ */
+
+
+.tableBdd {
+    max-height: 100%;
+    overflow: auto;
+}
+
+.rightContainer thead {
+    background-color: var(--blue-green-sky);
+    color: #fff;
+}
+
+.rightContainer tbody td {
+    padding: 0rem 1rem;
+}
+
+table td .modoBtn {
+    display: flex;
+    flex-direction: column;
+}
+
+table td .modoBtn button {
+    margin-top: 5px;
+    padding: 5px 15px;
+    border-radius: 3rem;
+    border: none;
+} 
+
+
+/* Style initial des boutons */
+.btnValid, .btnBlock {
+    background-color: lightgray;
+    color: black;
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+    margin-right: 5px;
+    border-radius: 4px;
+  }
+  
+  /* Quand le bouton est actif */
+  .btnValid.active {
+    background-color: rgb(2, 165, 2);
+    color: white;
+  }
+  
+  .btnBlock.active {
+    background-color: rgb(255, 63, 63);
+    color: white;
+  }
+
+
+
+
+.rightContainer table {
+    border-collapse: collapse;  
+    table-layout: auto;         
+    width: auto;               
+
+    tbody td {
+        border: 0.2px solid #dbdbdb;
+        padding: 1.5rem 1rem;
+        white-space: nowrap;      
+      }
+    
+      tbody th {
+        border: 0.2px solid #dbdbdb;
+        padding: 1rem;
+        white-space: nowrap;       
+      }
+    
+      .primaryKey {
+        font-weight: 700;
+      }
+  }
+
+
+
+
+
+  .rightContainer .headRightContainer {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .rightContainer .headRightContainer button {
+    margin-right: 3rem;
+    padding: 1rem 2rem;
+    border-radius: 3rem;
+    border: none;
+    background-color: var(--blue-green-sky);
+    color: #fff;
+    cursor: pointer;
+  }
+
+  
+  .rightContainer .boxConexion {
+    max-width: 400px;
+    margin: 4rem auto;
+    padding: 2rem;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .boxConexion input {
+    padding: 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+
+  .buttonHover {
+    padding: 0.8rem 2.5rem;
+    border-radius: 3rem;
+    border-color: transparent;
+    color: #fff;
+    background-color: var(--blue-green-sky);
+  }
+
+  .buttonHover a {
+    text-decoration: none;
+    font-size: 1rem;
+  }
+
+  .error-msg {
+    color: red;
+    text-align: center;
+  }
+
+
+.forgot-password {
+  margin: 0.5rem 0;
+  text-align: right;
+
+  a {
+    color: var(--blue-green-sky);
+    font-size: 0.9rem;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

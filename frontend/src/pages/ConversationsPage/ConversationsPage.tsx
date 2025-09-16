@@ -1,0 +1,77 @@
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router';
+
+import ConversationItem from '../../components/ConversationItem/ConversationItem';
+import type { Conversation } from '../../types';
+
+import Rooftop from '../../components/Rooftop/Rooftop';
+import Banner from '../../components/Banner/Banner';
+import Footer from '../../components/Footer/Footer';
+
+import './ConversationsPage.scss';
+
+// ✅ Import image correctement
+import avatarWoman from '../../assets/images/avatarWomen.webp';
+
+const ConversationsPage: React.FC = () => {
+
+    const token = localStorage.getItem("token");
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!token) {
+            navigate('/connexion');
+        };
+    }, [token, navigate])
+
+    const conversations: Conversation[] = [
+        {
+            id: 1,
+            participant: 'Nadine Feu',
+            lastMessage: 'Salut ! Tu serais dispo demain, petit coquin ?',
+            timestamp: '2025-08-21T10:24:00',
+            avatarUrl: avatarWoman, // ✅ remplacé par image importée
+        },
+        {
+            id: 2,
+            participant: 'Bob Martin',
+            lastMessage: 'Parfait, à plus tard.',
+            timestamp: '2025-08-21T09:05:00',
+            avatarUrl: avatarWoman,
+        },
+        {
+            id: 3,
+            participant: 'Blandine GALLET',
+            lastMessage: 'Test de vue',
+            timestamp: '2025-08-20T14:42:00',
+            avatarUrl: avatarWoman,
+        },
+    ];
+
+    return (
+        <>
+            <Rooftop />
+            <Banner />
+
+            <div id="container-content">
+                <section className="keyFigure">
+                    <h2>Mes Conversations</h2>
+
+                    <div className="conversation-list">
+                        {conversations.map((conv) => (
+                            <ConversationItem
+                                key={conv.id}
+                                conversation={conv}
+                                onClick={() => navigate(`/messages/${conv.id}`)}
+                            />
+                        ))}
+                    </div>
+                </section>
+            </div>
+
+            <Footer />
+        </>
+    );
+};
+
+export default ConversationsPage;

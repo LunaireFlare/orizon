@@ -1,5 +1,5 @@
 import React from 'react';
-import type { Conversation } from '../../type/ConversationType';
+import type { Conversation } from '../../types/index.d.ts';
 
 interface Props {
     conversation: Conversation;

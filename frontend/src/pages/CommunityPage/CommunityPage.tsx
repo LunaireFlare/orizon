@@ -3,53 +3,140 @@ import Rooftop from '../../components/Rooftop/Rooftop.tsx';
 import Banner from '../../components/Banner/Banner.tsx';
 import Footer from '../../components/Footer/Footer.tsx';
 import CardUser from '../../components/CardUser/CardUser.tsx';
+import InterestSelect from '../../components/InterestFilter/InterestSelect.tsx';
 
 import './CommunityPage.scss';
+import { useNavigate } from 'react-router';
 
 type Search = {
-    code: number,
-    nom: string,
-    codesPostaux: string[]
-}
+    code: number;
+    nom: string;
+    codesPostaux: string[];
+};
 
+type User = {
+    id: number;
+    firstname: string;
+    lastname: string;
+    email: string;
+    city: string;
+    zip_code: string;
+    description: string;
+    photo: string;
+    interests?: { id: number; name: string }[];
+    status?: string;
+};
 
-export default function EventPage() {
+export default function CommunityPage() {
+    const [options, setOptions] = useState<Search[]>([]);
+    const [query, setQuery] = useState<string>('');
+    const [filteredCities, setFilteredCities] = useState<Search[]>([]);
+    const [selectedCity, setSelectedCity] = useState<Search | null>(null);
 
-    const [ options, setOptions ] = useState<Search[]>([]); 
-    const [ query, setQuery ] = useState<string>("");
-    const [ filtered, setFiltered ] = useState<Search[]>([]);
-    const [ selected, setSelected ] = useState<string>("");
+    const [name, setName] = useState('');
+    const [interest, setInterest] = useState('');
+    const [users, setUsers] = useState<User[]>([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
+    const token = localStorage.getItem("token");
+    const navigate = useNavigate();
 
-    // Appel de l'Api 
     useEffect(() => {
-        if (query.length > 2) { // attendre au moins 3 lettres
-        fetch(`https://geo.api.gouv.fr/communes?nom=${query}&fields=nom,codesPostaux,code`)
-            .then(res => res.json())
-            .then((data: Search[]) => {
-            setOptions(data);
-            setFiltered(data); // suggestions directes
-            })
-            .catch(err => console.error("Erreur API :", err));
+        if (!token) {
+            navigate('/connexion');
+        };
+    }, [token, navigate]);
+
+    // Requête API villes GeoGouv
+    useEffect(() => {
+        const fetchVilles = async () => {
+            if (query.length > 2 && !selectedCity) {
+                try {
+                    const res = await fetch(
+                        `https://geo.api.gouv.fr/communes?nom=${query}&fields=nom,codesPostaux,code`
+                    );
+                    const data: Search[] = await res.json();
+                    setOptions(data);
+                    setFilteredCities(data);
+                } catch (err) {
+                    console.error('Erreur API :', err);
+                    setOptions([]);
+                    setFilteredCities([]);
+                }
+            } else {
+                setOptions([]);
+                setFilteredCities([]);
+            }
+        };
+        fetchVilles();
+    }, [query, selectedCity]);
+
+    // Filtrer suggestions selon saisie
+    useEffect(() => {
+        if (query.length > 0 && !selectedCity) {
+            const results = options.filter((opt) =>
+                opt.nom.toLowerCase().includes(query.toLowerCase())
+            );
+            setFilteredCities(results);
         } else {
-        setOptions([]);
-        setFiltered([]);
+            setFilteredCities([]);
         }
-    }, [query]);
+    }, [query, options, selectedCity]);
 
+    // Chargement des utilisateurs avec filtres dynamiques
+    useEffect(() => {
+        const fetchUsers = async () => {
+            setLoading(true);
+            setError(null);
+            try {
+                const res = await fetch('http://backend.localhost:81/users', {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
 
-  // Filtrer les résultats dès que l'utilisateur tape quelque chose
-  useEffect(() => {
-    if (query.length > 0) {
-        const results = options.filter(opt =>
-            opt.nom.toLowerCase().includes(query.toLowerCase())
-        );
-        setFiltered(results);
-    } else {
-        setFiltered([]);
-    }
-  }, [query, options]);
+                const data: User[] = await res.json();
 
+                const forbiddenStatus = ['bloqué', 'désactivé', 'en_attente', undefined];
+                let filteredData = data.filter(
+                    (user) => !forbiddenStatus.includes(user.status)
+                );
+
+                if (name.length > 0) {
+                    filteredData = filteredData.filter((user: User) =>
+                        `${user.firstname} ${user.lastname}`
+                            .toLowerCase()
+                            .includes(name.toLowerCase())
+                    );
+                }
+
+                if (selectedCity) {
+                    filteredData = filteredData.filter(
+                        (user: User) =>
+                            user.city.toLowerCase() === selectedCity.nom.toLowerCase() &&
+                            user.zip_code === selectedCity.codesPostaux[0]
+                    );
+                }
+
+                if (interest.length > 0) {
+                    filteredData = filteredData.filter((user: User) =>
+                        user.interests?.some(
+                            (i) => i.name.toLowerCase() === interest.toLowerCase()
+                        )
+                    );
+                }
+
+                setUsers(filteredData);
+            } catch (err) {
+                setError('Erreur lors du chargement des utilisateurs.');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchUsers();
+    }, [name, selectedCity, interest]);
 
     return (
         <div>
@@ -60,64 +147,74 @@ export default function EventPage() {
                 <div className="searchUser">
                     <h2>Rechercher un utilisateur</h2>
                     <form action="/">
-                        <label htmlFor="">Nom ou prénom</label>
-                        <input type="text" id="name" name="name" placeholder="Tapez votre nom ou prénom"/>
+                        <label htmlFor="name">Nom ou prénom</label>
+                        <input
+                            type="text"
+                            id="name"
+                            name="name"
+                            placeholder="Tapez votre nom ou prénom"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                        />
 
                         <div className="twoForm">
                             <div>
-                                <label htmlFor="Ville">Ville</label>
+                                <label htmlFor="ville">Ville</label>
                                 <input
-                                    type="text" 
-                                    id="ville" 
-                                    value={query}
-                                    onChange={(e) => setQuery(e.target.value)}
-                                    placeholder="Tapez votre ville" />
+                                    type="text"
+                                    id="ville"
+                                    value={
+                                        selectedCity
+                                            ? `${selectedCity.nom} (${selectedCity.codesPostaux[0]})`
+                                            : query
+                                    }
+                                    onChange={(e) => {
+                                        setQuery(e.target.value);
+                                        setSelectedCity(null);
+                                    }}
+                                    placeholder="Tapez votre ville"
+                                    autoComplete="off"
+                                />
 
-                                {/* Liste de suggestions */}
-                                {filtered.length > 0 && (
+                                {!selectedCity && filteredCities.length > 0 && (
                                     <ul className="suggestions">
-                                    {filtered.map(opt => (
-                                        <div id="contentFilter">
+                                        {filteredCities.map((opt) => (
                                             <li
-                                            key={opt.code}
-                                            onClick={() => {
-                                                setSelected(opt.nom);
-                                                setQuery(opt.nom); // Remplit l'input
-                                                setFiltered([]); // Ferme la liste
-                                            }}
+                                                key={opt.code}
+                                                onClick={() => {
+                                                    setSelectedCity(opt);
+                                                    setQuery(`${opt.nom} (${opt.codesPostaux[0]})`);
+                                                    setFilteredCities([]);
+                                                }}
+                                                style={{ cursor: 'pointer' }}
                                             >
-                                            {opt.nom} ({opt.codesPostaux})
+                                                {opt.nom} ({opt.codesPostaux[0]})
                                             </li>
-                                        </div>
-                                    ))}
+                                        ))}
                                     </ul>
                                 )}
 
-                                {/* Valeur choisie (pour debug) */}
-                                { selected && <p>Catégorie choisie : {selected}</p> }
-
-
+                                {/* Plus d'affichage de la ville sélectionnée en dessous */}
                             </div>
+
                             <div>
-                                <label>Centre d’intérêt</label>
-                                <select id="interet">
-                                    <option value="">-- Choisissez un centre d'interêt --</option>
-                                    <option value="sport">Sport</option>
-                                    <option value="musique">Musique</option>
-                                    <option value="voyage">Voyage</option>
-                                    <option value="cuisine">Cuisine</option>
-                                </select>
+                                <InterestSelect value={interest} onChange={setInterest} />
                             </div>
                         </div>
                     </form>
-
-                </div> 
+                </div>
             </div>
-            <div id="userCommunity">
-                <CardUser />
+
+            <div id="containerCardUser">
+                {loading && <p>Chargement des utilisateurs...</p>}
+                {error && <p style={{ color: 'red' }}>{error}</p>}
+                {!loading && users.length === 0 && <p>Aucun utilisateur trouvé.</p>}
+                {users.map((user) => (
+                    <CardUser key={user.id} user={user} />
+                ))}
             </div>
 
             <Footer />
         </div>
-    )
+    );
 }

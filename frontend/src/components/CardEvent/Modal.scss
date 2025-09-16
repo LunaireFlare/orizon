@@ -1,0 +1,42 @@
+.modalEvent {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.modalContent {
+  background-color: white;
+  padding: 20px;
+  max-height: 90vh;
+  //TODO : a fix width
+  width: 90vh;
+  border-radius: 8px;
+  position: relative;
+  font-size: 1rem;
+  font-weight: 400;
+  overflow-y: auto;
+}
+
+.close {
+  position: absolute;
+  right: 15px;
+  top: 10px;
+  margin: 0.5rem;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+@media (min-width: 1291px) {
+
+    .modal-content {
+        width: 50vw;
+    }
+}
+
