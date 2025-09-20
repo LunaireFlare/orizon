@@ -1,4 +1,3 @@
-import "dotenv/config";
 import { sequelize } from '../database/sequelize/client.js';
 
 import {
