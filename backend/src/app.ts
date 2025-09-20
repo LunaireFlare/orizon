@@ -13,7 +13,7 @@ const app = express();
 app.disable("x-powered-by");
 
 // router principal, middlewares d'erreur...
-app.use(cors({ origin: "*" }));
+app.use(cors({ origin: ["http://localhost:81", "http://backoffice.localhost:81"] }));
 // app.use(rateLimit);
 
 app.use(express.json());
