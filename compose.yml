@@ -12,10 +12,8 @@ services:
 
     database:
         image: postgres:17
-        environment:
-            POSTGRES_USER: seniorlove
-            POSTGRES_PASSWORD: seniorlove
-            POSTGRES_DB: seniorlove
+        env_file:
+            - ./docker.env
         volumes:
             - ./backend/data:/docker-entrypoint-initdb.d/
             # .database/ ==> crée dossier database local, risque de corruption et pas de gestion automatique par Docker, comportement erratique selon environnement.
