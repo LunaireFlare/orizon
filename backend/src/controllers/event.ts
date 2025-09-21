@@ -83,21 +83,25 @@ const eventController = {
             };
     
             const t = await sequelize.transaction();
-            const createdEvent = await Event.create({ name, start_date, end_date, description, address, zip_code, city, creator_id }, {transaction: t});
-
-            await Event_Participant.create({ 
-                event_id: createdEvent.id,
-                participant_id: createdEvent.creator_id 
-            }, {transaction: t});
-
-            await Event_Interest.create({
-                event_id: createdEvent.id,
-                interest_id
-            }, {transaction: t});
-
-            await t.commit();
+            try {
+                const createdEvent = await Event.create({ name, start_date, end_date, description, address, zip_code, city, creator_id }, {transaction: t});
     
-            res.status(201).json(createdEvent);
+                await Event_Participant.create({ 
+                    event_id: createdEvent.id,
+                    participant_id: createdEvent.creator_id 
+                }, {transaction: t});
+    
+                await Event_Interest.create({
+                    event_id: createdEvent.id,
+                    interest_id
+                }, {transaction: t});
+    
+                await t.commit();
+                res.status(201).json(createdEvent);
+            } catch (error) {
+                await t.rollback();
+                res.status(500).json({ error: 'Erreur lors de la création de l’événement' });
+            }
         },
 
         /**
