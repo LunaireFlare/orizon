@@ -99,7 +99,7 @@ const userController = {
     const userExists = await User.findOne({ where: { email: email } });
 
     if (userExists !== null) {
-      return res.status(400).json({ error: "User already exists." });
+      return res.status(409).json({ error: "User already exists." });
     }
 
     const hashedPassword = await argon2.hash(password);
