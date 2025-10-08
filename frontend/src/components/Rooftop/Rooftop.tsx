@@ -26,8 +26,46 @@ export default function Rooftop() {
 
     return (
         <div>
+            {token ? (
+                <>
+                    <div>
+                        <div id='navMobile'>
+                            <NavLink to='/'>
+                                <img src={logo} alt='logo orizon' />
+                            </NavLink>
+                            <div className='navButton' onClick={() => setBgrOpen(!bgrOpen)}>
+                                <img width='20px' src={pictonav} alt='navigation' />
+                            </div>
+                        </div>
 
-            {!token && (
+                        {bgrOpen && (
+                            <div className="mobileMenu">
+                                <NavLink to='/evenements' onClick={() => setBgrOpen(false)}>Événements</NavLink>
+                                <NavLink to='/communaute' onClick={() => setBgrOpen(false)}>Communauté</NavLink>
+                                <NavLink to={`/profil/${currentUser?.id}`} onClick={() => setBgrOpen(false)}>Profil</NavLink>
+                                <NavLink to='/' onClick={() => {
+                                    setBgrOpen(false);
+                                    handleLogout();
+                                }}>Déconnexion</NavLink>
+                            </div>
+                        )
+                        }
+
+                        <div id='elemRoof'>
+                            <NavLink to='/'>
+                                <img src={logo} style={{ width: '15rem' }} alt='logo orizon' />
+                            </NavLink>
+
+                            <div className='buttonBox'>
+                                <div className='buttonHover'><NavLink to='/evenements'>Événements</NavLink></div>
+                                <div className='buttonHover'><NavLink to='/communaute'>Communauté</NavLink></div>
+                                <div className='buttonHover'><NavLink to={`/profil/${currentUser?.id}`}>Profil</NavLink></div>
+                                <div className='buttonHover3' onClick={handleLogout}><NavLink to='/'>Déconnexion</NavLink></div>
+                            </div>
+                        </div>
+                    </div>
+                </>
+            ) : (
                 <>
                     <div id='navMobile'>
                         <NavLink to='/'>
@@ -56,52 +94,7 @@ export default function Rooftop() {
                         </div>
                     </div>
                 </>
-            )}
-
-            {token && (
-                <>
-                    <div>
-                        <div id='navMobile'>
-                            <NavLink to='/'>
-                                <img src={logo} alt='logo orizon' />
-                            </NavLink>
-                            <div className='navButton' onClick={() => setBgrOpen(!bgrOpen)}>
-                                <img width='20px' src={pictonav} alt='navigation' />
-                            </div>
-                        </div>
-
-                        {bgrOpen && (
-                            <div className="mobileMenu">
-                                <NavLink to='/evenements' onClick={() => setBgrOpen(false)}>Événements</NavLink>
-                                <NavLink to='/communaute' onClick={() => setBgrOpen(false)}>Communauté</NavLink>
-                                <NavLink to={`/profil/${currentUser?.id}`} onClick={() => setBgrOpen(false)}>Profil</NavLink>
-                                <NavLink to='/conversations' onClick={() => setBgrOpen(false)}>Messagerie</NavLink>
-                                <NavLink to='/' onClick={() => {
-                                    setBgrOpen(false);
-                                    handleLogout();
-                                }}>Déconnexion</NavLink>
-                            </div>
-                        )
-                        }
-
-                        <div id='elemRoof'>
-                            <NavLink to='/'>
-                                <img src={logo} style={{ width: '15rem' }} alt='logo orizon' />
-                            </NavLink>
-
-                            <div className='buttonBox'>
-                                <div className='buttonHover'><NavLink to='/evenements'>Événements</NavLink></div>
-                                <div className='buttonHover'><NavLink to='/communaute'>Communauté</NavLink></div>
-                                <div className='buttonHover'><NavLink to={`/profil/${currentUser?.id}`}>Profil</NavLink></div>
-                                <div className='buttonHover'><NavLink to='/conversations'>Messagerie</NavLink></div>
-                                <div className='buttonHover3' onClick={handleLogout}><NavLink to='/'>Déconnexion</NavLink></div>
-                            </div>
-                        </div>
-                    </div>
-            
-                </>
-            )}
-        
+            )}        
         </div>
     );
 };
