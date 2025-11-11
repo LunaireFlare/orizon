@@ -5,14 +5,14 @@ export function authorizeRoles(allowedRoles: string[]) {
     const userRole = req.user?.role;
 
     if (!userRole) {
-      return res
-        .status(401)
-        .json({ error: "Oh non vous n'êtes pas autorisé :( " });
+      return res.status(401).json({ 
+        error: "Vous devez vous connecter." 
+      });
     }
 
     if (!allowedRoles.includes(userRole)) {
       return res.status(403).json({
-        error: "Oh non vous l'accès est interdit... ",
+        error: "Vous n'êtes pas autorisé à accéder à la ressource.",
       });
     }
 
