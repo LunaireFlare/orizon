@@ -122,7 +122,7 @@ const config = {
     '^(\\.{1,2}/.*)\\.js$': '$1',
   },
   verbose: true,
-  transformIgnorePatterns: ['node_modules'],
+  transformIgnorePatterns: ['/node_modules/'],
   moduleFileExtensions: ['ts', 'js', 'json', 'node'],
 };
 
