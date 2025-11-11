@@ -6,7 +6,7 @@ import { fetchApi } from '../../utils/api.js';
 import './CreateEventModal.scss';
 
 
-interface ModifyAccountModalProps {
+interface createEventModalProps {
     isOpen: boolean;
     onClose: () => void;
     interests: Interest[];
@@ -15,18 +15,18 @@ interface ModifyAccountModalProps {
     setActiveModal: React.Dispatch<React.SetStateAction<string | null>>
 }
 
-export default function ModifyAccountModal({
+export default function CreateEventModal({
     isOpen,
     onClose,
     interests,
     user,
     setUser,
     setActiveModal
-}: ModifyAccountModalProps) {
+}: createEventModalProps) {
 
-    const [_success, setSuccess] = useState(false);
-    const [_loading, setLoading] = useState(false);
-    const [_error, setError] = useState<string | null>(null);
+    const [success, setSuccess] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     const [selectedInterestEvent, setSelectedInterestEvent] = useState<number>();
 
@@ -67,28 +67,28 @@ export default function ModifyAccountModal({
 
             if (!data) {
                 setError(data.error || "Erreur lors de la modification.");
-            } else {
-                const addedInterest = interests.find(i => i.id === selectedInterestEvent);
-                const eventWithInterest = addedInterest ? { ...data, interests: [addedInterest] } : data;
-                if (data.creator_id === user?.id) {
-                    setUser(prevUser => prevUser ? {
-                        ...prevUser,
-                        events: [...prevUser.events, eventWithInterest]
-                    } : prevUser);
-                }
-                setSuccess(true);
-                setActiveModal(null);
-                setFormDataEvent({
-                    name: "",
-                    start_date: "",
-                    end_date: "",
-                    description: "",
-                    address: "",
-                    zip_code: "",
-                    city: "",
-                    interests: []
-                });
+            } 
+
+            const addedInterest = interests.find(i => i.id === selectedInterestEvent);
+            const eventWithInterest = addedInterest ? { ...data, interests: [addedInterest] } : data;
+            if (data.creator_id === user?.id) {
+                setUser(prevUser => prevUser ? {
+                    ...prevUser,
+                    events: [...prevUser.events, eventWithInterest]
+                } : prevUser);
             }
+            setSuccess(true);
+            setActiveModal(null);
+            setFormDataEvent({
+                name: "",
+                start_date: "",
+                end_date: "",
+                description: "",
+                address: "",
+                zip_code: "",
+                city: "",
+                interests: []
+            });
         } catch (err) {
             console.error("Erreur lors de la création de l'évènement :", err);
             setError('Erreur réseau ou serveur.');
@@ -104,19 +104,22 @@ export default function ModifyAccountModal({
                 <p>Tous les champs doivent obligatoirement être remplis.</p>
 
                 <form className='eventForm' onSubmit={handleSubmitNewEvent}>
-                    <label htmlFor="name">Nom de l'évènement</label>
 
+                    <label htmlFor="name">Nom de l'évènement</label>
                     <input
                         type="text"
+                        id="name"
                         name="name"
                         placeholder="Cours de cuisine, exposition au musée..."
                         onChange={handleChangeEvent}
                         required
+                        autoFocus
                     />
 
-                    <label>Centre d’intérêt</label>
+                    <label htmlFor="interest">Centre d’intérêt</label>
                     <select
-                        id="interet"
+                        id="interest"
+                        name="interest"
                         value={selectedInterestEvent}
                         onChange={(e) => { setSelectedInterestEvent(Number(e.target.value)); handleChangeEvent(e) }}
                         required
@@ -130,6 +133,7 @@ export default function ModifyAccountModal({
                     <label htmlFor="start_date">Date et heure de début de l'évènement</label>
                     <input
                         type="datetime-local"
+                        id="start_date"
                         name="start_date"
                         onChange={handleChangeEvent}
                         required
@@ -138,6 +142,7 @@ export default function ModifyAccountModal({
                     <label htmlFor="end_date">Date et heure de fin de l'évènement</label>
                     <input
                         type="datetime-local"
+                        id="end_date"
                         name="end_date"
                         onChange={handleChangeEvent}
                         required
@@ -145,6 +150,7 @@ export default function ModifyAccountModal({
 
                     <label htmlFor="description">Description</label>
                     <textarea
+                        id="description"                        
                         name="description"
                         placeholder="Décrivez votre évènement en quelques lignes !"
                         onChange={handleChangeEvent}
@@ -154,6 +160,7 @@ export default function ModifyAccountModal({
                     <label htmlFor="address">Adresse</label>
                     <input
                         type="text"
+                        id="address"                        
                         name="address"
                         placeholder="75 rue Honoré de Balzac"
                         onChange={handleChangeEvent}
@@ -164,6 +171,7 @@ export default function ModifyAccountModal({
                         <label htmlFor="city">Ville</label>
                         <input
                             type="text"
+                            id="city"                            
                             name="city"
                             placeholder="Paris"
                             onChange={handleChangeEvent}
@@ -173,6 +181,7 @@ export default function ModifyAccountModal({
                         <label htmlFor="zip_code">Code postal</label>
                         <input
                             type="text"
+                            id="zip_code"
                             name="zip_code"
                             placeholder="75000"
                             onChange={handleChangeEvent}
