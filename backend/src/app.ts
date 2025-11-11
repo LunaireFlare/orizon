@@ -12,7 +12,6 @@ const app = express();
 // Sécurité
 app.disable("x-powered-by");
 
-// router principal, middlewares d'erreur...
 app.use(cors({ origin: ["http://localhost:81", "http://backoffice.localhost:81"] }));
 // app.use(rateLimit);
 
@@ -20,8 +19,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodySanitizerMiddleware); // Pour nettoyer les données
 
+// router principal, middlewares d'erreur...
 app.use(mainRouter);
-// app.use("/api", mainRouter);
 
 app.use(notFound);
 app.use(errorHandler);
