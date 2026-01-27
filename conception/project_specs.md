@@ -335,6 +335,6 @@ _Toutes les routes précédentes, plus :_
 
 Dans l'équipe de développement, les rôles sont les suivants :
 
-- Product Owner : Cheikna COULIBALY
-- Scrum Master : Ambre MALET
-- Lead Devs : Coralie POISSON ( back & spécialité : SQL ) et Kannann BHANLIN ( front & spécialité: sécurité )
+- Product Owner : Cheikna
+- Scrum Master : Ambre
+- Lead Devs : Coralie (back & spécialité : SQL) et Kannann (front & spécialité: sécurité)
